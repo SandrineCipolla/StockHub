@@ -1,18 +1,13 @@
 require("dotenv").config();
-import express, { Request, Response } from "express";
-import mysql from "mysql2";
+import express from "express";
+import connection from './db';
+import stockRoutes from './routes/stockRoutes';
 
 // Créer une application Express
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configuration de la connexion à MySQL en utilisant dotenv
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-});
+
 
 // Vérifier si la connexion à la base de données a réussi
 connection.connect((err) => {
@@ -22,6 +17,9 @@ connection.connect((err) => {
   }
   console.log("Connexion à la base de données établie avec succès");
 });
+
+// Utiliser les routes définies dans stockRoutes.ts
+app.use('/api', stockRoutes);
 
 // Démarrer le serveur
 app.listen(port, () => {
