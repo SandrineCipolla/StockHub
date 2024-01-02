@@ -1,18 +1,22 @@
-// import { useState } from 'react'
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import StocksList from "./components/StocksList";
 import "./App.css";
-import StockCreation from "./pages/home/StockCreation";
+
 
 function App() {
   return (
-    <>
+    <Router>
       <Header />
       <main>
-        <StockCreation />
+        <Routes>
+        <Route path="/" element={<StocksList />} />
+          
+        </Routes>
       </main>
       <Footer />
-    </>
+    </Router>
   );
 }
 
