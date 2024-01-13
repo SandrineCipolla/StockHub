@@ -7,14 +7,37 @@ import stockRoutes from "./routes/stockRoutes";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Vérifier si la connexion à la base de données a réussi
-connection.connect((err) => {
-  if (err) {
-    console.error("Erreur de connexion à la base de données :", err);
-    return;
-  }
-  console.log("Connexion à la base de données établie avec succès");
-});
+// //Facon1
+// // Vérifier si la connexion à la base de données a réussi
+// connection.connect((err) => {
+//   if (err) {
+//     console.error("Erreur de connexion à la base de données :", err);
+//     return;
+//   }
+//   console.log("Connexion à la base de données établie avec succès");
+// });
+
+// //Facon2
+export async function connectToDatabase(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    connection.connect((err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// Appel de la fonction avec async/await
+if (process.env.NODE_ENV !== 'test') {
+  connectToDatabase().then(() => {
+    console.log('Connexion à la base de données établie avec succès');
+  }).catch((err) => {
+    console.error('Erreur de connexion à la base de données :', err);
+  });
+}
 
 // Utiliser CORS middleware
 app.use(cors());
@@ -41,3 +64,4 @@ app.listen(port, () => {
   console.log(`Serveur backend en cours d'exécution sur le port ${port}`);
 });
 
+export default app;
