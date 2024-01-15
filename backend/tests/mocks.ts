@@ -2,11 +2,19 @@ import { jest } from '@jest/globals';
 
 import { Request, Response } from 'express';
 import { Query, FieldPacket } from 'mysql2';
+import * as originalConnection from '../src/db';
 
 // Mock pour la requête Express
 export const createMockRequest = (): Request => {
-  
   return {} as Request;
+};
+
+//Mock ConnectionToData
+export const mockConnectionToData = jest.fn();
+
+export const mockConnection = {
+  ...originalConnection,
+  connectToDatabase : mockConnectionToData,
 };
 
 // Mock pour la réponse Express
