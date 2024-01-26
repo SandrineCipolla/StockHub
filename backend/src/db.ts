@@ -2,7 +2,6 @@
 
 import mysql, { Connection } from "mysql2/promise";
 import dotenv from "dotenv";
-import util from 'util';
 
 dotenv.config();
 
@@ -20,21 +19,6 @@ const connectionOptions = {
   database: dbDatabase,
 };
 
-// //const connection = mysql.createConnection(connectionOptions);
-// // Exporte la fonction de création de connexion pour permettre le mocking
-// export function createDatabaseConnection() {
-// const connection = mysql.createConnection(connectionOptions);
-//    // Ajoutez cette ligne pour vous assurer que la méthode query est disponible
-//    connection.query = util.promisify(connection.query);
-
-//  // return mysql.createConnection(connectionOptions);
-//  return connection;
-// }
 const pool = mysql.createPool(connectionOptions);
 
 export default pool;
-// export function createDatabaseConnection(): Connection {
-//   return mysql.createConnection(connectionOptions) as Connection;
-// }
-
-//export default connection;
