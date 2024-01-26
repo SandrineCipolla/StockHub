@@ -46,7 +46,7 @@ const configureStockRoutes = (): Router => {
             res.status(500).json({error: "Error while querying the database."});
         }
     });
-
+  
     return router;
 };
 
