@@ -23,6 +23,10 @@ describe("Stock Controller", () => {
     req = createMockedRequest();
     res = createMockedResponse();
   });
+  
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   it("should get all stocks", async () => {
     const mockQuery = jest.fn();
@@ -46,16 +50,9 @@ describe("Stock Controller", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-   
     await getAllStocks(req, res, fakeConnection);
 
     expect(mockQuery).toHaveBeenCalledWith("SELECT * FROM stocks");
     expect(jsonSpy).toHaveBeenCalledWith();
-
-  });
-
-  afterEach(() => {
-    // Restaure les espions créés avec spyOn
-    jest.restoreAllMocks();
   });
 });
