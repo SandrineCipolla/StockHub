@@ -8,7 +8,7 @@ import {
   createFakeDatabaseConnection,
   createMockedRequest,
   createMockedResponse,
-} from "../__mocks__/utils";
+} from "../__mocks__/connectionUtils";
 
 //Simulation connectToDatabase
 jest.mock("../../src/db");
@@ -23,19 +23,21 @@ describe("Stock Controller", () => {
     req = createMockedRequest();
     res = createMockedResponse();
   });
-  
   afterEach(() => {
     jest.restoreAllMocks();
   });
-
+  
   it("should get all stocks", async () => {
-    const mockQuery = jest.fn();
-    fakeConnection.query = mockQuery;
-    mockQuery.mockResolvedValueOnce([fakeStocks]);
+    // const mockQuery = jest.fn();
+    // fakeConnection.query = mockQuery;
+    // mockQuery.mockResolvedValueOnce([fakeStocks]);
+    (fakeConnection.query as jest.Mock).mockResolvedValueOnce([fakeStocks]);
 
     await getAllStocks(req, res, fakeConnection);
 
-    expect(mockQuery).toHaveBeenCalledWith("SELECT * FROM stocks");
+    expect(fakeConnection.query as jest.Mock).toHaveBeenCalledWith(
+      "SELECT * FROM stocks"
+    );
     expect(res.status).not.toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith(fakeStocks);
   });
@@ -50,9 +52,12 @@ describe("Stock Controller", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    await getAllStocks(req, res, fakeConnection);
+    try {
+      await getAllStocks(req, res, fakeConnection);
+    } catch (err) {}
 
     expect(mockQuery).toHaveBeenCalledWith("SELECT * FROM stocks");
-    expect(jsonSpy).toHaveBeenCalledWith();
+    expect(jsonSpy).toHaveBeenCalledWith({ error: databaseError.message }); // erreur attendue
+    expect(consoleErrorSpy).toHaveBeenCalledWith(databaseError);
   });
 });

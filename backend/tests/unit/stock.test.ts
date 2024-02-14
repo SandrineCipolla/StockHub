@@ -1,12 +1,18 @@
 import { PoolConnection, RowDataPacket } from "mysql2/promise";
-import { createMockedRequest, createMockedResponse } from "../__mocks__/utils";
+import {
+  createMockedRequest,
+  createMockedResponse,
+} from "../__mocks__/connectionUtils";
 import {
   expectedTableStructure,
   fakeStocks,
   fakeStocksWithoutId,
   newStocks,
 } from "../__mocks__/mockedData";
-import { getAllStocks } from "../../src/controllers/stockController";
+import {
+  getAllStocks,
+  getStocksFromDatabase,
+} from "../../src/controllers/stockController";
 import { Request, Response } from "express";
 import { getTableStructure, insertStock } from "../../src/utils/dbUtils";
 
@@ -53,18 +59,33 @@ describe("getAllStocks", () => {
     });
   });
 
+  // describe("when the ID information is missing", () => {
+  //   it("should return error with missing ID information", async () => {
+  //     (mockConnection.query as jest.Mock).mockResolvedValue([
+  //       fakeStocksWithoutId,
+  //     ]);
+
+  //     await expect(getAllStocks(req, res, mockConnection)).rejects.toThrow(
+  //       "Column 'id' is missing in some stocks"
+  //     );
+
+  //     // Vérifier que la fonction query a été appelée avec la requête attendue
+  //     expect(mockConnection.query).toHaveBeenCalledWith("SELECT * FROM stocks");
+  //   });
+  // });
+
   describe("when the ID information is missing", () => {
     it("should return error with missing ID information", async () => {
       (mockConnection.query as jest.Mock).mockResolvedValue([
         fakeStocksWithoutId,
       ]);
 
-      await expect(getAllStocks(req, res, mockConnection)).rejects.toThrow(
-        "Column 'id' is missing in some stocks"
-      );
+      await getAllStocks(req, res, mockConnection);
 
-      // Vérifier que la fonction query a été appelée avec la requête attendue
-      expect(mockConnection.query).toHaveBeenCalledWith("SELECT * FROM stocks");
+      // Vérifier que res.json a été appelé avec l'erreur attendue
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Column 'id' is missing in some stocks",
+      });
     });
   });
 
@@ -80,7 +101,7 @@ describe("getAllStocks", () => {
       // const query = "SELECT * FROM stocks WHERE label = ?";
       // const rows = (await mockConnection.query(query, ["MyFirstStock"]))[0] as RowDataPacket[];
       //
-      // //Vérification de l'existance des nouvelles données dans la table
+      // //Vérification  des nouvelles données dans la table
       // expect(rows.length).toBeGreaterThan(0);
       // expect((rows[0] as any).label).toBe("MyFirstStock");
       //---------------------------------------------

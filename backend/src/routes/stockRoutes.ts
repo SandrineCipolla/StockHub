@@ -14,7 +14,7 @@ const configureStockRoutes = (): Router => {
         connection.release(); // Libérer la connexion après utilisation
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Erreur lors de la requête à la base de données." });
+        res.status(500).json({ error: "Error while querying the database." });
       }
     });
   
