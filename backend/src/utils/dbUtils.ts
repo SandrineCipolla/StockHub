@@ -1,9 +1,9 @@
-import { PoolConnection } from "mysql2/promise";
-import { newStocks, Stock } from "../../tests/__mocks__/mockedData";
+import {PoolConnection} from "mysql2/promise";
+import {newStocks, Stock} from "../../tests/__mocks__/mockedData";
 
 export interface TableColumn {
-  column_name: string;
-  data_type: string;
+    column_name: string;
+    data_type: string;
 }
 
 export async function getTableStructure(
@@ -48,6 +48,22 @@ export async function insertStock(
 
   } catch (error: any) {
 
+    throw new Error(`Error inserting stocks : ${error.message}`);
+  }
+export async function insertStock(
+  connection: PoolConnection,
+  stocks: Stock[]
+): Promise<void> {
+  try {
+    console.log("Inserting stocks:", stocks);
+    const values = stocks.map((stock) => [stock.id, stock.label]);
+    console.log("Formatted values:", values);
+    const query = "INSERT INTO stocks (id, label) VALUES ?";
+    console.log("query", query);
+    await connection.query(query, [values]);
+    console.log("Stocks inserted successfully!");
+  } catch (error: any) {
+    console.error(`Error inserting stocks: ${error.message}`);
     throw new Error(`Error inserting stocks : ${error.message}`);
   }
 }
