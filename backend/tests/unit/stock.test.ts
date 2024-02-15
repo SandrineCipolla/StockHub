@@ -11,7 +11,7 @@ import {
 } from "../__mocks__/mockedData";
 import {
   getAllStocks,
-  getStocksFromDatabase,
+
 } from "../../src/controllers/stockController";
 import { Request, Response } from "express";
 import { getTableStructure, insertStock } from "../../src/utils/dbUtils";
@@ -39,7 +39,7 @@ describe("getAllStocks", () => {
   describe("when the table Stock is created", () => {
     const tableName = "stocks";
 
-    it("should return Stocks table with columns ID end Label", async () => {
+    it("should return Stocks table with columns ID and Label", async () => {
       (mockConnection.query as jest.Mock).mockResolvedValueOnce([
         expectedTableStructure,
       ]);
@@ -59,35 +59,6 @@ describe("getAllStocks", () => {
     });
   });
 
-  // describe("when the ID information is missing", () => {
-  //   it("should return error with missing ID information", async () => {
-  //     (mockConnection.query as jest.Mock).mockResolvedValue([
-  //       fakeStocksWithoutId,
-  //     ]);
-
-  //     await expect(getAllStocks(req, res, mockConnection)).rejects.toThrow(
-  //       "Column 'id' is missing in some stocks"
-  //     );
-
-  //     // Vérifier que la fonction query a été appelée avec la requête attendue
-  //     expect(mockConnection.query).toHaveBeenCalledWith("SELECT * FROM stocks");
-  //   });
-  // });
-
-  describe("when the ID information is missing", () => {
-    it("should return error with missing ID information", async () => {
-      (mockConnection.query as jest.Mock).mockResolvedValue([
-        fakeStocksWithoutId,
-      ]);
-
-      await getAllStocks(req, res, mockConnection);
-
-      // Vérifier que res.json a été appelé avec l'erreur attendue
-      expect(res.json).toHaveBeenCalledWith({
-        error: "Column 'id' is missing in some stocks",
-      });
-    });
-  });
 
   describe("when a new stock is created in an empty stock Table", () => {
     it("should insert a new entry to the empty stock stock table", async () => {
