@@ -5,23 +5,35 @@ import cors from "cors";
 import pool from "./db";
 
 import configureStockRoutes from "./routes/stockRoutes";
-import { Connection } from "mysql2/promise";
+import { Connection, PoolConnection } from "mysql2/promise";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 let isDatabaseConnected = false;
-let connection: Connection;
+let connection: PoolConnection | null = null;
 
-export async function connectToDatabase(): Promise<void> {
-  if (!isDatabaseConnected) {
-    try {
-      connection = await pool.getConnection();
-      isDatabaseConnected = true;
-    } catch (error) {
-      console.error("Error connecting to the database:", error);
-      throw error; // Rejet de l'erreur pour laisser le gestionnaire de promesse gérer l'échec
-    }
+// export async function connectToDatabase(): Promise<PoolConnection> {
+//   if (!isDatabaseConnected) {
+//     try {
+//       connection = await pool.getConnection();
+//       isDatabaseConnected = true;
+//     } catch (error) {
+//       console.error("Error connecting to the database:", error);
+//       throw error; // Rejet de l'erreur pour laisser le gestionnaire de promesse gérer l'échec
+//     }
+//   }
+
+//   return connection as PoolConnection;
+// }
+export async function connectToDatabase(): Promise<PoolConnection> {
+  try {
+    const connection = await pool.getConnection();
+
+    return connection;
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+    throw error;
   }
 }
 
@@ -42,7 +54,7 @@ export async function initializeApp() {
   app.use(express.json());
 
   // Utilisation des routes définies dans stockRoutes.ts
-  app.use("/api/v1",configureStockRoutes());
+  app.use("/api/v1", configureStockRoutes());
 
   // Gestion des erreurs 404
   app.use((req, res, next) => {

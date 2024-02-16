@@ -15,13 +15,24 @@ export function createFakeDatabaseConnection(): PoolConnection {
   return { query: jest.fn() } as unknown as PoolConnection;
 }
 
-//Mock ConnectionToData
-export const mockConnectionToData = jest.fn();
+//Mock ConnectToDatabase
+export const mockConnectToDatabase = jest.fn();
 
+// Mock de la connexion à la base de données (objet qui simule une connexion)
 export const mockConnection = {
-  ...originalConnection,
-  connectToDatabase: mockConnectionToData,
+  query: jest.fn(), 
 };
+
+
+
+
+// export const mockConnection = {
+//   ...originalConnection,
+//   connectToDatabase: mockConnectToDatabase,
+// };
+
+// Configuration du mock pour la fonction connectToDatabase
+//export const mockConnectToDatabase = jest.fn().mockResolvedValue(mockConnection);
 
 // // Mock pour la réponse
 // export function createMockedResponse(): Response {
