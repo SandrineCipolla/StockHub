@@ -21,42 +21,69 @@ export const getAllStocks = async (
       );
     }
   } catch (err: any) {
-    console.error(err); // Enregistrer l'erreur
-    if (res && res.json) {
-      res.json({ error: err.message }); // Envoyer une réponse d'erreur au client
+    console.error(err);
+    if (res && res.status && res.json()) {
+      res.status(500).json({ error: err.message });
     }
-    throw err; // Rejeter l'erreur pour que le test puisse la détecter
+    throw err;
   }
 };
 
-// // Fonction pour récupérer les stocks de la base de données
-// export async function getStocksFromDatabase(connection: PoolConnection): Promise<RowDataPacket[]> {
-//   const [stocks] = (await connection.query("SELECT * FROM stocks")) as [RowDataPacket[], FieldPacket[]];
-//   // const isIdMissing = stocks.some((stock) => stock.id === undefined);
+export const getStockDetails = async (
+  req: Request,
+  res: Response,
+  connection: PoolConnection,
+  ID: number
+) => {
+  try {
+    const [stock] = (await connection.query(
+      "SELECT * FROM stocks WHERE ID = ?",
+      [ID]
+    )) as [RowDataPacket[], FieldPacket[]];
 
-//   // if (isIdMissing) {
-//   //   throw new Error("Column 'id' is missing in some stocks");
-//   // }
-//   for (const stock of stocks) {
-//     if (stock.id == null) {
-//       throw new Error("Column 'id' is missing or null in some stocks");
-//     }
-//   }
+    if (res && res.json) {
+      res.json(stock);
+    } else {
+      throw new Error(
+        "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+      );
+    }
+  } catch (err: any) {
+    console.error(err);
+    if (res && res.json) {
+      res.json({ error: err.message });
+    }
+    throw err;
+  }
+};
 
-//   return stocks;
-// }
+export const createStock = async (
+  req: Request,
+  res: Response,
+  connection: PoolConnection,
+  stock: { id:number; label: string; description: string; quantity: number }
+) => {
+  try {
+    const { id, label, description, quantity } = stock;
+    await connection.query("INSERT INTO stocks VALUES (?, ?, ?, ?)", [
+      id,
+      label,
+      description,
+      quantity,
+    ]);
 
-// export const getAllStocks = async (req: Request, res: Response, connection: PoolConnection) => {
-//   if (!res || !res.json) {
-//     console.error("Response or res.json is undefined. Cannot call res.status and res.json for error handling.");
-//     return;
-//   }
-
-//   try {
-//     const stocks = await getStocksFromDatabase(connection);
-//     res.json(stocks);
-//   } catch (err: any) {
-//     console.error(err);
-//     res.json({ error: err.message });
-//   }
-// };
+    if (res && res.json) {
+      res.json({ message: "Stock created successfully." });
+    } else {
+      throw new Error(
+        "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+      );
+    }
+  } catch (err: any) {
+    console.error(err);
+    if (res && res.json) {
+      res.json({ error: err.message });
+    }
+    throw err;
+  }
+};

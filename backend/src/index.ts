@@ -22,8 +22,6 @@ let connection: PoolConnection | null = null;
 //       console.error("Error connecting to the database:", error);
 //       throw error; // Rejet de l'erreur pour laisser le gestionnaire de promesse gérer l'échec
 //     }
-//   }
-
 //   return connection as PoolConnection;
 // }
 export async function connectToDatabase(): Promise<PoolConnection> {
