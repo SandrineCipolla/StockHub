@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from "react-router-dom";
 
 interface Stock {
   ID: number;
@@ -19,15 +20,15 @@ const StocksList: React.FC = () => {
   })
       .then(response => {
         if (!response.ok) {
-          throw new Error(`Réponse HTTP avec un statut ${response.status}`);
+          throw new Error(`HTTP response with a status ${response.status}`);
         }
         return response.json();
       })
       .then((data: Stock[]) => {
-        console.log('Données JSON récupérées:', data);
+        console.log('JSON data recovered:', data);
         setStocks(data);
       })
-      .catch(error => console.error('Erreur lors de la récupération des stocks', error));
+      .catch(error => console.error('Error in recovering inventory', error));
   }, []);
 
   return (
@@ -35,7 +36,9 @@ const StocksList: React.FC = () => {
       <h2>Liste des stocks</h2>
       <ul>
         {stocks.map(stock => (
-          <li key={stock.ID}>{stock.LABEL}</li>
+          <li key={stock.ID}>
+              <Link to={`/stock/${stock.ID}`}>{stock.LABEL}</Link>
+          </li>
         ))}
       </ul>
     </div>
