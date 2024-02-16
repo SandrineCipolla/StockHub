@@ -59,15 +59,15 @@ export async function insertStock(
   stocks: Stock[]
 ): Promise<void> {
   try {
-    console.log("Inserting stocks:", stocks);
-    const values = stocks.map((stock) => [stock.id, stock.label]);
-    console.log("Formatted values:", values);
-    const query = "INSERT INTO stocks (id, label) VALUES ?";
-    console.log("query", query);
+
+    const values = stocks.map((stock) => [stock.id, stock.label, stock.description, stock.quantity]);
+
+    const query = "INSERT INTO stocks (id, label,description, quantity) VALUES ?";
+
     await connection.query(query, [values]);
-    console.log("Stocks inserted successfully!");
+
   } catch (error: any) {
-    console.error(`Error inserting stocks: ${error.message}`);
+
     throw new Error(`Error inserting stocks : ${error.message}`);
   }
 }
