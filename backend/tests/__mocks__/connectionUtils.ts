@@ -19,9 +19,6 @@ export const mockConnection = {
     query: jest.fn(),
 };
 
-// Configuration du mock pour la fonction connectToDatabase
-//export const mockConnectToDatabase = jest.fn().mockResolvedValue(mockConnection);
-
 // // Mock pour la réponse
 // export function createMockedResponse(): Response {
 //   return {
