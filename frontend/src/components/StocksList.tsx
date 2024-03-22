@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 interface Stock {
   ID: number;
   LABEL: string;
+
 }
 
 const StocksList: React.FC = () => {
@@ -25,7 +26,7 @@ const StocksList: React.FC = () => {
         return response.json();
       })
       .then((data: Stock[]) => {
-        console.log('JSON data recovered:', data);
+        console.log('JSON data recovered stocklist:', data);
         setStocks(data);
       })
       .catch(error => console.error('Error in recovering inventory', error));
@@ -35,11 +36,16 @@ const StocksList: React.FC = () => {
     <div>
       <h2>Liste des stocks</h2>
       <ul>
-        {stocks.map(stock => (
-          <li key={stock.ID}>
-              <Link to={`/stock/${stock.ID}`}>{stock.LABEL}</Link>
-          </li>
-        ))}
+        {stocks.map(stock => {
+            console.log(stock)
+            return (
+                <li key={stock.ID}>
+                    <Link to={`/stocks/${stock.ID}`}>
+                        {stock.LABEL}
+                    </Link>
+                </li>
+            );
+        })}
       </ul>
     </div>
   );
