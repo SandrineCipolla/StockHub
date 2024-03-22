@@ -136,8 +136,8 @@ describe("insertStock", () => {
             (mockConnection.query as jest.Mock).mockResolvedValueOnce([...fakeStocks]);// ? ou [fakeStocks] ?
 
 
-            // nouvelle entrée
-            await insertStock(mockConnection, newStocks);
+      // nouvelle entrée
+      await insertStock(mockConnection, newStocks);
 
             // Spécification de la valeur retour après l'insertion
             (mockConnection.query as jest.Mock).mockResolvedValueOnce([

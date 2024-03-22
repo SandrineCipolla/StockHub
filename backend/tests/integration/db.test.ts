@@ -29,4 +29,3 @@ describe("Database Connection", () => {
         }
     });
 });
-

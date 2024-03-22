@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 interface Stock {
   ID: number;
   LABEL: string;
+
 }
 
 const StocksList: React.FC = () => {
