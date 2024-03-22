@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 
 interface StockDetails {
     ID: number;
@@ -14,6 +14,8 @@ const StockDetails: React.FC = () => {
     console.log('ID from params:', ID);
     const [stockDetail, setStockDetail] = useState<StockDetails | null>(null);
     console.log('Stock detail:', stockDetail);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log('Stock detail updated:', stockDetail);
@@ -73,6 +75,8 @@ const StockDetails: React.FC = () => {
             <p>Label: {stockDetail.LABEL}</p>
             <p>Quantity: {stockDetail.QUANTITY}</p>
             <p>Description: {stockDetail.DESCRIPTION}</p>
+
+            <button onClick={() => navigate('/stocks')}>Retour à la liste des stocks</button>
         </div>
     );
 };
