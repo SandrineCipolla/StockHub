@@ -68,30 +68,41 @@ const StockDetails: React.FC = () => {
     }, [ID, numericID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuantity(Number(event.target.value));
+        // Récupération de la nouvelle valeur de la quantité depuis l'input
+        const newQuantity = Number(event.target.value);
+        console.log('New quantity:', newQuantity);
+        // Mise à jour de l'état de quantité
+        setQuantity(newQuantity);
     };
 
     const handleQuantityUpdate = () => {
-        fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
-            },
-            body: JSON.stringify({QUANTITY: quantity}),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP response with a status ${response.status}`);
-                }
-                return response.json();
+        console.log('Quantity before sending the request:', quantity);
+        if (quantity !== undefined) {
+            fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    credentials: 'include',
+                },
+                body: JSON.stringify({QUANTITY: quantity}),
             })
-            .then((data: StockDetails) => {
-                console.log('JSON data recovered stockdetails:', data);
-                setStockDetail(data);
-            })
-            .catch(error => console.error('Error in updating stock quantity', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP response with a status ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data: StockDetails) => {
+                    console.log('JSON data recovered stockdetails:', data);
+                    setStockDetail(data);
+                })
+                .catch(error => console.error('Error in updating stock quantity', error));
+            console.log('PUT request sent with quantity:', quantity);
+        } else {
+            console.error('Quantity is undefined');
+        }
     }
+
 
     if (!stockDetail) {
         return <div>Loading...</div>;
