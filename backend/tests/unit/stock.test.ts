@@ -11,7 +11,7 @@ import {
 } from "../__mocks__/mockedData";
 import { getAllStocks } from "../../src/controllers/stockController";
 import { Request, Response } from "express";
-import { getTableStructure, insertStock } from "../../src/utils/dbUtils";
+import { getTableStructure, insertStock } from "../integration/dbUtils";
 
 //Simulation connectToDatabase
 jest.mock("../../src/db");

@@ -1,4 +1,4 @@
-import { TableColumn } from "../../src/utils/dbUtils";
+import { TableColumn } from "../integration/dbUtils";
 
 export interface Stock {
   id: number;

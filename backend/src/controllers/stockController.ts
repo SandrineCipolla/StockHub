@@ -14,6 +14,7 @@ export const getAllStocks = async (
     ];
 
     if (res && res.json) {
+
       res.json(stocks);
     } else {
       throw new Error(
