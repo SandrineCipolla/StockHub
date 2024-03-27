@@ -1,12 +1,28 @@
-import { Request, Response } from 'express';
-import connection from '../db';
+import {Request, Response} from "express";
 
-export const getAllStocks = async (req: Request, res: Response) => {
-  try {
-    const [results] = await connection.promise().query('SELECT * FROM Stock');
-    res.json(results);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur lors de la requête à la base de données.' });
-  }
+import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+
+export const getAllStocks = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection
+) => {
+    try {
+        const [stocks] = (await connection.query("SELECT * FROM stocks")) as [
+            RowDataPacket[],
+            FieldPacket[]
+        ];
+
+        if (res) {
+            res.status(200).json(stocks);
+        } else {
+            throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
+        }
+    } catch (err: any) {
+        console.error(err); // Enregistrer l'erreur
+        if (res) {
+            res.status(500).json({error: err.message}); // Envoyer une réponse d'erreur au client
+        }
+        throw err; // Rejeter l'erreur pour que le test puisse la détecter
+    }
 };
