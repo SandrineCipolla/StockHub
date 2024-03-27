@@ -6,6 +6,6 @@ export default  {
       '\\.(css|less|scss)$': 'identity-obj-proxy',
     },
     setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-    testMatch: ['<rootDir>/src/tests/**/*.test.(ts|tsx)'],
+    testMatch: ['<rootDir>/tests/**/*.test.(ts|tsx)'],
   };
   

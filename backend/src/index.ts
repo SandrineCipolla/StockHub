@@ -1,29 +1,51 @@
-require("dotenv").config();
-import express, { Request, Response } from "express";
-import mysql from "mysql2";
+//point d'entrée principal de l'application.
 
-// Créer une application Express
+import express from "express";
+import cors from "cors";
+
+import configureStockRoutes from "./routes/stockRoutes";
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configuration de la connexion à MySQL en utilisant dotenv
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-});
+let isDatabaseConnected: boolean = false;
 
-// Vérifier si la connexion à la base de données a réussi
-connection.connect((err) => {
-  if (err) {
-    console.error("Erreur de connexion à la base de données :", err);
-    return;
-  }
-  console.log("Connexion à la base de données établie avec succès");
-});
 
-// Démarrer le serveur
-app.listen(port, () => {
-  console.log(`Serveur backend en cours d'exécution sur le port ${port}`);
-});
+export async function initializeApp() {
+    try {
+        // Établir la connexion avec connectToDatabase
+        isDatabaseConnected = true;
+    } catch (error) {
+        console.error("Error connecting to the database :", error);
+        process.exit(1); // Si la connexion échoue, arrêtez l'application
+    }
+
+    // Utilisation CORS middleware
+    app.use(cors());
+
+    // Middleware pour analyser les corps de requête en JSON
+    app.use(express.json());
+
+    // Utilisation des routes définies dans stockRoutes.ts
+    app.use("/api/v1", configureStockRoutes());
+
+    // Gestion des erreurs 404
+    app.use((req, res, next) => {
+        res.status(404).send("Route not found");
+    });
+
+    // Gestion des erreurs globales
+    app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void => {
+        console.error(err.stack);
+        res.status(500).send("Internal Server Error");
+    });
+
+    // Démarrer le serveur
+    app.listen(port, () => {
+        console.log(`Backend server running on port ${port}`);
+    });
+}
+
+if (process.env.NODE_ENV !== "test") {
+    initializeApp();
+}
