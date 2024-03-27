@@ -31,10 +31,33 @@ export const mockConnection = {
 // }
 
 // Mock pour la réponse
-export function createMockedResponse(): Response {
+/*export function createMockedResponse(): Response {
+    let statusCode = 200;
     const mockedResponse: Partial<Response> = {
-        status: jest.fn().mockReturnThis() as (code: number) => Response,
+        status: jest.fn().mockImplementation((code: number) => {
+            statusCode = code;
+            return mockedResponse as Response;
+        }) as any as (code: number) => Response,
         json: jest.fn() as (body: any) => Response,
+        get statusCode() {
+            return statusCode;
+        },
     };
     return mockedResponse as Response;
+}*/
+
+export interface MockedResponse extends Response {
+    getStatusCode: () => number;
+}
+export function createMockedResponse(): MockedResponse {
+    let statusCode = 200;
+    const mockedResponse: Partial<MockedResponse> = {
+        status: ((code: number) => {
+            statusCode = code;
+            return mockedResponse;
+        }) as (code: number) => MockedResponse,
+        json: jest.fn() as (body: any) => MockedResponse,
+        getStatusCode: () => statusCode,
+    };
+    return mockedResponse as MockedResponse;
 }

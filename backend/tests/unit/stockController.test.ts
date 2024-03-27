@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {Request} from "express";
 import {getAllStocks} from "../../src/controllers/stockController";
 
 import {fakeStocks} from "../__mocks__/mockedData";
@@ -8,7 +8,10 @@ import {
     createFakeDatabaseConnection,
     createMockedRequest,
     createMockedResponse,
+    MockedResponse
 } from "../__mocks__/connectionUtils";
+import * as assert from "assert";
+
 
 //Simulation connectToDatabase
 jest.mock("../../src/dbUtils");
@@ -16,7 +19,7 @@ jest.mock("../../src/dbUtils");
 describe("Stock Controller", () => {
     let fakeConnection: PoolConnection;
     let req: Request;
-    let res: Response;
+    let res: MockedResponse
 
     beforeEach(() => {
         fakeConnection = createFakeDatabaseConnection();
@@ -35,7 +38,9 @@ describe("Stock Controller", () => {
         expect(fakeConnection.query as jest.Mock).toHaveBeenCalledWith(
             "SELECT * FROM stocks"
         );
-        expect(res.status).not.toHaveBeenCalledWith(500);
+        //expect(res.status).not.toHaveBeenCalledWith(500);
+        //expect(res.getStatusCode()).toBe(200);
+        assert.deepStrictEqual(res.getStatusCode(), 200);
         expect(res.json).toHaveBeenCalledWith(fakeStocks);
     });
 
