@@ -2,32 +2,18 @@
 
 import express from "express";
 import cors from "cors";
-import pool from "./db";
 
 import configureStockRoutes from "./routes/stockRoutes";
-import {Connection, PoolConnection} from "mysql2/promise";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-let isDatabaseConnected = false;
-let connection: PoolConnection | null = null;
+let isDatabaseConnected: boolean = false;
 
-export async function connectToDatabase(): Promise<PoolConnection> {
-    try {
-        const connection = await pool.getConnection();
-        console.info("Connection to database successful");
-        return connection;
-    } catch (error) {
-        console.error("Error connecting to the database:", error);
-        throw error;
-    }
-}
 
 export async function initializeApp() {
     try {
         // Établir la connexion avec connectToDatabase
-        //await connectToDatabase();
         isDatabaseConnected = true;
     } catch (error) {
         console.error("Error connecting to the database :", error);
@@ -49,17 +35,10 @@ export async function initializeApp() {
     });
 
     // Gestion des erreurs globales
-    app.use(
-        (
-            err: Error,
-            req: express.Request,
-            res: express.Response,
-            next: express.NextFunction
-        ): void => {
-            console.error(err.stack);
-            res.status(500).send("Internal Server Error");
-        }
-    );
+    app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void => {
+        console.error(err.stack);
+        res.status(500).send("Internal Server Error");
+    });
 
     // Démarrer le serveur
     app.listen(port, () => {
@@ -70,5 +49,3 @@ export async function initializeApp() {
 if (process.env.NODE_ENV !== "test") {
     initializeApp();
 }
-
-export default app;
