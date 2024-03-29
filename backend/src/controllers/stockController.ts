@@ -85,3 +85,35 @@ export const getStockDetails = async (
         throw err;
     }
 };
+
+export const updateStockQuantity = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    ID: number,
+    QUANTITY: number
+) => {
+    try {
+        // Vérification si "quantité" est définie
+        if (QUANTITY === undefined) {
+            throw new Error("Quantity is undefined");
+        }
+        const [rows, okPacket] = await connection.execute(
+            "UPDATE stocks SET QUANTITY = ? WHERE ID = ?",
+            [QUANTITY, ID]
+        ) as unknown as [RowDataPacket[], OkPacket];
+
+        // Vérification de la réussite de l'update
+        if (okPacket.affectedRows === 0) {
+            res.status(404).json({message: 'Stock not found'});
+            return;
+        }
+
+        // Renvoyer le stock mis à jour
+        res.json({ID, QUANTITY});
+    } catch
+        (err) {
+        console.error('Error in updateStockQuantity:', err);
+        res.status(500).json({error: 'Error while updating the database.'});
+    }
+}
