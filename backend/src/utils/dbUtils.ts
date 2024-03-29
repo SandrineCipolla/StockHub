@@ -6,26 +6,6 @@ export interface TableColumn {
   data_type: string;
 }
 
-// export async function getTableStructure(connection: PoolConnection, tableName: string): Promise<TableColumn[]> {
-//     try {
-//         const query = `
-//             SELECT column_name, data_type
-//             FROM information_schema.columns
-//             WHERE table_name = ?
-//         `;
-//         const result = await connection.query(query, [tableName]);
-//         console.log('Result of query:', result);
-//         const [rows] = result;
-//
-//         if (!rows) {
-//             throw new Error(`Aucune donnée retournée pour la table ${tableName}`);
-//         }
-//         return rows as TableColumn[];
-//     } catch
-//         (error: any) {
-//         throw new Error(`Erreur lors de la récupération de la structure de la table : ${error.message}`);
-//     }
-// }
 export async function getTableStructure(
   connection: PoolConnection,
   tableName: string
