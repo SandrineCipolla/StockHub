@@ -28,32 +28,60 @@ export const getAllStocks = async (
 };
 
 export const createStock = async (
-  req: Request,
-  res: Response,
-  connection: PoolConnection,
-  stock: { id:number; label: string; description: string; quantity: number }
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    stock: { id: number; label: string; description: string; quantity: number }
 ) => {
-  try {
-    const { id, label, description, quantity } = stock;
-    await connection.query("INSERT INTO stocks VALUES (?, ?, ?, ?)", [
-      id,
-      label,
-      description,
-      quantity,
-    ]);
+    try {
+        const {id, label, description, quantity} = stock;
+        await connection.query("INSERT INTO stocks VALUES (?, ?, ?, ?)", [
+            id,
+            label,
+            description,
+            quantity,
+        ]);
 
-    if (res && res.json) {
-      res.json({ message: "Stock created successfully." });
-    } else {
-      throw new Error(
-        "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
-      );
+        if (res && res.json) {
+            res.json({message: "Stock created successfully."});
+        } else {
+            throw new Error(
+                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+            );
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res && res.json) {
+            res.json({error: err.message});
+        }
+        throw err;
     }
-  } catch (err: any) {
-    console.error(err);
-    if (res && res.json) {
-      res.json({ error: err.message });
+};
+
+export const getStockDetails = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    ID: number
+) => {
+    try {
+        const [stock] = (await connection.query(
+            "SELECT * FROM stocks WHERE ID = ?",
+            [ID]
+        )) as [RowDataPacket[], FieldPacket[]];
+
+        if (res && res.json) {
+            res.json(stock);
+        } else {
+            throw new Error(
+                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+            );
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res && res.json) {
+            res.json({error: err.message});
+        }
+        throw err;
     }
-    throw err;
-  }
 };
