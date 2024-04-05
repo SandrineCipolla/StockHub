@@ -105,15 +105,26 @@ export const updateStockQuantity = async (
         ) as unknown as [RowDataPacket[], OkPacket];
 
         // Vérification de la réussite de l'update
-        if (okPacket.affectedRows === 0) {
-            res.status(404).json({message: 'Stock not found'});
-            return;
-        }
+        //     if (okPacket.affectedRows === 0) {
+        //         res.status(404).json({message: 'Stock not found'});
+        //         return;
+        //     }
+        //
+        //     // Renvoyer le stock mis à jour
+        //     res.json({ID, QUANTITY});
+        // } catch
+        //     (err) {
+        //     console.error('Error in updateStockQuantity:', err);
+        //     res.status(500).json({error: 'Error while updating the database.'});
 
-        // Renvoyer le stock mis à jour
-        res.json({ID, QUANTITY});
-    } catch
-        (err) {
+        if (okPacket && okPacket.affectedRows !== undefined && okPacket.affectedRows > 0) {
+            // Mise à jour réussie
+            res.json({ID, QUANTITY});
+        } else {
+            // Aucune ligne mise à jour (peut-être que l'ID n'existe pas)
+            res.status(404).json({message: 'Stock not found or quantity not updated'});
+        }
+    } catch (err) {
         console.error('Error in updateStockQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
