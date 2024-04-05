@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+import {OkPacket} from "mysql";
 
 export const getAllStocks = async (
     req: Request,
