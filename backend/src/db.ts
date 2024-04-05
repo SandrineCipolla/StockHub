@@ -1,11 +1,24 @@
-import mysql from 'mysql2';
+//configuration et de l'établissement de la connexion à la base de données MySQL
 
-// Configuration de la connexion à MySQL en utilisant dotenv
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-  });
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-  export default connection;
+dotenv.config();
+
+const dbHost = process.env.DB_HOST;
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3307;
+const dbDatabase = process.env.DB_DATABASE;
+
+const connectionOptions = {
+  host: dbHost,
+  user: dbUser,
+  password: dbPassword,
+  port: dbPort,
+  database: dbDatabase,
+};
+
+const pool = mysql.createPool(connectionOptions);
+
+export default pool;

@@ -55,10 +55,11 @@ describe("Stock Controller", () => {
             .mockImplementation(() => {
             });
 
-        try {
-            await getAllStocks(req, res, fakeConnection);
-        } catch (err) {
-        }
+    try {
+      await getAllStocks(req, res, fakeConnection);
+    } catch (err) {
+      res.json({ error: (err as Error).message });
+    }
 
         expect(mockQuery).toHaveBeenCalledWith("SELECT * FROM stocks");
         expect(jsonSpy).toHaveBeenCalledWith({error: databaseError.message}); // erreur attendue
