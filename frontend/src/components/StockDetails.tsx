@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 
 interface StockDetails {
     ID: number;
@@ -44,7 +44,9 @@ const StockDetails: React.FC = () => {
                     data = data[0];
                 }
                 console.log('JSON data recovered stockdetails:', data);
-                console.log('Type of data:', typeof data);
+                setStockDetail(data);
+                setQuantity(data.QUANTITY);
+
                 // Vérifier si les données sont au format attendu
                 if (
                     typeof data !== 'object' ||
@@ -59,8 +61,7 @@ const StockDetails: React.FC = () => {
                 console.log('Data LABEL:', data.LABEL);
                 console.log('Data QUANTITY:', data.QUANTITY);
                 console.log('Data DESCRIPTION:', data.DESCRIPTION);
-                setStockDetail(data);
-                setQuantity(data.QUANTITY);
+
             })
             .catch(error => {
                 console.error('Error in recovering stock detail', error)
@@ -94,7 +95,16 @@ const StockDetails: React.FC = () => {
                 })
                 .then((data: StockDetails) => {
                     console.log('JSON data recovered stockdetails:', data);
-                    setStockDetail(data);
+                    if (data.ID && data.LABEL && data.DESCRIPTION) {
+                        setStockDetail({...stockDetail, QUANTITY: data.QUANTITY});
+                    } else {
+                        setStockDetail({
+                            ID: data.ID || stockDetail?.ID,
+                            LABEL: data.LABEL || stockDetail?.LABEL,
+                            DESCRIPTION: data.DESCRIPTION || stockDetail?.DESCRIPTION,
+                            QUANTITY: data.QUANTITY
+                        });
+                    }
                 })
                 .catch(error => console.error('Error in updating stock quantity', error));
             console.log('PUT request sent with quantity:', quantity);

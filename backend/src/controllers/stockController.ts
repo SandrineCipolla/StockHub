@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {OkPacket} from "mysql";
+import {StockRepository} from "../repositories/stockRepository";
 
 export const getAllStocks = async (
     req: Request,
@@ -87,6 +88,7 @@ export const getStockDetails = async (
     }
 };
 
+
 export const updateStockQuantity = async (
     req: Request,
     res: Response,
@@ -95,37 +97,10 @@ export const updateStockQuantity = async (
     QUANTITY: number
 ) => {
     try {
-        // Vérification si "quantité" est définie
-        if (QUANTITY === undefined) {
-            throw new Error("Quantity is undefined");
-        }
-        const [rows, okPacket] = await connection.execute(
-            "UPDATE stocks SET QUANTITY = ? WHERE ID = ?",
-            [QUANTITY, ID]
-        ) as unknown as [RowDataPacket[], OkPacket];
-
-        // Vérification de la réussite de l'update
-        //     if (okPacket.affectedRows === 0) {
-        //         res.status(404).json({message: 'Stock not found'});
-        //         return;
-        //     }
-        //
-        //     // Renvoyer le stock mis à jour
-        //     res.json({ID, QUANTITY});
-        // } catch
-        //     (err) {
-        //     console.error('Error in updateStockQuantity:', err);
-        //     res.status(500).json({error: 'Error while updating the database.'});
-
-        if (okPacket && okPacket.affectedRows !== undefined && okPacket.affectedRows > 0) {
-            // Mise à jour réussie
-            res.json({ID, QUANTITY});
-        } else {
-            // Aucune ligne mise à jour (peut-être que l'ID n'existe pas)
-            res.status(404).json({message: 'Stock not found or quantity not updated'});
-        }
+        const updatedStock = await StockRepository.updateStockQuantity(connection, ID, QUANTITY);
+        res.json(updatedStock);
     } catch (err) {
         console.error('Error in updateStockQuantity:', err);
-        res.status(500).json({error: 'Error while updating the database.'});
+        res.status(500).json({ error: 'Error while updating the database.' });
     }
 }
