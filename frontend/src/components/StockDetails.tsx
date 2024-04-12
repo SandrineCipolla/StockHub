@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
+import {fetchStockDetails, updateStockQuantity} from "../utils/StockAPIClient.ts";
+import {StockDetail} from "../models.ts";
 
-interface StockDetails {
-    ID: number;
-    LABEL: string;
-    QUANTITY: number;
-    DESCRIPTION: string;
-}
+
 
 const StockDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
@@ -14,7 +11,7 @@ const StockDetails: React.FC = () => {
     console.log('ID from params:', ID);
 
     const [quantity, setQuantity] = useState<number>(0);
-    const [stockDetail, setStockDetail] = useState<StockDetails | null>(null);
+    const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
     console.log('Stock detail:', stockDetail);
 
     const navigate = useNavigate();
@@ -24,48 +21,16 @@ const StockDetails: React.FC = () => {
     }, [stockDetail]);
 
     useEffect(() => {
-        // Récupération des détails du stock depuis l'API
-        fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
-            },
-        })
-            .then(response => {
-                console.log('Raw API response:', response);
-                if (!response.ok) {
-                    throw new Error(`HTTP response with a status ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data: StockDetails[] | StockDetails) => {
-                if (Array.isArray(data)) {
-                    data = data[0];
-                }
-                console.log('JSON data recovered stockdetails:', data);
+        const fetchData = async () => {
+            try {
+                const data = await fetchStockDetails(numericID);
                 setStockDetail(data);
                 setQuantity(data.QUANTITY);
-
-                // Vérifier si les données sont au format attendu
-                if (
-                    typeof data !== 'object' ||
-                    !('ID' in data) ||
-                    !('LABEL' in data) ||
-                    !('QUANTITY' in data) ||
-                    !('DESCRIPTION' in data)
-                ) {
-                    throw new Error('Data format is not as expected');
-                }
-                console.log('Data ID:', data.ID);
-                console.log('Data LABEL:', data.LABEL);
-                console.log('Data QUANTITY:', data.QUANTITY);
-                console.log('Data DESCRIPTION:', data.DESCRIPTION);
-
-            })
-            .catch(error => {
-                console.error('Error in recovering stock detail', error)
-            });
+            } catch (error) {
+                console.error('Error in recovering stock detail', error);
+            }
+        };
+        fetchData().catch(error => console.error('Error in fetching data:', error));// permet d'afficher une erreur si la requête fetch ne fonctionne pas
     }, [ID, numericID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,42 +41,20 @@ const StockDetails: React.FC = () => {
         setQuantity(newQuantity);
     };
 
-    const handleQuantityUpdate = () => {
-        console.log('Quantity before sending the request:', quantity);
-        if (quantity !== undefined) {
-            fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    credentials: 'include',
-                },
-                body: JSON.stringify({QUANTITY: quantity}),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP response with a status ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then((data: StockDetails) => {
-                    console.log('JSON data recovered stockdetails:', data);
-                    if (data.ID && data.LABEL && data.DESCRIPTION) {
-                        setStockDetail({...stockDetail, QUANTITY: data.QUANTITY});
-                    } else {
-                        setStockDetail({
-                            ID: data.ID || stockDetail?.ID,
-                            LABEL: data.LABEL || stockDetail?.LABEL,
-                            DESCRIPTION: data.DESCRIPTION || stockDetail?.DESCRIPTION,
-                            QUANTITY: data.QUANTITY
-                        });
-                    }
-                })
-                .catch(error => console.error('Error in updating stock quantity', error));
-            console.log('PUT request sent with quantity:', quantity);
-        } else {
-            console.error('Quantity is undefined');
+    const handleQuantityUpdate = async () => {
+        try {
+            console.log('Quantity before sending the request:', quantity);
+            if (quantity !== undefined) {
+                const updatedStockDetail = await updateStockQuantity(numericID, quantity);
+                setStockDetail(updatedStockDetail);
+                console.log('PUT request sent with quantity:', quantity);
+            } else {
+                console.error('Quantity is undefined');
+            }
+        } catch (error) {
+            console.error('Error in updating stock quantity', error);
         }
-    }
+    };
 
 
     if (!stockDetail) {

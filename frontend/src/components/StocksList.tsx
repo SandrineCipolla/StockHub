@@ -1,38 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
+import {fetchStocksList} from "../utils/StockAPIClient.ts";
+import {Stock} from "../models.ts";
 
-interface Stock {
-    ID: number;
-    LABEL: string;
 
-}
 
 const StocksList: React.FC = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Appel à l'API pour récupérer la liste des stocks
-        fetch('http://localhost:3000/api/v1/stocks', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP response with a status ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data: Stock[]) => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchStocksList();
                 console.log('JSON data recovered stocklist:', data);
                 setStocks(data);
-            })
-            .catch(error => console.error('Error in recovering inventory', error));
+            } catch (error) {
+                console.error('Error in recovering inventory', error);
+            }
+        };
+
+        fetchData();
     }, []);
+
 
     return (
         <div>
