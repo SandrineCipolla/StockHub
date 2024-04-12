@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
-import {OkPacket} from "mysql";
 import {StockRepository} from "../repositories/stockRepository";
 
 export const getAllStocks = async (
@@ -21,11 +20,11 @@ export const getAllStocks = async (
             throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
         }
     } catch (err: any) {
-        console.error(err); // Enregistrer l'erreur
+        console.error(err);
         if (res) {
-            res.status(500).json({error: err.message}); // Envoyer une réponse d'erreur au client
+            res.status(500).json({error: err.message});
         }
-        throw err; // Rejeter l'erreur pour que le test puisse la détecter
+        throw err;
     }
 };
 
@@ -101,6 +100,6 @@ export const updateStockQuantity = async (
         res.json(updatedStock);
     } catch (err) {
         console.error('Error in updateStockQuantity:', err);
-        res.status(500).json({ error: 'Error while updating the database.' });
+        res.status(500).json({error: 'Error while updating the database.'});
     }
 }
