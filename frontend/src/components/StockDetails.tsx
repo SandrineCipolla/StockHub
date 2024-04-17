@@ -4,20 +4,16 @@ import {fetchStockDetails, updateStockQuantity} from "../utils/StockAPIClient.ts
 import {StockDetail} from "../models.ts";
 
 
-
 const StockDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
     const numericID = Number(ID);
-    console.log('ID from params:', ID);
 
     const [quantity, setQuantity] = useState<number>(0);
     const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
-    console.log('Stock detail:', stockDetail);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('Stock detail updated:', stockDetail);
     }, [stockDetail]);
 
     useEffect(() => {
@@ -34,43 +30,22 @@ const StockDetails: React.FC = () => {
     }, [ID, numericID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // Récupération de la nouvelle valeur de la quantité depuis l'input
+
         const newQuantity = Number(event.target.value);
         console.log('New quantity:', newQuantity);
-        // Mise à jour de l'état de quantité
         setQuantity(newQuantity);
     };
 
-    // const handleQuantityUpdate = async () => {
-    //     try {
-    //         console.log('Quantity before sending the request:', quantity);
-    //         if (quantity !== undefined) {
-    //             const updatedStockDetail = await updateStockQuantity(numericID, quantity);
-    //             setStockDetail(updatedStockDetail);
-    //             setQuantity(updatedStockDetail.QUANTITY);
-    //             console.log('PUT request sent with quantity:', quantity);
-    //             console.log('Updated stock detail from API:', updatedStockDetail);
-    //
-    //         } else {
-    //             console.error('Quantity is undefined');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error in updating stock quantity*', error);
-    //     }
-    // };
     const handleQuantityUpdate = async () => {
         try {
-            console.log('Quantity before sending the request:', quantity);
+
             if (quantity !== undefined) {
-                // Mettre à jour la quantité du stock
                 await updateStockQuantity(numericID, quantity);
 
-                // Récupérer à nouveau les détails mis à jour du stock
                 const updatedStock = await fetchStockDetails(numericID);
 
-                // Mettre à jour l'état avec les détails mis à jour
                 setStockDetail(updatedStock);
-                console.log('PUT request sent with quantity:', quantity);
+                console.info('PUT request sent with quantity:', quantity);
             } else {
                 console.error('Quantity is undefined');
             }
@@ -78,7 +53,6 @@ const StockDetails: React.FC = () => {
             console.error('Error in updating stock quantity', error);
         }
     };
-
 
 
     if (!stockDetail) {

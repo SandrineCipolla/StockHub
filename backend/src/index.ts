@@ -34,22 +34,22 @@ export async function initializeApp() {
         res.status(404).send("Route not found");
     });
 
-  // Gestion des erreurs globales
-  app.use(
-    (
-      err: Error,
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ): void => {
-      console.error(err.stack);
-      res.status(500).send("Internal Server Error");
-    }
-  );
+    // Gestion des erreurs globales
+    app.use(
+        (
+            err: Error,
+            req: express.Request,
+            res: express.Response,
+            next: express.NextFunction
+        ): void => {
+            console.error(err.stack);
+            res.status(500).send("Internal Server Error");
+        }
+    );
 
     // Démarrer le serveur
     app.listen(port, () => {
-        console.log(`Backend server running on port ${port}`);
+        console.info(`Backend server running on port ${port}`);
     });
 }
 

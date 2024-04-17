@@ -5,10 +5,7 @@ export class StockRepository {
         try {
             if (QUANTITY === undefined) {
                 throw new Error("Quantity is undefined");
-
             }
-            console.log('Updated stock detail:', {ID, QUANTITY});
-
             await connection.execute(
                 "UPDATE stocks SET QUANTITY = ? WHERE ID = ?",
                 [QUANTITY, ID])
