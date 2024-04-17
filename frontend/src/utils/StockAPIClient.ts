@@ -31,6 +31,7 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
     });
 
     if (!response.ok) {
+        console.error('Error in fetching stock details');
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
@@ -39,7 +40,8 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
     if (Array.isArray(data)) {
         return data[0] as StockDetail;
     } else {
-        return data as StockDetail;
+        console.error('Missing necessary data in the response for fetchStockDetails');
+        throw new Error('Missing necessary data in the response for fetchStockDetails');
     }
 };
 
@@ -58,17 +60,7 @@ export const updateStockQuantity = async (numericID: number, quantity: number) =
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data = await response.json();
+    return await response.json()
 
-    if (data.ID && data.LABEL && data.DESCRIPTION) { // Vérifier si toutes les données nécessaires sont présentes
-        return {...data, QUANTITY: data.QUANTITY}; // Mettre à jour stockDetail avec les données récupérées de l'API
-    } else {
-        return {
-            ID: data.ID || undefined,
-            LABEL: data.LABEL || undefined,
-            DESCRIPTION: data.DESCRIPTION || undefined,
-            QUANTITY: data.QUANTITY
-        };
-    }
 };
 
