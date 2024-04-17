@@ -13,39 +13,15 @@ export function createFakeDatabaseConnection(): PoolConnection {
     return {query: jest.fn()} as unknown as PoolConnection;
 }
 
-
 // Mock de la connexion à la base de données (objet qui simule une connexion)
 export const mockConnection = {
     query: jest.fn(),
 };
 
-// // Mock pour la réponse
-// export function createMockedResponse(): Response {
-//   return {
-//     status: jest.fn(),
-//     json: jest.fn(),
-//   } as unknown as Response;
-// }
-
-// Mock pour la réponse
-/*export function createMockedResponse(): Response {
-    let statusCode = 200;
-    const mockedResponse: Partial<Response> = {
-        status: jest.fn().mockImplementation((code: number) => {
-            statusCode = code;
-            return mockedResponse as Response;
-        }) as any as (code: number) => Response,
-        json: jest.fn() as (body: any) => Response,
-        get statusCode() {
-            return statusCode;
-        },
-    };
-    return mockedResponse as Response;
-}*/
-
 export interface MockedResponse extends Response {
     getStatusCode: () => number;
 }
+
 export function createMockedResponse(): MockedResponse {
     let statusCode = 200;
     const mockedResponse: Partial<MockedResponse> = {

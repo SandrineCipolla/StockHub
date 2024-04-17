@@ -1,7 +1,10 @@
 import {Stock, StockDetail} from "../models.ts";
+import ConfigManager from "./ConfigManager.ts";
+
+const apiUrl = ConfigManager.getApiServerUrl();
 
 export const fetchStocksList = async (): Promise<Stock[]> => {
-    const response = await fetch('http://localhost:3000/api/v1/stocks', {
+    const response = await fetch(`${apiUrl}/stocks`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +22,7 @@ export const fetchStocksList = async (): Promise<Stock[]> => {
 };
 
 export const fetchStockDetails = async (numericID: number): Promise<StockDetail> => {
-    const response = await fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
+    const response = await fetch(`${apiUrl}/stocks/${numericID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -41,7 +44,7 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
 };
 
 export const updateStockQuantity = async (numericID: number, quantity: number) => {
-    const response = await fetch(`http://localhost:3000/api/v1/stocks/${numericID}`, {
+    const response = await fetch(`${apiUrl}/stocks/${numericID}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -57,10 +60,8 @@ export const updateStockQuantity = async (numericID: number, quantity: number) =
 
     const data = await response.json();
 
-    // Mettre à jour stockDetail avec les données récupérées de l'API
-    // Vérifier si toutes les données nécessaires sont présentes
-    if (data.ID && data.LABEL && data.DESCRIPTION) {
-        return {...data, QUANTITY: data.QUANTITY};
+    if (data.ID && data.LABEL && data.DESCRIPTION) { // Vérifier si toutes les données nécessaires sont présentes
+        return {...data, QUANTITY: data.QUANTITY}; // Mettre à jour stockDetail avec les données récupérées de l'API
     } else {
         return {
             ID: data.ID || undefined,
