@@ -15,6 +15,7 @@ export async function connectToDatabase(): Promise<PoolConnection> {
         console.info("Connection to database successful");
         return connection;
     } catch (error) {
+        //TODO :affiner les message d'erreur.
         console.error("Error connecting to the database:", error);
         throw error;
     }

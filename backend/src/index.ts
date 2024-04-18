@@ -16,6 +16,7 @@ export async function initializeApp() {
         // Établir la connexion avec connectToDatabase
         isDatabaseConnected = true;
     } catch (error) {
+        //TODO :affiner les message d'erreur.
         console.error("Error connecting to the database :", error);
         process.exit(1); // Si la connexion échoue, arrêtez l'application
     }
@@ -34,22 +35,22 @@ export async function initializeApp() {
         res.status(404).send("Route not found");
     });
 
-  // Gestion des erreurs globales
-  app.use(
-    (
-      err: Error,
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ): void => {
-      console.error(err.stack);
-      res.status(500).send("Internal Server Error");
-    }
-  );
+    // Gestion des erreurs globales
+    app.use(
+        (
+            err: Error,
+            req: express.Request,
+            res: express.Response,
+            next: express.NextFunction
+        ): void => {
+            console.error(err.stack);
+            res.status(500).send("Internal Server Error");
+        }
+    );
 
     // Démarrer le serveur
     app.listen(port, () => {
-        console.log(`Backend server running on port ${port}`);
+        console.info(`Backend server running on port ${port}`);
     });
 }
 

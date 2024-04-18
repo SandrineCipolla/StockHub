@@ -154,8 +154,8 @@ describe("insertStock", () => {
 
             // Vérification que la requête d'insertion a été appelée avec les bonnes valeurs
             expect(mockConnection.query).toHaveBeenCalledWith(
-                "INSERT INTO stocks (id, label) VALUES ?",
-                [newStocks.map((stock) => [stock.id, stock.label])]
+                "INSERT INTO stocks (id,label,description,quantity) VALUES ?",
+                [newStocks]
             );
             expect(finalStocks).toEqual([...fakeStocks, ...newStocks]);
         });

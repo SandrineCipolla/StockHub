@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+import {StockRepository} from "../repositories/stockRepository";
 
 export const getAllStocks = async (
     req: Request,
@@ -19,11 +20,13 @@ export const getAllStocks = async (
             throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
         }
     } catch (err: any) {
-        console.error(err); // Enregistrer l'erreur
+        console.error(err);
         if (res) {
-            res.status(500).json({error: err.message}); // Envoyer une réponse d'erreur au client
+            //TODO :affiner les message d'erreur.
+            //TODO :créer une const pour le console.error
+            res.status(500).json({error: err.message});
         }
-        throw err; // Rejeter l'erreur pour que le test puisse la détecter
+        throw err;
     }
 };
 
@@ -52,6 +55,7 @@ export const createStock = async (
     } catch (err: any) {
         console.error(err);
         if (res && res.json) {
+            //TODO :affiner les message d'erreur.
             res.json({error: err.message});
         }
         throw err;
@@ -80,8 +84,27 @@ export const getStockDetails = async (
     } catch (err: any) {
         console.error(err);
         if (res && res.json) {
+            //TODO :affiner les message d'erreur.
             res.json({error: err.message});
         }
         throw err;
     }
 };
+
+
+export const updateStockQuantity = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    ID: number,
+    QUANTITY: number
+) => {
+    try {
+        const updatedStock = await StockRepository.updateStockQuantity(connection, ID, QUANTITY);
+        res.json(updatedStock);
+    } catch (err) {
+        //TODO :affiner les message d'erreur.
+        console.error('Error in updateStockQuantity:', err);
+        res.status(500).json({error: 'Error while updating the database.'});
+    }
+}
