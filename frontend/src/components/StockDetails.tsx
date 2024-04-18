@@ -30,25 +30,22 @@ const StockDetails: React.FC = () => {
     }, [ID, numericID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
         const newQuantity = Number(event.target.value);
-        console.log('New quantity:', newQuantity);
+        console.info('New quantity:', newQuantity);
         setQuantity(newQuantity);
     };
 
     const handleQuantityUpdate = async () => {
+       if (quantity === undefined) {
+            console.error('Quantity is undefined');
+            return;
+       }
+
         try {
-
-            if (quantity !== undefined) {
-                await updateStockQuantity(numericID, quantity);
-
-                const updatedStock = await fetchStockDetails(numericID);
-
-                setStockDetail(updatedStock);
-                console.info('PUT request sent with quantity:', quantity);
-            } else {
-                console.error('Quantity is undefined');
-            }
+           await updateStockQuantity(numericID, quantity);
+           const updatedStock = await fetchStockDetails(numericID);
+           setStockDetail(updatedStock);
+           console.info('PUT request sent with quantity:', quantity);
         } catch (error) {
             console.error('Error in updating stock quantity', error);
         }

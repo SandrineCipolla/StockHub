@@ -13,6 +13,7 @@ const configureStockRoutes = (): Router => {
             await stockController.getAllStocks(req, res, connection);
             connection.release();
         } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error("Error in route /stocks:", error);
             res.status(500).json({error: "Error while querying the database."});
         }
@@ -27,6 +28,7 @@ const configureStockRoutes = (): Router => {
 
             connection.release();
         } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error(`Error in route /stocks/${ID}:`, error);
             res.status(500).json({error: "Error while querying the database."});
         }
@@ -40,6 +42,7 @@ const configureStockRoutes = (): Router => {
             await stockController.createStock(req, res, connection, {id, label, description, quantity});
             connection.release();
         } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error("Error in route /stocks:", error);
             res.status(500).json({error: "Error while querying the database."});
         }
@@ -54,6 +57,7 @@ const configureStockRoutes = (): Router => {
             await stockController.updateStockQuantity(req, res, connection, ID, QUANTITY);
             connection.release();
         } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error(`Error in route /stocks/${ID}:`, error);
             res.status(500).json({error: "Error while querying the database."});
         }

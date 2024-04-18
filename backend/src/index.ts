@@ -16,6 +16,7 @@ export async function initializeApp() {
         // Établir la connexion avec connectToDatabase
         isDatabaseConnected = true;
     } catch (error) {
+        //TODO :affiner les message d'erreur.
         console.error("Error connecting to the database :", error);
         process.exit(1); // Si la connexion échoue, arrêtez l'application
     }

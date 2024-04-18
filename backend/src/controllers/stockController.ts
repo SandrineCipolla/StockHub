@@ -22,6 +22,8 @@ export const getAllStocks = async (
     } catch (err: any) {
         console.error(err);
         if (res) {
+            //TODO :affiner les message d'erreur.
+            //TODO :créer une const pour le console.error
             res.status(500).json({error: err.message});
         }
         throw err;
@@ -53,6 +55,7 @@ export const createStock = async (
     } catch (err: any) {
         console.error(err);
         if (res && res.json) {
+            //TODO :affiner les message d'erreur.
             res.json({error: err.message});
         }
         throw err;
@@ -81,6 +84,7 @@ export const getStockDetails = async (
     } catch (err: any) {
         console.error(err);
         if (res && res.json) {
+            //TODO :affiner les message d'erreur.
             res.json({error: err.message});
         }
         throw err;
@@ -99,6 +103,7 @@ export const updateStockQuantity = async (
         const updatedStock = await StockRepository.updateStockQuantity(connection, ID, QUANTITY);
         res.json(updatedStock);
     } catch (err) {
+        //TODO :affiner les message d'erreur.
         console.error('Error in updateStockQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
