@@ -2,15 +2,22 @@ import {Stock, StockDetail} from "../models.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();
+const getConfig:RequestInit = ConfigManager.getFetchConfig();
+
+async function putFetch(url: string, body: Record<string, unknown>) {
+    const putConfig = ConfigManager.putFetchConfig(body);
+    const response = await fetch(url, putConfig);
+
+    if (!response.ok) {
+        console.error(`Error in PUT request to ${url}`);
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+}
 
 export const fetchStocksList = async (): Promise<Stock[]> => {
-    const response = await fetch(`${apiUrl}/stocks`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            credentials: 'include',
-        },
-    });
+    const response = await fetch(`${apiUrl}/stocks`,getConfig);
 
     if (!response.ok) {
         console.error('Error in fetching stocks list');
@@ -22,13 +29,7 @@ export const fetchStocksList = async (): Promise<Stock[]> => {
 };
 
 export const fetchStockDetails = async (numericID: number): Promise<StockDetail> => {
-    const response = await fetch(`${apiUrl}/stocks/${numericID}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            credentials: 'include',
-        },
-    });
+    const response = await fetch(`${apiUrl}/stocks/${numericID}`, getConfig);
 
     if (!response.ok) {
         console.error('Error in fetching stock details');
@@ -46,21 +47,8 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
 };
 
 export const updateStockQuantity = async (numericID: number, quantity: number) => {
-    const response = await fetch(`${apiUrl}/stocks/${numericID}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            credentials: 'include',
-        },
-        body: JSON.stringify({QUANTITY: quantity}),
-    });
-
-    if (!response.ok) {
-        console.error('Error in updating stock quantity');
-        throw new Error(`HTTP response with a status ${response.status}`);
-    }
-
-    return await response.json()
-
+    const body = {QUANTITY: quantity};
+    return putFetch(`${apiUrl}/stocks/${numericID}`, body);
 };
+
 
