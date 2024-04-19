@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {fetchStockDetails} from "../utils/StockAPIClient.ts";
 import {StockDetail} from "../models.ts";
 
@@ -11,7 +11,7 @@ const StockDetails: React.FC = () => {
     // const [quantity, setQuantity] = useState<number>(0);
     const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
 
-    const navigate = useNavigate();
+
 
     useEffect(() => {
     }, [stockDetail]);
@@ -57,21 +57,13 @@ const StockDetails: React.FC = () => {
     }
 
     return (
-        <div className="flex items-center">
-            <h2>Stock Detail</h2>
-            <p>ID: {stockDetail.ID}</p>
-            <p>Label: {stockDetail.LABEL}</p>
-            {/*<p>Quantity: {stockDetail.QUANTITY}</p>*/}
+        <div className="flex flex-col h-full justify-between">
 
-            {/*<input type="number" value={quantity} onChange={handleQuantityChange} className="mr-2"/>*/}
-            {/*<button onClick={handleQuantityUpdate}*/}
-            {/*        className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">*/}
-            {/*    Mettre à jour la quantité*/}
-            {/*</button>*/}
-            <p>Description: {stockDetail.DESCRIPTION}</p>
+            <div>
+                <h2 className="text-lg font-bold mb-2 mt-2">{stockDetail.LABEL}</h2>
+                <p className="text-m font-semibold">{stockDetail.DESCRIPTION}</p>
+            </div>
 
-
-            <button onClick={() => navigate('/stocks')}>Retour à la liste des stocks</button>
         </div>
     );
 };

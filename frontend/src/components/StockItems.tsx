@@ -37,14 +37,14 @@ const StockItems: React.FC<StockItemsProps> = () => {
         setQuantities(newQuantities);
     };
 
-    const handleQuantityUpdate = async (stockID:number,index: number) => {
+    const handleQuantityUpdate = async (stockID: number, index: number) => {
         if (quantities === undefined) {
             console.error('Quantity is undefined');
             return;
         }
 
         try {
-            await updateStockItemQuantity(stockID,stockItems[index].ID, quantities[index]);
+            await updateStockItemQuantity(stockID, stockItems[index].ID, quantities[index]);
             const updatedStockItems = await fetchStockItems(numericID);
             setStockItems(updatedStockItems);
             setQuantities(updatedStockItems.map(item => item.QUANTITY));
@@ -60,30 +60,35 @@ const StockItems: React.FC<StockItemsProps> = () => {
     }
 
     return (
-        <div className="flex flex-col items-center w-full">
-            <h2 className="mb-4">Stock Items</h2>
-            <div className="flex justify-between mb-4 w-full">
+        <div className="flex flex-col items-center w-full p-10">
+            {/*<h2 className="mb-4">Stock Items</h2>*/}
+            <div className="flex justify-between mb-4 mt-4 w-full">
                 <p className="mr-2">ID</p>
                 <p className="mr-2">Label</p>
                 <p className="mr-2">Quantity</p>
-                <p className="mr-2">Update Quantity</p>
                 <p className="mr-2">Description</p>
+                <p className="mr-2">Update Quantity</p>
+
             </div>
             {stockItems.map((item, index) => (
-                < div key={item.ID} className="flex justify-between mb-4 w-full">
-                    <p className="mr-2">{item.ID}</p>
-                    <p className="mr-2">{item.LABEL}</p>
-                    <p className="mr-2">{item.QUANTITY}</p>
+                < div key={item.ID} className="flex items-center justify-between mb-2 w-full space-x-5">
 
-                    <div className="mr-2 flex items-start w-32">
+                    <p className="mr-2">{item.ID}</p>
+                    <p className="mr-8">{item.LABEL}</p>
+                    <div className="flex items-center space-x-10">
+                        <p className="ml-6 text-right">{item.QUANTITY}</p>
+                        <p className="ml-10 text-right">{item.DESCRIPTION}</p>
+                    </div>
+
+                    <div className="ml-auto flex items-start w-32">
                         <input type="number" value={quantities[index]} onChange={handleQuantityChange(index)}
-                               className="text-right mb-2 w-1/3"/>
-                        <button onClick={() => handleQuantityUpdate(item.STOCK_ID,index)}
-                                className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-1 px-2 rounded text-xs w-2/3 mr-1">
+                               className="text-right mt-0.5 w-1/3"/>
+                        <button onClick={() => handleQuantityUpdate(item.STOCK_ID, index)}
+                                className="bg-violet-400 text-purple-200 hover:bg-violet-600 font-bold py-1 px-2 rounded text-xs w-2/3 mr-1 mt-0.5">
                             Update
                         </button>
                     </div>
-                    <p className="mr-2">{item.DESCRIPTION}</p>
+
                 </div>
             ))}
             {/*<button onClick={() => navigate('/stocks')}>Retour à la liste des stocks</button>*/}
