@@ -63,9 +63,8 @@ const StockItems: React.FC<StockItemsProps> = () => {
                 <p className="mr-2">ID</p>
                 <p className="mr-2">Label</p>
                 <p className="mr-2">Quantity</p>
-                <p className="mr-2">Description</p>
                 <p className="mr-2">Update Quantity</p>
-
+                <p className="mr-2">Description</p>
             </div>
             {stockItems.map((item, index) => (
                 < div key={item.ID} className="flex items-center justify-between mb-2 w-full space-x-5">
@@ -85,7 +84,7 @@ const StockItems: React.FC<StockItemsProps> = () => {
                             Update
                         </button>
                     </div>
-
+                    <p className="mr-2">{item.DESCRIPTION}</p>
                 </div>
             ))}
 
