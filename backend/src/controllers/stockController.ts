@@ -34,15 +34,14 @@ export const createStock = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
-    stock: { id: number; label: string; description: string; quantity: number }
+    stock: { id: number; label: string; description: string; }
 ) => {
     try {
-        const {id, label, description, quantity} = stock;
-        await connection.query("INSERT INTO stocks VALUES (?, ?, ?, ?)", [
+        const {id, label, description} = stock;
+        await connection.query("INSERT INTO stocks VALUES (?, ?, ?)", [
             id,
             label,
             description,
-            quantity,
         ]);
 
         if (res && res.json) {
@@ -91,20 +90,49 @@ export const getStockDetails = async (
     }
 };
 
+export const getStockItems = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    ID: number
+) => {
+    try {
+        const [items] = (await connection.query(
+            "SELECT * FROM items WHERE STOCK_ID = ?",
+            [ID]
+        )) as [RowDataPacket[], FieldPacket[]];
 
-export const updateStockQuantity = async (
+        if (res && res.json) {
+            res.json(items);
+        } else {
+            throw new Error(
+                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+            );
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res && res.json) {
+            //TODO :affiner les message d'erreur.
+            res.json({error: err.message});
+        }
+        throw err;
+    }
+};
+
+export const updateStockItemQuantity = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
     ID: number,
-    QUANTITY: number
+    QUANTITY: number,
+    STOCK_ID: number,
 ) => {
     try {
-        const updatedStock = await StockRepository.updateStockQuantity(connection, ID, QUANTITY);
-        res.json(updatedStock);
+        const updatedStockItem = await StockRepository.updateStockItemQuantity(connection, ID, QUANTITY, STOCK_ID);
+        res.json(updatedStockItem);
     } catch (err) {
         //TODO :affiner les message d'erreur.
-        console.error('Error in updateStockQuantity:', err);
+        console.error('Error in updateStockItemQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
 }

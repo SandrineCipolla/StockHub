@@ -25,11 +25,24 @@ const configureStockRoutes = (): Router => {
         try {
             const connection = await connectToDatabase();
             await stockController.getStockDetails(req, res, connection, ID);
-
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error(`Error in route /stocks/${ID}:`, error);
+            res.status(500).json({error: "Error while querying the database."});
+        }
+    });
+
+    //Route pour récupérer les items d'un stock via l'ID
+    router.get("/stocks/:ID/items", async (req, res) => {
+        const ID = Number(req.params.ID);
+        try {
+            const connection = await connectToDatabase();
+            await stockController.getStockItems(req, res, connection, ID);
+            connection.release();
+        } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
+            console.error(`Error in route /stocks/${ID}/items:`, error);
             res.status(500).json({error: "Error while querying the database."});
         }
     });
@@ -39,7 +52,7 @@ const configureStockRoutes = (): Router => {
         try {
             const {id, label, description, quantity} = req.body;
             const connection = await connectToDatabase();
-            await stockController.createStock(req, res, connection, {id, label, description, quantity});
+            await stockController.createStock(req, res, connection, {id, label, description});
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
@@ -48,17 +61,18 @@ const configureStockRoutes = (): Router => {
         }
     });
     //Route pour mettre à jour un stock (via l'id?)
-    router.put("/stocks/:ID", async (req, res) => {
-        const ID = Number(req.params.ID);
+    router.put("/stocks/:stockID/items/:itemID", async (req, res) => {
+        const itemID = Number(req.params.itemID);
         const {QUANTITY} = req.body;
+        const stockID = Number(req.params.stockID);
         console.info('New quantity:', QUANTITY);
         try {
             const connection = await connectToDatabase();
-            await stockController.updateStockQuantity(req, res, connection, ID, QUANTITY);
+            await stockController.updateStockItemQuantity(req, res, connection, itemID, QUANTITY,stockID);
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
-            console.error(`Error in route /stocks/${ID}:`, error);
+            console.error(`Error in route /stocks/${stockID}/items/${itemID}:`, error);
             res.status(500).json({error: "Error while querying the database."});
         }
     });

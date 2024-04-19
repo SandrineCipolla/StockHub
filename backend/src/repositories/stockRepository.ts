@@ -1,19 +1,19 @@
 import {PoolConnection} from "mysql2/promise";
 
 export class StockRepository {
-    static async updateStockQuantity(connection: PoolConnection, ID: number, QUANTITY: number) {
+    static async updateStockItemQuantity(connection: PoolConnection, ID: number, QUANTITY: number, STOCK_ID: number) {
         try {
             if (QUANTITY === undefined) {
                 throw new Error("Quantity is undefined");
             }
             await connection.execute(
-                "UPDATE stocks SET QUANTITY = ? WHERE ID = ?",
-                [QUANTITY, ID])
+                "UPDATE items SET QUANTITY = ? WHERE ID = ? AND STOCK_ID = ?",
+                [QUANTITY, ID, STOCK_ID])
 
-            return {ID, QUANTITY};
+            return {ID, QUANTITY, STOCK_ID};
 
         } catch (err) {
-            console.error('Error in updateStockQuantity:', err);
+            console.error('Error in updateStockItemQuantity:', err);
             throw new Error('Error while updating the database.');
         }
     }

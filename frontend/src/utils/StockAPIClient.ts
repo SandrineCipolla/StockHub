@@ -1,4 +1,4 @@
-import {Stock, StockDetail} from "../models.ts";
+import {Stock, StockDetail, StockItem} from "../models.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();
@@ -46,9 +46,27 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
     }
 };
 
-export const updateStockQuantity = async (numericID: number, quantity: number) => {
+export const fetchStockItems = async (numericID: number): Promise<StockItem[]> => {
+    const response = await fetch(`${apiUrl}/stocks/${numericID}/items`, getConfig);
+
+    if (!response.ok) {
+        console.error('Error in fetching stock details');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data:StockItem[] = await response.json();
+
+    if (Array.isArray(data)) {
+        return data
+    } else {
+        console.error('Missing necessary data in the response for fetchStockDetails');
+        throw new Error('Missing necessary data in the response for fetchStockDetails');
+    }
+};
+
+export const updateStockItemQuantity = async (stockID:number,itemID:number, quantity: number) => {
     const body = {QUANTITY: quantity};
-    return putFetch(`${apiUrl}/stocks/${numericID}`, body);
+    return putFetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, body);
 };
 
 
