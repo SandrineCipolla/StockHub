@@ -84,7 +84,7 @@ const StockItems: React.FC<StockItemsProps> = () => {
                             Update
                         </button>
                     </div>
-                    <p className="mr-2">{item.DESCRIPTION}</p>
+
                 </div>
             ))}
 
