@@ -8,6 +8,7 @@ import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
 
 
 function App() {
+    //const {ID} = useParams<{ ID: string }>();
     return (
         <Router>
             <Header/>
@@ -17,8 +18,9 @@ function App() {
                     <Route path="/home" element={<Home/>}/>
                     <Route path="/stocks" element={<StocksList/>}/>
                     <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
+                    //TODO: check the need/relevance of these routes
                     {/*<Route path="/stocks/:ID" element={<StockDetails />} />*/}
-                    {/*<Route path="/stocks/:ID/items" element={<StockItems />} />*/}
+                    {/*<Route path="/stocks/:ID/items" element={<StockItems  ID={ID}/>} />*/}
                 </Routes>
             </main>
             <Footer/>

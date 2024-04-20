@@ -11,9 +11,6 @@ const StockItems: React.FC<StockItemsProps> = () => {
     const [quantities, setQuantities] = useState<number[]>([]);
     const [stockItems, setStockItems] = useState<StockItem[]>([]);
 
-    // const navigate = useNavigate();
-
-
     useEffect(() => {
     }, [stockItems]);
 
@@ -59,9 +56,9 @@ const StockItems: React.FC<StockItemsProps> = () => {
         return <div>Loading...</div>;
     }
 
+    //TODO: check if it is possible to create a "graphic" component to put in the return
     return (
         <div className="flex flex-col items-center w-full p-10">
-            {/*<h2 className="mb-4">Stock Items</h2>*/}
             <div className="flex justify-between mb-4 mt-4 w-full">
                 <p className="mr-2">ID</p>
                 <p className="mr-2">Label</p>
@@ -91,7 +88,6 @@ const StockItems: React.FC<StockItemsProps> = () => {
 
                 </div>
             ))}
-            {/*<button onClick={() => navigate('/stocks')}>Retour à la liste des stocks</button>*/}
 
         </div>
     );

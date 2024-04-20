@@ -8,9 +8,7 @@ const StockDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
     const numericID = Number(ID);
 
-    // const [quantity, setQuantity] = useState<number>(0);
     const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
-
 
 
     useEffect(() => {
@@ -21,36 +19,13 @@ const StockDetails: React.FC = () => {
             try {
                 const data = await fetchStockDetails(numericID);
                 setStockDetail(data);
-                // setQuantity(data.QUANTITY);
             } catch (error) {
                 console.error('Error in recovering stock detail', error);
             }
         };
-        fetchData().catch(error => console.error('Error in fetching data:', error));// permet d'afficher une erreur si la requête fetch ne fonctionne pas
+        //TODO affiner message d'erreur si la requete fetch ne fonctionne pas
+        fetchData().catch(error => console.error('Error in fetching data:', error));
     }, [ID, numericID]);
-
-    // const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const newQuantity = Number(event.target.value);
-    //     console.info('New quantity:', newQuantity);
-    //     setQuantity(newQuantity);
-    // };
-    //
-    // const handleQuantityUpdate = async () => {
-    //    if (quantity === undefined) {
-    //         console.error('Quantity is undefined');
-    //         return;
-    //    }
-    //
-    //     try {
-    //        await updateStockQuantity(numericID, quantity);
-    //        const updatedStock = await fetchStockDetails(numericID);
-    //        setStockDetail(updatedStock);
-    //        console.info('PUT request sent with quantity:', quantity);
-    //     } catch (error) {
-    //         console.error('Error in updating stock quantity', error);
-    //     }
-    // };
-
 
     if (!stockDetail) {
         return <div>Loading...</div>;
