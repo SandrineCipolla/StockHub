@@ -136,3 +136,36 @@ export const updateStockItemQuantity = async (
         res.status(500).json({error: 'Error while updating the database.'});
     }
 }
+
+export const addStockItem = async (
+    res: Response,
+    connection: PoolConnection,
+    stockID: number,
+    item: { id: number; label: string; description: string; quantity: number }
+) => {
+    try {
+        const {id, label, description,quantity} = item;
+        await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
+            id,
+            label,
+            description,
+            quantity,
+            stockID
+        ]);
+
+        if (res && res.json) {
+            res.json({message: "Item created successfully."});
+        } else {
+            throw new Error(
+                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
+            );
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res && res.json) {
+            //TODO :affiner les message d'erreur.
+            res.json({error: err.message});
+        }
+        throw err;
+    }
+};

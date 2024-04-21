@@ -69,4 +69,17 @@ export const updateStockItemQuantity = async (stockID:number,itemID:number, quan
     return putFetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, body);
 };
 
+export const addStockItem = async (stockID: number, item: { LABEL: string; DESCRIPTION: string; QUANTITY: number }) => {
+    const body = { ...item, STOCK_ID: stockID };
+    const postConfig = ConfigManager.postFetchConfig(body);
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items`, postConfig);
+
+    if (!response.ok) {
+        console.error('Error in addStockItem');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
 

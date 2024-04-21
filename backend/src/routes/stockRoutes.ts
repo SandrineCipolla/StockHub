@@ -50,7 +50,7 @@ const configureStockRoutes = (): Router => {
     //Route pour créer un nouveau stock
     router.post("/stocks", async (req, res) => {
         try {
-            const {id, label, description, quantity} = req.body;
+            const {id, label, description} = req.body;
             const connection = await connectToDatabase();
             await stockController.createStock(req, res, connection, {id, label, description});
             connection.release();
@@ -74,6 +74,23 @@ const configureStockRoutes = (): Router => {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error(`Error in route /stocks/${stockID}/items/${itemID}:`, error);
             res.status(500).json({error: "Error while querying the database."});
+        }
+    });
+
+    //Route pour créer un nouvel item
+    router.post("/stocks/:stockID/items", async (req, res) => {
+        try {
+            const stockID=Number(req.params.stockID) ;
+            const {id, label, description, quantity} = req.body;
+            const connection = await connectToDatabase();
+            // await stockController.addStockItem(res,connection,stockID, {id, label, description,quantity});
+            // connection.release();
+            const newStockItem = await stockController.addStockItem(res, connection, stockID, {id, label, description, quantity});
+            res.status(201).json(newStockItem);
+        } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
+            console.error("Error in route /stocks/:stockID/items", error);
+            res.status(500).json({error: "Error in adding stock item to database."});
         }
     });
 

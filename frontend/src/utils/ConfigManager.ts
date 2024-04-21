@@ -23,6 +23,17 @@ class ConfigManager {
             body: JSON.stringify(body),
         };
     }
+
+    static postFetchConfig(body: Record<string, unknown> ) {
+        return {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                credentials: 'include',
+            },
+            body: JSON.stringify(body),
+        };
+    }
 }
 
 export default ConfigManager;
