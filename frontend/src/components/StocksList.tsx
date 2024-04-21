@@ -27,12 +27,12 @@ const StocksList: React.FC = () => {
 
     return (
         <div>
-            <h2>Liste des stocks</h2>
+            <h2 className="text-lg font-bold mb-2 mt-2">Liste des stocks</h2>
             <ul>
                 {stocks.map(stock => {
                     console.log(stock)
                     return (
-                        <li key={stock.ID}>
+                        <li className="mb-2" key={stock.ID}>
                             <Link to={`/stocks/${stock.ID}`}>
                                 {stock.LABEL}
                             </Link>
@@ -40,7 +40,7 @@ const StocksList: React.FC = () => {
                     );
                 })}
             </ul>
-            <button onClick={() => navigate('/home')}>Retour à l'accueil</button>
+            <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950" onClick={() => navigate('/home')}>Retour à l'accueil</button>
         </div>
     );
 };
