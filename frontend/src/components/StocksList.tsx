@@ -14,7 +14,7 @@ const StocksList: React.FC = () => {
         const fetchData = async () => {
             try {
                 const data = await fetchStocksList();
-                console.log('JSON data recovered stocklist:', data);
+                console.info('JSON data recovered stocklist:', data);
                 setStocks(data);
             } catch (error) {
                 console.error('Error in recovering inventory', error);
@@ -30,9 +30,8 @@ const StocksList: React.FC = () => {
             <h2 className="text-lg font-bold mb-2 mt-2">Liste des stocks</h2>
             <ul>
                 {stocks.map(stock => {
-                    console.log(stock)
                     return (
-                        <li className="mb-2" key={stock.ID}>
+                        <li className="mb-2 text-purple-600 hover:text-violet-300" key={stock.ID}>
                             <Link to={`/stocks/${stock.ID}`}>
                                 {stock.LABEL}
                             </Link>
