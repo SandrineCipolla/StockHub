@@ -71,6 +71,7 @@ export const updateStockItemQuantity = async (stockID:number,itemID:number, quan
 
 export const addStockItem = async (stockID: number, item: { LABEL: string; DESCRIPTION: string; QUANTITY: number }) => {
     const body = { ...item, STOCK_ID: stockID };
+    console.log('Sending request with body:', body);
     const postConfig = ConfigManager.postFetchConfig(body);
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items`, postConfig);
 

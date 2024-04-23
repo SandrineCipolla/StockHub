@@ -81,11 +81,11 @@ const configureStockRoutes = (): Router => {
     router.post("/stocks/:stockID/items", async (req, res) => {
         try {
             const stockID=Number(req.params.stockID) ;
-            const {id, label, description, quantity} = req.body;
+            const {ID, LABEL, DESCRIPTION, QUANTITY} = req.body;
             const connection = await connectToDatabase();
             // await stockController.addStockItem(res,connection,stockID, {id, label, description,quantity});
             // connection.release();
-            const newStockItem = await stockController.addStockItem(res, connection, stockID, {id, label, description, quantity});
+            const newStockItem = await stockController.addStockItem(res, connection, stockID, {ID,LABEL, DESCRIPTION, QUANTITY});
             res.status(201).json(newStockItem);
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)

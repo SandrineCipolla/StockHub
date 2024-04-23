@@ -141,15 +141,15 @@ export const addStockItem = async (
     res: Response,
     connection: PoolConnection,
     stockID: number,
-    item: { id: number; label: string; description: string; quantity: number }
+    item: { ID: number; LABEL: string;  DESCRIPTION: string; QUANTITY: number }
 ) => {
     try {
-        const {id, label, description,quantity} = item;
+        const {ID, LABEL, DESCRIPTION,QUANTITY} = item;
         await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
-            id,
-            label,
-            description,
-            quantity,
+            ID,
+            LABEL,
+            DESCRIPTION,
+            QUANTITY,
             stockID
         ]);
 
