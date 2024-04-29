@@ -6,6 +6,7 @@
   "proxy": "http://localhost:3000",
   "scripts": {
     "start": "npm run dev",
+    "start:host": "vite --host",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
