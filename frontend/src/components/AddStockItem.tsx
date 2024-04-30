@@ -23,7 +23,7 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            console.log('Submitting form with values:', {LABEL: label, DESCRIPTION: description, QUANTITY: quantity});
+            console.info('Submitting form with values:', {LABEL: label, DESCRIPTION: description, QUANTITY: quantity});
             await addStockItem(stockID, {
                 LABEL: label,
                 DESCRIPTION: description,

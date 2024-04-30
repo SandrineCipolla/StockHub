@@ -2,6 +2,8 @@ import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
+import { extractDataFromRequestBody } from "../Utils/requestUtils";
+import {Stock} from "../../tests/__mocks__/mockedData";
 
 export const getAllStocks = async (
     req: Request,
@@ -34,14 +36,13 @@ export const createStock = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
-    stock: { id: number; label: string; description: string; }
 ) => {
     try {
-        const {id, label, description} = stock;
+        const stock:Partial<Stock> = extractDataFromRequestBody(req, ['id', 'label', 'description']);
         await connection.query("INSERT INTO stocks VALUES (?, ?, ?)", [
-            id,
-            label,
-            description,
+            stock.id,
+            stock.label,
+            stock.description,
         ]);
 
         if (res && res.json) {
@@ -123,13 +124,16 @@ export const updateStockItemQuantity = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
-    ID: number,
-    QUANTITY: number,
     STOCK_ID: number,
 ) => {
     try {
-        const updatedStockItem = await StockRepository.updateStockItemQuantity(connection, ID, QUANTITY, STOCK_ID);
-        res.json(updatedStockItem);
+        const updatedStockItem:Partial<Stock> =extractDataFromRequestBody(req, ['ID', 'QUANTITY', 'STOCK_ID']);
+        if (updatedStockItem.id === undefined || updatedStockItem.quantity === undefined) {
+            res.status(400).json({error: 'ID and QUANTITY must be provided.'});
+            return;
+        }
+        await StockRepository.updateStockItemQuantity(connection,updatedStockItem.id, updatedStockItem.quantity, STOCK_ID);
+        res.json({message: "Stock updated successfully."});
     } catch (err) {
         //TODO :affiner les message d'erreur.
         console.error('Error in updateStockItemQuantity:', err);
@@ -138,18 +142,18 @@ export const updateStockItemQuantity = async (
 }
 
 export const addStockItem = async (
+    req:Request,
     res: Response,
     connection: PoolConnection,
     stockID: number,
-    item: { ID: number; LABEL: string;  DESCRIPTION: string; QUANTITY: number }
 ) => {
     try {
-        const {ID, LABEL, DESCRIPTION,QUANTITY} = item;
+        const item:Partial<Stock> = extractDataFromRequestBody(req, ['ID', 'LABEL', 'DESCRIPTION', 'QUANTITY']);
         await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
-            ID,
-            LABEL,
-            DESCRIPTION,
-            QUANTITY,
+            item.id,
+            item.label,
+            item.description,
+            item.quantity,
             stockID
         ]);
 

@@ -50,9 +50,9 @@ const configureStockRoutes = (): Router => {
     //Route pour créer un nouveau stock
     router.post("/stocks", async (req, res) => {
         try {
-            const {id, label, description} = req.body;
+            // const {id, label, description} = req.body;
             const connection = await connectToDatabase();
-            await stockController.createStock(req, res, connection, {id, label, description});
+            await stockController.createStock(req, res, connection);
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
@@ -68,7 +68,7 @@ const configureStockRoutes = (): Router => {
         console.info('New quantity:', QUANTITY);
         try {
             const connection = await connectToDatabase();
-            await stockController.updateStockItemQuantity(req, res, connection, itemID, QUANTITY,stockID);
+            await stockController.updateStockItemQuantity(req, res, connection, itemID, QUANTITY, stockID);
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
@@ -80,13 +80,11 @@ const configureStockRoutes = (): Router => {
     //Route pour créer un nouvel item
     router.post("/stocks/:stockID/items", async (req, res) => {
         try {
-            const stockID=Number(req.params.stockID) ;
-            const {ID, LABEL, DESCRIPTION, QUANTITY} = req.body;
+            const stockID = Number(req.params.stockID);
             const connection = await connectToDatabase();
-            // await stockController.addStockItem(res,connection,stockID, {id, label, description,quantity});
-            // connection.release();
-            const newStockItem = await stockController.addStockItem(res, connection, stockID, {ID,LABEL, DESCRIPTION, QUANTITY});
-            res.status(201).json(newStockItem);
+            await stockController.addStockItem(req, res, connection, stockID);
+            connection.release();
+            res.status(201).json({message: "Item created successfully."});
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error("Error in route /stocks/:stockID/items", error);
