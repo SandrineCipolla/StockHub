@@ -17,9 +17,7 @@ const StockDetailsWithItems: React.FC = () => {
             <div className="flex flex-col h-full justify-between">
                 <div>
                     <StockDetails/>
-
                     <StockItems ID={ID}/>
-
                     <AddStockItem stockID={numericID}/>
                 </div>
                 <div className="self-center">

@@ -69,7 +69,6 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         <div className="flex flex-col items-center w-full p-10 mr-auto max-w-screen-lg">
             <div className="flex justify-between mb-5 w-full">
                 <div className="ml-auto flex items-start w-32">
-                    {/*<p className="ml-auto">ID</p>*/}
                     <p className="ml-auto mr-1">N°</p>
                 </div>
                 <div className="ml-auto flex items-start w-32">
@@ -89,7 +88,6 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                 < div key={item.ID} className="flex items-center justify-between mb-2 w-full">
 
                     <div className="ml-auto flex items-start w-32">
-                        {/*<p className="ml-auto mr-1">{item.ID}</p>*/}
                         <p className="ml-auto mr-1">{index + 1}</p>
                     </div>
                     <div className="ml-auto flex items-start w-32">
