@@ -44,8 +44,8 @@ class ConfigManager {
         return {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
+                [CONTENT_TYPE]: APPLICATION_JSON,
+                [CREDENTIALS]: INCLUDE,
             },
             body: JSON.stringify(body),
         };
