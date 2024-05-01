@@ -24,8 +24,6 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
         setShowForm(!showForm);
     };
 
-
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
