@@ -1,4 +1,4 @@
-import {Stock, StockDetail, StockItem} from "../models.ts";
+import {Stock, StockDetail, StockItem} from "../dataModels.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();

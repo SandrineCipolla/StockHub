@@ -1,5 +1,5 @@
 import React, {createContext, useState} from 'react';
-import {StockItem} from '../models.ts';
+import {StockItem} from '../dataModels.ts';
 
 interface StockItemsContextProps {
     stockItems: StockItem[];

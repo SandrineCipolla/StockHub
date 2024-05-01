@@ -1,5 +1,6 @@
 import { Request } from 'express';
-import {Stock} from "../../tests/__mocks__/mockedData";
+import {Stock} from "../models";
+
 
 export const extractDataFromRequestBody = (req: Request, keys: string[]) => {
     const data: Partial<Stock> = {};

@@ -3,7 +3,8 @@ import {Request, Response} from "express";
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
 import { extractDataFromRequestBody } from "../Utils/requestUtils";
-import {Stock} from "../../tests/__mocks__/mockedData";
+import {Stock} from "../models";
+
 
 export const getAllStocks = async (
     req: Request,

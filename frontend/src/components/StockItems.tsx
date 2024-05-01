@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
-import {StockItemsProps} from "../models.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
+import {StockItemsProps} from "../frontModels.ts";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {

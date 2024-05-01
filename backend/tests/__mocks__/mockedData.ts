@@ -1,11 +1,7 @@
 import { TableColumn } from "../integration/dbUtils";
+import {Stock} from "../../src/models";
 
-export interface Stock {
-  id: number;
-  label: string;
-  description: string;
-  quantity: number;
-}
+
 
 export const fakeStocks: Stock[] = [
   { id: 1, label: "Stock1", description: "Description1", quantity: 10 },
