@@ -50,7 +50,6 @@ const configureStockRoutes = (): Router => {
     //Route pour créer un nouveau stock
     router.post("/stocks", async (req, res) => {
         try {
-            // const {id, label, description} = req.body;
             const connection = await connectToDatabase();
             await stockController.createStock(req, res, connection);
             connection.release();
@@ -68,7 +67,7 @@ const configureStockRoutes = (): Router => {
         console.info('New quantity:', QUANTITY);
         try {
             const connection = await connectToDatabase();
-            await stockController.updateStockItemQuantity(req, res, connection, itemID, QUANTITY, stockID);
+            await stockController.updateStockItemQuantity(req, res, connection, stockID);
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
