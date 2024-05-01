@@ -1,5 +1,3 @@
-import {Dispatch, SetStateAction} from "react";
-
 export interface Stock {
     ID: number;
     LABEL: string;
@@ -19,12 +17,3 @@ export interface StockItem {
     STOCK_ID: number;
 }
 
-export interface StockItemsProps {
-    ID: string | undefined;
-
-}
-
-export interface AddStockItemProps {
-    stockID: number;
-    setStockItems: Dispatch<SetStateAction<StockItem[]>>;
-}
