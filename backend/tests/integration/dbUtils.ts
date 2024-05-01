@@ -1,5 +1,6 @@
 import {PoolConnection} from "mysql2/promise";
-import {Stock} from "../__mocks__/mockedData";
+import {Stock} from "../../src/models";
+
 
 export interface TableColumn {
     column_name: string;

@@ -1,4 +1,4 @@
-import {Stock, StockDetail, StockItem} from "../models.ts";
+import {Stock, StockDetail, StockItem} from "../dataModels.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();
@@ -67,6 +67,20 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
 export const updateStockItemQuantity = async (stockID:number,itemID:number, quantity: number) => {
     const body = {QUANTITY: quantity};
     return putFetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, body);
+};
+
+export const addStockItem = async (stockID: number, item: { LABEL: string; DESCRIPTION: string; QUANTITY: number }) => {
+    const body = { ...item, STOCK_ID: stockID };
+    console.debug('Sending request with body:', body);
+    const postConfig = ConfigManager.postFetchConfig(body);
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items`, postConfig);
+
+    if (!response.ok) {
+        console.error('Error in addStockItem');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
 };
 
 

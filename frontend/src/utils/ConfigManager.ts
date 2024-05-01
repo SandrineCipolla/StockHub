@@ -1,3 +1,8 @@
+const CONTENT_TYPE = 'Content-Type';
+const APPLICATION_JSON = 'application/json';
+const CREDENTIALS = 'credentials';
+const INCLUDE = 'include';
+
 class ConfigManager {
     static getApiServerUrl() {
         return import.meta.env.VITE_API_SERVER_URL || 'http://localhost:3000/api/v1';
@@ -7,8 +12,8 @@ class ConfigManager {
         return {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
+                [CONTENT_TYPE]: APPLICATION_JSON,
+                [CREDENTIALS]: INCLUDE,
             },
         };
     }
@@ -17,8 +22,19 @@ class ConfigManager {
         return {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
+                [CONTENT_TYPE]: APPLICATION_JSON,
+                [CREDENTIALS]: INCLUDE,
+            },
+            body: JSON.stringify(body),
+        };
+    }
+
+    static postFetchConfig(body: Record<string, unknown> ) {
+        return {
+            method: 'POST',
+            headers: {
+                [CONTENT_TYPE]: APPLICATION_JSON,
+                [CREDENTIALS]: INCLUDE,
             },
             body: JSON.stringify(body),
         };

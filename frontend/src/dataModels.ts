@@ -17,6 +17,3 @@ export interface StockItem {
     STOCK_ID: number;
 }
 
-export interface StockItemsProps {
-    ID: string | undefined;
-}

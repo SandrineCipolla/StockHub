@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {fetchStockDetails} from "../utils/StockAPIClient.ts";
-import {StockDetail} from "../models.ts";
+import {StockDetail} from "../dataModels.ts";
 
 
 const StockDetails: React.FC = () => {
