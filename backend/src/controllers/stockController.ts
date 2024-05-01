@@ -128,12 +128,24 @@ export const updateStockItemQuantity = async (
     STOCK_ID: number,
 ) => {
     try {
+        const itemID = Number(req.params.itemID);
+        const {QUANTITY} = req.body;
+        const stockID = Number(req.params.stockID);
+
         const updatedStockItem:Partial<Stock> =extractDataFromRequestBody(req, ['ID', 'QUANTITY', 'STOCK_ID']);
-        if (updatedStockItem.id === undefined || updatedStockItem.quantity === undefined) {
+
+        const sourceStock:Partial<Stock> = {
+            id: itemID,
+            quantity: QUANTITY,
+        }
+
+        console.info('Stock item update', sourceStock, 'with stock id', stockID)
+
+        if (sourceStock.id === undefined || sourceStock.quantity === undefined) {
             res.status(400).json({error: 'ID and QUANTITY must be provided.'});
             return;
         }
-        await StockRepository.updateStockItemQuantity(connection,updatedStockItem.id, updatedStockItem.quantity, STOCK_ID);
+        await StockRepository.updateStockItemQuantity(connection,sourceStock.id, sourceStock.quantity, stockID);
         res.json({message: "Stock updated successfully."});
     } catch (err) {
         //TODO :affiner les message d'erreur.
@@ -150,21 +162,30 @@ export const addStockItem = async (
 ) => {
     try {
         const item:Partial<Stock> = extractDataFromRequestBody(req, ['ID', 'LABEL', 'DESCRIPTION', 'QUANTITY']);
+
+        const itemUpdated:Partial<Stock> = {
+            id: undefined,
+            label: req.body['LABEL'],
+            description: req.body['DESCRIPTION'],
+            quantity: req.body['QUANTITY']
+        }
+
         await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
-            item.id,
-            item.label,
-            item.description,
-            item.quantity,
+            itemUpdated.id,
+            itemUpdated.label,
+            itemUpdated.description,
+            itemUpdated.quantity,
             stockID
         ]);
 
+        /*
         if (res && res.json) {
             res.json({message: "Item created successfully."});
         } else {
             throw new Error(
                 "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
             );
-        }
+        }*/
     } catch (err: any) {
         console.error(err);
         if (res && res.json) {
