@@ -177,8 +177,6 @@ export const addStockItem = async (
             res.status(500).json({error: 'Error while updating the database.'});
         }
     }
-
-
 };
 
 export const deleteStockItem = async (
