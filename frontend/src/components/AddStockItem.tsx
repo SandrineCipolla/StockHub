@@ -60,9 +60,9 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
                     },
 
                     content: {
-                        width: 'auto', // Set width to auto
-                        height: 'auto', // Set height to auto
-                        margin: 'auto' // Center the modal
+                        width: 'auto',
+                        height: 'auto',
+                        margin: 'auto',
                     }
                 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-white p-4 rounded shadow-lg">
