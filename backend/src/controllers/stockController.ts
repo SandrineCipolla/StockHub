@@ -2,8 +2,10 @@ import {Request, Response} from "express";
 
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
-import { extractDataFromRequestBody } from "../Utils/requestUtils";
-import {Stock} from "../models";
+import {extractDataFromRequestBody} from "../Utils/requestUtils";
+import {Stock, UpdateStockRequest} from "../models";
+import {createUpdatedItemQuantity} from "../Utils/itemFactory";
+import {ValidationError} from "../errors";
 
 
 export const getAllStocks = async (
@@ -39,7 +41,7 @@ export const createStock = async (
     connection: PoolConnection,
 ) => {
     try {
-        const stock:Partial<Stock> = extractDataFromRequestBody(req, ['id', 'label', 'description']);
+        const stock: Partial<Stock> = extractDataFromRequestBody(req, ['id', 'label', 'description']);
         await connection.query("INSERT INTO stocks VALUES (?, ?, ?)", [
             stock.id,
             stock.label,
@@ -125,15 +127,23 @@ export const updateStockItemQuantity = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
-    STOCK_ID: number,
 ) => {
     try {
-        const updatedStockItem:Partial<Stock> =extractDataFromRequestBody(req, ['ID', 'QUANTITY', 'STOCK_ID']);
-        if (updatedStockItem.id === undefined || updatedStockItem.quantity === undefined) {
+        const itemID = Number(req.params.itemID);
+        const {QUANTITY} = req.body;
+        const stockID = Number(req.params.stockID);
+
+        const updatedItemQuantity: Partial<Stock> = createUpdatedItemQuantity(itemID, QUANTITY);
+
+        console.info('Stock item update', updatedItemQuantity, 'with stock id', stockID)
+
+        if (updatedItemQuantity.id === undefined || updatedItemQuantity.quantity === undefined) {
             res.status(400).json({error: 'ID and QUANTITY must be provided.'});
             return;
         }
-        await StockRepository.updateStockItemQuantity(connection,updatedStockItem.id, updatedStockItem.quantity, STOCK_ID);
+        //await StockRepository.updateStockItemQuantity(connection, updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
+        const updateRequest = new UpdateStockRequest(updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
+        await StockRepository.updateStockItemQuantity(connection, updateRequest);
         res.json({message: "Stock updated successfully."});
     } catch (err) {
         //TODO :affiner les message d'erreur.
@@ -143,34 +153,28 @@ export const updateStockItemQuantity = async (
 }
 
 export const addStockItem = async (
-    req:Request,
+    req: Request,
     res: Response,
     connection: PoolConnection,
     stockID: number,
 ) => {
     try {
-        const item:Partial<Stock> = extractDataFromRequestBody(req, ['ID', 'LABEL', 'DESCRIPTION', 'QUANTITY']);
-        await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
-            item.id,
-            item.label,
-            item.description,
-            item.quantity,
-            stockID
-        ]);
 
-        if (res && res.json) {
-            res.json({message: "Item created successfully."});
-        } else {
-            throw new Error(
-                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
-            );
+        const itemUpdated: Partial<Stock> = {
+            id: undefined,
+            label: req.body['LABEL'],
+            description: req.body['DESCRIPTION'],
+            quantity: req.body['QUANTITY']
         }
+
+        await StockRepository.addStockItem(connection, itemUpdated, stockID);
+        res.status(201).json({message: "Stock item added successfully."});
     } catch (err: any) {
-        console.error(err);
-        if (res && res.json) {
-            //TODO :affiner les message d'erreur.
-            res.json({error: err.message});
+        console.error('Error in addStockItem:', err);
+        if (err instanceof ValidationError) {
+            res.status(400).json({error: err.message, data: err.data});
+        } else {
+            res.status(500).json({error: 'Error while updating the database.'});
         }
-        throw err;
     }
 };

@@ -4,3 +4,15 @@ export interface Stock {
     description: string;
     quantity: number;
 }
+
+export class UpdateStockRequest {
+    itemID: number;
+    quantity: number;
+    stockID: number;
+
+    constructor(itemID: number, quantity: number, stockID: number) {
+        this.itemID = itemID;
+        this.quantity = quantity;
+        this.stockID = stockID;
+    }
+}
