@@ -4,6 +4,7 @@ import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock} from "../models";
+import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 
 
 export const getAllStocks = async (
@@ -131,10 +132,7 @@ export const updateStockItemQuantity = async (
         const {QUANTITY} = req.body;
         const stockID = Number(req.params.stockID);
 
-        const updatedItemQuantity: Partial<Stock> = {
-            id: itemID,
-            quantity: QUANTITY,
-        }
+        const updatedItemQuantity: Partial<Stock> = createUpdatedItemQuantity(itemID, QUANTITY);
 
         console.info('Stock item update', updatedItemQuantity, 'with stock id', stockID)
 
