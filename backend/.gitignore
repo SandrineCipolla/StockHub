@@ -25,3 +25,4 @@ dist-ssr
 
 # Fichiers spécifiques à l'environnement
 /.env
+/.env.test
