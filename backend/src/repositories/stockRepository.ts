@@ -1,5 +1,6 @@
 import {PoolConnection} from "mysql2/promise";
 import {Stock} from "../models";
+import {ValidationError} from "../errors";
 
 export class StockRepository {
     static async updateStockItemQuantity(connection: PoolConnection, ID: number, QUANTITY: number, STOCK_ID: number) {
@@ -22,10 +23,10 @@ export class StockRepository {
     static async addStockItem(connection: PoolConnection, item: Partial<Stock>, stockID: number) {
         try {
             if (!item.label || !item.description || item.quantity === undefined) {
-                throw new Error("Label, description and quantity must be provided.");
+                throw new ValidationError("Label, description and quantity must be provided.");
             }
             if (item.quantity < 1) {
-                throw new Error("Quantity must be a positive number.");
+                throw new ValidationError("Quantity must be a positive number.");
             }
             await connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
                 item.id,

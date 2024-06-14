@@ -5,6 +5,7 @@ import {StockRepository} from "../repositories/stockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
+import {ValidationError} from "../errors";
 
 
 export const getAllStocks = async (
@@ -165,13 +166,13 @@ export const addStockItem = async (
         }
 
         await StockRepository.addStockItem(connection, itemUpdated, stockID);
-
+        res.status(201).json({message: "Stock item added successfully."});
     } catch (err: any) {
-        console.error(err);
-        if (res && res.json) {
-            //TODO :affiner les message d'erreur.
-            res.json({error: err.message});
+        console.error('Error in addStockItem:', err);
+        if (err instanceof ValidationError) {
+            res.status(400).json({error: err.message, data: err.data});
+        } else {
+            res.status(500).json({error: 'Error while updating the database.'});
         }
-        throw err;
     }
 };
