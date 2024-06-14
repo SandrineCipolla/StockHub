@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
-import {Stock} from "../models";
+import {Stock, UpdateStockRequest} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
 
@@ -141,7 +141,9 @@ export const updateStockItemQuantity = async (
             res.status(400).json({error: 'ID and QUANTITY must be provided.'});
             return;
         }
-        await StockRepository.updateStockItemQuantity(connection, updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
+        //await StockRepository.updateStockItemQuantity(connection, updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
+        const updateRequest = new UpdateStockRequest(updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
+        await StockRepository.updateStockItemQuantity(connection, updateRequest);
         res.json({message: "Stock updated successfully."});
     } catch (err) {
         //TODO :affiner les message d'erreur.
