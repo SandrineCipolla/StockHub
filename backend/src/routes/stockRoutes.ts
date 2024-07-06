@@ -83,7 +83,6 @@ const configureStockRoutes = (): Router => {
             const connection = await connectToDatabase();
             await stockController.addStockItem(req, res, connection, stockID);
             connection.release();
-            res.status(201).json({message: "Item created successfully."});
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
             console.error("Error in route /stocks/:stockID/items", error);
