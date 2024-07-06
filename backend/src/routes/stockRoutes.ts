@@ -67,7 +67,7 @@ const configureStockRoutes = (): Router => {
         console.info('New quantity:', QUANTITY);
         try {
             const connection = await connectToDatabase();
-            await stockController.updateStockItemQuantity(req, res, connection, stockID);
+            await stockController.updateStockItemQuantity(req, res, connection);
             connection.release();
         } catch (error) {
             //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
