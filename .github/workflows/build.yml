@@ -15,11 +15,18 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies for backend
+      - name: Install dependencies for BACKEND
         working-directory: ./backend
         run: npm ci
 
-      - name: Build backend
+      - name: Build BACKEND
         working-directory: ./backend
         run: npm run build
 
+      - name: Install dependencies for FRONTEND
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Build FRONTEND
+        working-directory: ./backend
+        run: npm run build
