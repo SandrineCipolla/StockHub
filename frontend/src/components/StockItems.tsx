@@ -59,7 +59,26 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         }
     };
 
-
+    const handleItemDelete = async (stockID: number, itemID: number) => {
+        try {
+            const response = await fetch(`/api/v1/stocks/${stockID}/items/${itemID}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Re-fetch the stock items to update the list
+            const updatedStockItems = await fetchStockItems(numericID);
+            if (setStockItems) {
+                setStockItems(updatedStockItems);
+            }
+            if (setQuantities) {
+                setQuantities(updatedStockItems.map(item => item.QUANTITY));
+            }
+        } catch (error) {
+            console.error('Error in deleting stock item:', error);
+        }
+    };
     if (!stockItems) {
         return <div>Loading...</div>;
     }
@@ -106,6 +125,13 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                         <button onClick={() => handleQuantityUpdate(item.STOCK_ID, index)}
                                 className="bg-violet-400 text-purple-200 hover:bg-violet-600 font-bold py-1 px-2 rounded text-xs w-2/3 mr-1 mt-0.5">
                             Update
+                        </button>
+                    </div>
+
+                    <div className="ml-auto flex items-start w-32">
+                        <button onClick={() => handleItemDelete(item.STOCK_ID, item.ID)}
+                                className="bg-red-500 text-white hover:bg-red-700 font-bold py-1 px-2 rounded text-xs w-2/3 mr-1 mt-0.5">
+                            Delete
                         </button>
                     </div>
 
