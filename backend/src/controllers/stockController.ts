@@ -150,7 +150,7 @@ export const updateStockItemQuantity = async (
         console.error('Error in updateStockItemQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
-}
+};
 
 export const addStockItem = async (
     req: Request,
@@ -176,5 +176,27 @@ export const addStockItem = async (
         } else {
             res.status(500).json({error: 'Error while updating the database.'});
         }
+    }
+
+
+};
+
+export const deleteStockItem = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    stockID: number,
+    itemID: number
+) => {
+    try {
+        // Exécutez la requête SQL DELETE pour supprimer l'élément du stock
+        await connection.query("DELETE FROM items WHERE ID = ? AND STOCK_ID = ?", [itemID, stockID]);
+
+        // Si la suppression a réussi, renvoyez un message de succès
+        res.status(200).json({message: "Stock item deleted successfully."});
+    } catch (err: any) {
+        console.error(`Error in deleteStockItem:`, err);
+        // Si une erreur se produit, renvoyez un message d'erreur
+        res.status(500).json({error: "Error while deleting the stock item from the database."});
     }
 };
