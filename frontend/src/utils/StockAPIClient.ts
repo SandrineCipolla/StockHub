@@ -83,4 +83,17 @@ export const addStockItem = async (stockID: number, item: { LABEL: string; DESCR
     return await response.json();
 };
 
+export const deleteStockItem = async (stockID: number, itemID: number) => {
+    const body = {ITEM : itemID}
+    const deleteConfig = ConfigManager.deleteFetchConfig(body);
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, deleteConfig);
+
+    if (!response.ok) {
+        console.error('Error in deleteStockItem');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
 
