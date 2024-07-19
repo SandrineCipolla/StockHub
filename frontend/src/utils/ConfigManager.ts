@@ -40,9 +40,10 @@ class ConfigManager {
         };
     }
 
-    static postFetchConfig(body: Record<string, unknown> ) {
+
+    static deleteFetchConfig(body: Record<string, unknown> ) {
         return {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 [CONTENT_TYPE]: APPLICATION_JSON,
                 [CREDENTIALS]: INCLUDE,
@@ -50,6 +51,7 @@ class ConfigManager {
             body: JSON.stringify(body),
         };
     }
+
 }
 
 export default ConfigManager;
