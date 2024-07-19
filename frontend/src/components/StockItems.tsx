@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
+import {deleteStockItem, fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import {StockItemsProps} from "../frontModels.ts";
 
@@ -61,17 +61,16 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
 
     const handleItemDelete = async (stockID: number, itemID: number) => {
         try {
-            const response = await fetch(`/api/v1/stocks/${stockID}/items/${itemID}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            // Re-fetch the stock items to update the list
-            const updatedStockItems = await fetchStockItems(numericID);
+            // Appel de la fonction deleteStockItem
+            await deleteStockItem(stockID, itemID);
+
+            // Re-fetch les éléments de stock pour mettre à jour la liste
+            const updatedStockItems = await fetchStockItems(stockID);
+
             if (setStockItems) {
                 setStockItems(updatedStockItems);
             }
+
             if (setQuantities) {
                 setQuantities(updatedStockItems.map(item => item.QUANTITY));
             }
