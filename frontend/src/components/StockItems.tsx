@@ -60,6 +60,9 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
     };
 
     const handleItemDelete = async (stockID: number, itemID: number) => {
+        if (!window.confirm('Are you sure you want to delete this item?')) {
+            return;
+        }
         try {
             // Appel de la fonction deleteStockItem
             await deleteStockItem(stockID, itemID);
