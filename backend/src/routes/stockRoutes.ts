@@ -8,7 +8,6 @@ const configureStockRoutes = (): Router => {
     //Route pour récupération de la liste des stocks
     router.get("/stocks", async (req, res) => {
         try {
-
             const connection = await connectToDatabase();
             await stockController.getAllStocks(req, res, connection);
             connection.release();
@@ -100,6 +99,20 @@ const configureStockRoutes = (): Router => {
         } catch (error) {
             console.error(`Error in route /stocks/${stockID}/items/${itemID}:`, error);
             res.status(500).json({error: "Error while deleting the stock item from the database."});
+        }
+    });
+
+    //Route pour récupérer la liste des items
+    router.get("/items", async (req, res) => {
+        try {
+            const connection = await connectToDatabase();
+            await stockController.getAllItems(req, res, connection);
+            connection.release();
+           // res.json(items)
+        } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
+            console.error(`Error in route /items:`, error);
+            res.status(500).json({error: "Error while querying the database for items list."});
         }
     });
 

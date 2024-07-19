@@ -5,6 +5,7 @@ import StocksList from "./components/StocksList";
 import "./App.css";
 import Home from "./pages/home/Home.tsx";
 import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
+import ItemsList from "./components/ItemsList.tsx";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/" element={<Navigate to="/home"/>}/>
                     <Route path="/home" element={<Home/>}/>
                     <Route path="/stocks" element={<StocksList/>}/>
+                    <Route path="/items" element={<ItemsList/>}/>
                     <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
                     //TODO: check the need/relevance of these routes
                     {/*<Route path="/stocks/:ID" element={<StockDetails />} />*/}

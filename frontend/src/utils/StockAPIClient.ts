@@ -1,4 +1,4 @@
-import {Stock, StockDetail, StockItem} from "../dataModels.ts";
+import {Item, Stock, StockDetail, StockItem} from "../dataModels.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();
@@ -94,6 +94,18 @@ export const deleteStockItem = async (stockID: number, itemID: number) => {
     }
 
     return await response.json();
+};
+
+export const fetchItemsList = async (): Promise<Item[]> => {
+    const response = await fetch(`${apiUrl}/items`,getConfig);
+
+    if (!response.ok) {
+        console.error('Error in fetching items list');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data as Item[];
 };
 
 

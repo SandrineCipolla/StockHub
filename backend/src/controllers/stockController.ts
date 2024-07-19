@@ -206,3 +206,30 @@ export const deleteStockItem = async (
         res.status(500).json({ error: "Error while deleting the stock item from the database." });
     }
 };
+
+export const getAllItems = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection
+) => {
+    try {
+        const [items] = (await connection.query("SELECT * FROM items")) as [
+            RowDataPacket[],
+            FieldPacket[]
+        ];
+
+        if (res) {
+            res.status(200).json(items);
+        } else {
+            throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res) {
+            //TODO :affiner les message d'erreur.
+            //TODO :créer une const pour le console.error
+            res.status(500).json({error: err.message});
+        }
+        throw err;
+    }
+};
