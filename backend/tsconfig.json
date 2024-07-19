@@ -10,6 +10,7 @@
     "outDir": "./dist",
     "strictNullChecks": true,
     "noImplicitAny": true,
+    "sourceMap": true
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

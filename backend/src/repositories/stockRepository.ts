@@ -5,7 +5,7 @@ import {ValidationError} from "../errors";
 export class StockRepository {
     static async updateStockItemQuantity(connection: PoolConnection, updateRequest: UpdateStockRequest) {
         const { itemID, quantity, stockID } = updateRequest;
-     //   try {
+
             if (quantity === undefined) {
                 throw new ValidationError("Quantity is undefined");
             }
@@ -15,14 +15,10 @@ export class StockRepository {
 
             return { itemID, quantity, stockID };
 
-        // } catch (err) {
-        //     console.error('Error in updateStockItemQuantity:', err);
-        //     throw new Error('Error while updating the database.');
-        // }
     }
 
     static async addStockItem(connection: PoolConnection, item: Partial<Stock>, stockID: number) {
-       // try {
+
             if (!item.label || !item.description || item.quantity === undefined) {
                 throw new ValidationError("Label, description and quantity must be provided.");
             }
@@ -36,9 +32,6 @@ export class StockRepository {
                 item.quantity,
                 stockID
             ]);
-        // } catch (err) {
-        //     console.error('Error in addStockItem:', err);
-        //     throw new Error('Error while updating the database.');
-        // }
+
     }
 }
