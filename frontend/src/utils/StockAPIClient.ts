@@ -55,7 +55,6 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     }
 
     const data:StockItem[] = await response.json();
-    console.log(data);
 
     if (Array.isArray(data)) {
         return data
