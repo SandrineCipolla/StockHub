@@ -55,6 +55,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+.menu:hover {
+  color: #5b21b6;
+}
 
 /*a {*/
 /*  font-weight: 500;*/

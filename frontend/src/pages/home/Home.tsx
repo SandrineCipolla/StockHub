@@ -9,8 +9,10 @@ const Home: React.FC = () => {
             <h1>Page d'accueil</h1>
             <nav>
                 <ul>
-                    <li className="mt-4 mb-4 text-violet-300 hover:text-purple-600">
-                        <Link to="/stocks">Mes stocks</Link>
+                    <li className="mt-4 mb-4 text-violet-300">
+                        <Link to="/stocks" className="menu">Mes stocks</Link>
+                        <span style={{ margin: '0 10px' }}></span>
+                        <Link to="/items" className="menu">Mes produits</Link>
                     </li>
                 </ul>
             </nav>
