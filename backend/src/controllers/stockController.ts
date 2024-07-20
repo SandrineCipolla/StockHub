@@ -238,13 +238,12 @@ export const getItemDetails = async (
     req: Request,
     res: Response,
     connection: PoolConnection,
-    stockID: number,
     itemID: number
 ) => {
     try {
         // Requête SQL pour récupérer les détails d'un item spécifique dans un stock donné
-        const query = "SELECT * FROM items WHERE ID = ? AND STOCK_ID = ?";
-        const [rows] = await connection.query(query, [itemID, stockID]);
+        const query = "SELECT * FROM items WHERE ID = ?";
+        const [rows] = await connection.query(query, [itemID]);
 
         const items = rows as RowDataPacket[]
         // Vérification si l'item existe

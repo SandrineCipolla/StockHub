@@ -119,13 +119,13 @@ const configureStockRoutes = (): Router => {
 
     // Route pour afficher un item spécifique d'un stock
     router.get("/stocks/:stockID/items/:itemID", async (req, res) => {
-        const { stockID, itemID } = req.params;
+        const {  itemID } = req.params;
         try {
             const connection = await connectToDatabase();
-            await stockController.getItemDetails(req, res, connection, Number(stockID), Number(itemID));
+            await stockController.getItemDetails(req, res, connection, Number(itemID));
             connection.release();
         } catch (error) {
-            console.error(`Error in route /stocks/${stockID}/items/${itemID}:`, error);
+            console.error(`Error in route /items/${itemID}:`, error);
             res.status(500).json({ error: "Error while querying the database." });
         }
     });

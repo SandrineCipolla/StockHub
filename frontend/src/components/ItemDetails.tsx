@@ -19,7 +19,7 @@ const ItemDetails: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchItemDetails(stockID, itemID);
+                const data = await fetchItemDetails( stockID,itemID);
                 setItemDetail(data);
                 setIsLoading(false);
             } catch (err) {
@@ -43,6 +43,8 @@ const ItemDetails: React.FC = () => {
             <div>
                 <h2 className="text-lg font-bold mb-2 mt-2">{itemDetail.LABEL}</h2>
                 <p className="text-m font-semibold">{itemDetail.DESCRIPTION}</p>
+                <p className="text-m font-semibold">Quantité : {itemDetail.QUANTITY}</p>
+                <p className="text-m font-semibold">Stock : {itemDetail.STOCK_ID}</p>
             </div>
 
         </div>

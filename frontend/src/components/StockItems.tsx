@@ -33,56 +33,56 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         fetchData().catch(error => console.error('Error in fetching data:', error));
     }, [ID, numericID, setStockItems]);
 
-    function refreshStockOnView(updatedStockItems: StockItem[]) {
-        if (setStockItems) {
-            setStockItems(updatedStockItems);
-        }
-        if (setQuantities) {
-            setQuantities(updatedStockItems.map(item => item.QUANTITY));
-        }
-    }
+    // function refreshStockOnView(updatedStockItems: StockItem[]) {
+    //     if (setStockItems) {
+    //         setStockItems(updatedStockItems);
+    //     }
+    //     if (setQuantities) {
+    //         setQuantities(updatedStockItems.map(item => item.QUANTITY));
+    //     }
+    // }
 
-    const handleQuantityChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newQuantities = [...quantities];
-        newQuantities[index] = Number(event.target.value);
-        console.info('New quantity:', newQuantities[index]);
-        setQuantities(newQuantities);
-    };
-
-    const handleQuantityUpdate = async (stockID: number, index: number) => {
-        if (quantities === undefined || stockItems === undefined) {
-            console.error('Quantity is undefined');
-            return;
-        }
-        try {
-            await updateStockItemQuantity(stockID, stockItems[index].ID, quantities[index]);
-            const updatedStockItems = await fetchStockItems(numericID);
-            refreshStockOnView(updatedStockItems);
-            console.info('PUT request sent with quantity:', quantities[index]);
-        } catch (error) {
-            console.error('Error in updating stock quantity', error);
-        }
-    };
-
-    const handleItemDelete = async (stockID: number, itemID: number) => {
-        if (!window.confirm('Are you sure you want to delete this item?')) {
-            return;
-        }
-        try {
-            // Appel de la fonction deleteStockItem
-            await deleteStockItem(stockID, itemID);
-
-            const deletedItem = stockItems.find(item => item.ID === itemID);
-            if (deletedItem) {
-                const indexToDelete = stockItems.indexOf(deletedItem);
-                stockItems.splice(indexToDelete, 1);
-            }
-
-            refreshStockOnView(stockItems);
-        } catch (error) {
-            console.error('Error in deleting stock item:', error);
-        }
-    };
+    // const handleQuantityChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const newQuantities = [...quantities];
+    //     newQuantities[index] = Number(event.target.value);
+    //     console.info('New quantity:', newQuantities[index]);
+    //     setQuantities(newQuantities);
+    // };
+    //
+    // const handleQuantityUpdate = async (stockID: number, index: number) => {
+    //     if (quantities === undefined || stockItems === undefined) {
+    //         console.error('Quantity is undefined');
+    //         return;
+    //     }
+    //     try {
+    //         await updateStockItemQuantity(stockID, stockItems[index].ID, quantities[index]);
+    //         const updatedStockItems = await fetchStockItems(numericID);
+    //         refreshStockOnView(updatedStockItems);
+    //         console.info('PUT request sent with quantity:', quantities[index]);
+    //     } catch (error) {
+    //         console.error('Error in updating stock quantity', error);
+    //     }
+    // };
+    //
+    // const handleItemDelete = async (stockID: number, itemID: number) => {
+    //     if (!window.confirm('Are you sure you want to delete this item?')) {
+    //         return;
+    //     }
+    //     try {
+    //         // Appel de la fonction deleteStockItem
+    //         await deleteStockItem(stockID, itemID);
+    //
+    //         const deletedItem = stockItems.find(item => item.ID === itemID);
+    //         if (deletedItem) {
+    //             const indexToDelete = stockItems.indexOf(deletedItem);
+    //             stockItems.splice(indexToDelete, 1);
+    //         }
+    //
+    //         refreshStockOnView(stockItems);
+    //     } catch (error) {
+    //         console.error('Error in deleting stock item:', error);
+    //     }
+    // };
 
     if (!stockItems) {
         return <div>Loading...</div>;

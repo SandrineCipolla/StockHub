@@ -109,7 +109,7 @@ export const fetchItemsList = async (): Promise<Item[]> => {
     return data as Item[];
 };
 
-export const fetchItemDetails = async (stockID: number,itemID: number): Promise<Item> => {
+export const fetchItemDetails = async (stockID:number,itemID: number): Promise<Item> => {
 
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, getConfig);
 
@@ -121,14 +121,8 @@ export const fetchItemDetails = async (stockID: number,itemID: number): Promise<
     const data:Item  = await response.json();
     console.log(data);
 
+    return data as Item;
 
-    if (Array.isArray(data)) {
-
-        return data[0] as Item;
-    } else {
-        console.error('Missing necessary data in the response for fetchItemDetails');
-        throw new Error('Missing necessary data in the response for fetchItemDetails');
-    }
 };
 
 
