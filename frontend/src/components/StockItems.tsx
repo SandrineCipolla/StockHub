@@ -3,6 +3,8 @@ import {fetchStockItems} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import {StockItemsProps} from "../frontModels.ts";
 import {Link} from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
@@ -52,7 +54,7 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                     <p>{item.QUANTITY}</p>
                     <p><Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
                              className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
-                        View Details
+                        <FontAwesomeIcon icon={faSearch} />
                     </Link></p>
                 </div>
             ))}

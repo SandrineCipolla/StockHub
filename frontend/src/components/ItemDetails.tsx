@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {fetchItemDetails, updateStockItemQuantity, deleteStockItem} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
+import {faArrowLeft, faSync, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const ItemDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
@@ -79,7 +81,7 @@ const ItemDetails: React.FC = () => {
                             onClick={handleQuantityUpdate}
                             className="ml-2 p-1 bg-violet-400 text-white rounded"
                         >
-                            Update Quantity
+                            <FontAwesomeIcon icon={faSync} />
                         </button>
                     </div>
                 </div>
@@ -90,7 +92,7 @@ const ItemDetails: React.FC = () => {
                     onClick={handleItemDelete}
                     className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded"
                 >
-                    Delete Item
+                    <FontAwesomeIcon icon={faTrash} />
                 </button>
             </div>
             <div className="self-center mt-4 mb-4">
@@ -98,7 +100,7 @@ const ItemDetails: React.FC = () => {
                     onClick={() => navigate(`/stocks/${itemDetail.STOCK_ID}`)}
                     className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
                 >
-                    Retour au stock
+                    <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                 </button>
             </div>
         </div>
