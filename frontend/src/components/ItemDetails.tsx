@@ -1,35 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {fetchItemDetails} from "../utils/StockAPIClient.ts";
-import {StockDetail} from "../dataModels.ts";
+import {Item} from "../dataModels.ts";
 
 
 const ItemDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
-    const numericID = Number(ID);
+    const stockID = Number(ID);
+    const itemID = Number(ID);
 
-    const [itemDetail, setItemDetail] = useState<StockDetail | null>(null);
+    const [itemDetail, setItemDetail] = useState<Item | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-
-    useEffect(() => {
-    }, [itemDetail]);
+    // useEffect(() => {
+    // }, [itemDetail]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchItemDetails(numericID);
+                const data = await fetchItemDetails(stockID, itemID);
                 setItemDetail(data);
-            } catch (error) {
-                console.error('Error in recovering item detail', error);
+                setIsLoading(false);
+            } catch (err) {
+                setError('Failed to fetch item details');
+                setIsLoading(false);
             }
         };
         //TODO affiner message d'erreur si la requete fetch ne fonctionne pas
-        fetchData().catch(error => console.error('Error in fetching data:', error));
-    }, [ID, numericID]);
+        fetchData();
+    }, [stockID,itemID]);
 
-    if (!itemDetail) {
+    if (isLoading) {
         return <div>Loading...</div>;
     }
+    if (error) return <div>{error}</div>;
+    if (!itemDetail) return <div>Item not found.</div>;
 
     return (
         <div className="flex flex-col h-full justify-between">

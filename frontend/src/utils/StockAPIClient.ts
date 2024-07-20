@@ -55,6 +55,7 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     }
 
     const data:StockItem[] = await response.json();
+    console.log(data);
 
     if (Array.isArray(data)) {
         return data
@@ -108,17 +109,21 @@ export const fetchItemsList = async (): Promise<Item[]> => {
     return data as Item[];
 };
 
-export const fetchItemDetails = async (numericID: number): Promise<Item> => {
-    const response = await fetch(`${apiUrl}/items/${numericID}`, getConfig);
+export const fetchItemDetails = async (stockID: number,itemID: number): Promise<Item> => {
+
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, getConfig);
 
     if (!response.ok) {
         console.error('Error in fetching item details');
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data = await response.json();
+    const data:Item  = await response.json();
+    console.log(data);
+
 
     if (Array.isArray(data)) {
+
         return data[0] as Item;
     } else {
         console.error('Missing necessary data in the response for fetchItemDetails');

@@ -6,6 +6,7 @@ import "./App.css";
 import Home from "./pages/home/Home.tsx";
 import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
 import ItemsList from "./components/ItemsList.tsx";
+import ItemDetails from "./components/ItemDetails.tsx";
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
                     <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
                     //TODO: check the need/relevance of these routes
                     {/*<Route path="/stocks/:ID" element={<StockDetails />} />*/}
-                    {/*<Route path="/stocks/:ID/items" element={<StockItems  ID={ID}/>} />*/}
+                    <Route path="/stocks/:ID/items/:ID" element={<ItemDetails />} />
                 </Routes>
             </main>
             <Footer/>

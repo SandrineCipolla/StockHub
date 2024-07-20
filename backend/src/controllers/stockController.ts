@@ -233,3 +233,28 @@ export const getAllItems = async (
         throw err;
     }
 };
+
+export const getItemDetails = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    stockID: number,
+    itemID: number
+) => {
+    try {
+        // Requête SQL pour récupérer les détails d'un item spécifique dans un stock donné
+        const query = "SELECT * FROM items WHERE ID = ? AND STOCK_ID = ?";
+        const [rows] = await connection.query(query, [itemID, stockID]);
+
+        const items = rows as RowDataPacket[]
+        // Vérification si l'item existe
+        if (items.length > 0) {
+            res.json(items[0]);
+        } else {
+            res.status(404).json({ error: "Item not found." });
+        }
+    } catch (error) {
+        console.error(`Error in getItemDetails:`, error);
+        res.status(500).json({ error: "Error while querying the database." });
+    }
+};
