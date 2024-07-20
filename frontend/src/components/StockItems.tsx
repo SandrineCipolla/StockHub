@@ -1,8 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {deleteStockItem, fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
+import {fetchStockItems} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import {StockItemsProps} from "../frontModels.ts";
-import {StockItem} from "../dataModels.ts";
 import {Link} from 'react-router-dom';
 
 
@@ -160,7 +159,7 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                     <p>{item.LABEL}</p>
                     <p>{item.QUANTITY}</p>
                     <p><Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
-                          className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
+                             className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
                         View Details
                     </Link></p>
                 </div>

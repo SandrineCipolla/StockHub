@@ -1,35 +1,59 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {fetchItemDetails} from "../utils/StockAPIClient.ts";
+import {useNavigate, useParams} from 'react-router-dom';
+import {fetchItemDetails, updateStockItemQuantity, deleteStockItem} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
-
 
 const ItemDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
-    const stockID = Number(ID);
     const itemID = Number(ID);
-
+    const stockID = Number(ID);
     const [itemDetail, setItemDetail] = useState<Item | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
-    // useEffect(() => {
-    // }, [itemDetail]);
+    const [quantity, setQuantity] = useState<number | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchItemDetails( stockID,itemID);
+                const data = await fetchItemDetails(stockID,itemID);
                 setItemDetail(data);
+                setQuantity(data.QUANTITY);
                 setIsLoading(false);
             } catch (err) {
                 setError('Failed to fetch item details');
                 setIsLoading(false);
             }
         };
-        //TODO affiner message d'erreur si la requete fetch ne fonctionne pas
         fetchData();
-    }, [stockID,itemID]);
+    }, [itemID]);
+
+    const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setQuantity(Number(event.target.value));
+    };
+
+    const handleQuantityUpdate = async () => {
+        if (itemDetail && quantity !== null) {
+            try {
+                await updateStockItemQuantity(itemDetail.STOCK_ID, itemDetail.ID, quantity);
+                const updatedItem = await fetchItemDetails(stockID,itemID);
+                setItemDetail(updatedItem);
+            } catch (error) {
+                console.error('Error in updating stock quantity', error);
+            }
+        }
+    };
+
+    const handleItemDelete = async () => {
+        if (itemDetail && window.confirm('Are you sure you want to delete this item?')) {
+            try {
+                await deleteStockItem(itemDetail.STOCK_ID, itemDetail.ID);
+                navigate(`/stocks/${itemDetail.STOCK_ID}`);
+            } catch (error) {
+                console.error('Error in deleting stock item:', error);
+            }
+        }
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -39,14 +63,44 @@ const ItemDetails: React.FC = () => {
 
     return (
         <div className="flex flex-col h-full justify-between">
-
             <div>
                 <h2 className="text-lg font-bold mb-2 mt-2">{itemDetail.LABEL}</h2>
                 <p className="text-m font-semibold">{itemDetail.DESCRIPTION}</p>
-                <p className="text-m font-semibold">Quantité : {itemDetail.QUANTITY}</p>
+                <div className="flex items-center justify-center mt-2">
+                    <p className="text-m font-semibold">Quantité : {itemDetail.QUANTITY}</p>
+                    <div>
+                        <input
+                            type="number"
+                            value={quantity !== null ? quantity : ''}
+                            onChange={handleQuantityChange}
+                            className="ml-2 p-1 border rounded w-16 text-center" // Adjust width here
+                        />
+                        <button
+                            onClick={handleQuantityUpdate}
+                            className="ml-2 p-1 bg-violet-400 text-white rounded"
+                        >
+                            Update Quantity
+                        </button>
+                    </div>
+                </div>
                 <p className="text-m font-semibold">Stock : {itemDetail.STOCK_ID}</p>
             </div>
-
+            <div className="self-center mt-4 mb-4">
+                <button
+                    onClick={handleItemDelete}
+                    className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded"
+                >
+                    Delete Item
+                </button>
+            </div>
+            <div className="self-center mt-4 mb-4">
+                <button
+                    onClick={() => navigate(`/stocks/${itemDetail.STOCK_ID}`)}
+                    className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
+                >
+                    Retour au stock
+                </button>
+            </div>
         </div>
     );
 };
