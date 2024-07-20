@@ -26,7 +26,7 @@ const ItemDetails: React.FC = () => {
             }
         };
         fetchData();
-    }, [itemID]);
+    }, [stockID,itemID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuantity(Number(event.target.value));
