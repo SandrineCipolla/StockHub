@@ -13,22 +13,24 @@ function App() {
     //const {ID} = useParams<{ ID: string }>();
     return (
         <Router>
-            <Header/>
-            <main>
-                <Routes>
-                    <Route path="/" element={<Navigate to="/home"/>}/>
-                    <Route path="/home" element={<Home/>}/>
-                    <Route path="/stocks" element={<StocksList/>}/>
-                    <Route path="/items" element={<ItemsList/>}/>
-                    <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
-                    //TODO: check the need/relevance of these routes
-                    {/*<Route path="/stocks/:ID" element={<StockDetails />} />*/}
-                    <Route path="/stocks/:ID/items/:ID" element={<ItemDetails />} />
-                </Routes>
-            </main>
-            <Footer/>
+            <div >
+                <Header/>
+                <main >
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/home"/>}/>
+                        <Route path="/home" element={<Home/>}/>
+                        <Route path="/stocks" element={<StocksList/>}/>
+                        <Route path="/items" element={<ItemsList/>}/>
+                        <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
+                        //TODO: check the need/relevance of these routes
+                        {/*<Route path="/stocks/:ID" element={<StockDetails />} />*/}
+                        <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
+                    </Routes>
+                </main>
+                <Footer/>
+            </div>
         </Router>
-    );
+);
 }
 
 export default App;
