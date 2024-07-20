@@ -68,14 +68,20 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
             await deleteStockItem(stockID, itemID);
 
             // Re-fetch les éléments de stock pour mettre à jour la liste
-            const updatedStockItems = await fetchStockItems(stockID);
-
+            // const updatedStockItems = await fetchStockItems(stockID);
+            // if (setStockItems) {
+            //     setStockItems(updatedStockItems);
+            // }
+            //
+            // if (setQuantities) {
+            //     setQuantities(updatedStockItems.map(item => item.QUANTITY));
+            // }
+            // Mettre à jour l'état local en supprimant l'élément correspondant
             if (setStockItems) {
-                setStockItems(updatedStockItems);
+                setStockItems(prevItems => prevItems.filter(item => item.ID !== itemID));
             }
-
             if (setQuantities) {
-                setQuantities(updatedStockItems.map(item => item.QUANTITY));
+                setQuantities(prevQuantities => prevQuantities.filter((_, index) => stockItems[index].ID !== itemID));
             }
         } catch (error) {
             console.error('Error in deleting stock item:', error);

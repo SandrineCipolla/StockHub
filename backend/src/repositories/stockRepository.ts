@@ -14,7 +14,6 @@ export class StockRepository {
                 [quantity, itemID, stockID])
 
             return { itemID, quantity, stockID };
-
     }
 
     static async addStockItem(connection: PoolConnection, item: Partial<Stock>, stockID: number) {
@@ -32,7 +31,5 @@ export class StockRepository {
                 item.quantity,
                 stockID
             ]);
-
     }
-
 }
