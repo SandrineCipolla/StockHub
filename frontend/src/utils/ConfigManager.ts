@@ -39,6 +39,19 @@ class ConfigManager {
             body: JSON.stringify(body),
         };
     }
+
+
+    static deleteFetchConfig(body: Record<string, unknown> ) {
+        return {
+            method: 'DELETE',
+            headers: {
+                [CONTENT_TYPE]: APPLICATION_JSON,
+                [CREDENTIALS]: INCLUDE,
+            },
+            body: JSON.stringify(body),
+        };
+    }
+
 }
 
 export default ConfigManager;

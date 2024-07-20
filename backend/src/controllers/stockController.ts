@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+import {FieldPacket, OkPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock, UpdateStockRequest} from "../models";
@@ -150,7 +150,7 @@ export const updateStockItemQuantity = async (
         console.error('Error in updateStockItemQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
-}
+};
 
 export const addStockItem = async (
     req: Request,
@@ -176,5 +176,35 @@ export const addStockItem = async (
         } else {
             res.status(500).json({error: 'Error while updating the database.'});
         }
+    }
+
+
+};
+
+export const deleteStockItem = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    stockID: number,
+    itemID: number
+) => {
+    try {
+        const { ITEM } = req.body;
+        // Vérification si l'ITEM dans le corps de la requête correspond à l'itemID dans l'URL
+        if (ITEM !== itemID) {
+            return res.status(400).json({ error: "Item ID in the body does not match item ID in the URL" });
+        }
+        // Suppression de la BDD
+        const [result] = await connection.query<OkPacket>("DELETE FROM items WHERE ID = ? AND STOCK_ID = ?", [itemID, stockID]);
+
+        // Vérification de la suppression de l'item
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Item not found or already deleted" });
+        }
+
+        res.status(200).json({ message: "Stock item deleted successfully." });
+    } catch (err: any) {
+        console.error(`Error in deleteStockItem:`, err);
+        res.status(500).json({ error: "Error while deleting the stock item from the database." });
     }
 };

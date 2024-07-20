@@ -89,6 +89,20 @@ const configureStockRoutes = (): Router => {
         }
     });
 
+    //Route pour supprimer un item
+    router.delete("/stocks/:stockID/items/:itemID", async (req, res) => {
+        const itemID = Number(req.params.itemID);
+        const stockID = Number(req.params.stockID);
+        try {
+            const connection = await connectToDatabase();
+            await stockController.deleteStockItem(req, res, connection, stockID, itemID);
+            connection.release();
+        } catch (error) {
+            console.error(`Error in route /stocks/${stockID}/items/${itemID}:`, error);
+            res.status(500).json({error: "Error while deleting the stock item from the database."});
+        }
+    });
+
     return router;
 };
 

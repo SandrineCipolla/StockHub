@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
+import {deleteStockItem, fetchStockItems, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import {StockItemsProps} from "../frontModels.ts";
+import {StockItem} from "../dataModels.ts";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
-    
+
     const numericID = Number(ID);
 
     const [quantities, setQuantities] = useState<number[]>([]);
@@ -31,6 +32,15 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         fetchData().catch(error => console.error('Error in fetching data:', error));
     }, [ID, numericID, setStockItems]);
 
+    function refreshStockOnView(updatedStockItems: StockItem[]) {
+        if (setStockItems) {
+            setStockItems(updatedStockItems);
+        }
+        if (setQuantities) {
+            setQuantities(updatedStockItems.map(item => item.QUANTITY));
+        }
+    }
+
     const handleQuantityChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newQuantities = [...quantities];
         newQuantities[index] = Number(event.target.value);
@@ -43,22 +53,35 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
             console.error('Quantity is undefined');
             return;
         }
-
         try {
             await updateStockItemQuantity(stockID, stockItems[index].ID, quantities[index]);
             const updatedStockItems = await fetchStockItems(numericID);
-            if (setStockItems) {
-                setStockItems(updatedStockItems);
-            }
-            if (setQuantities) {
-                setQuantities(updatedStockItems.map(item => item.QUANTITY));
-            }
+            refreshStockOnView(updatedStockItems);
             console.info('PUT request sent with quantity:', quantities[index]);
         } catch (error) {
             console.error('Error in updating stock quantity', error);
         }
     };
 
+    const handleItemDelete = async (stockID: number, itemID: number) => {
+        if (!window.confirm('Are you sure you want to delete this item?')) {
+            return;
+        }
+        try {
+            // Appel de la fonction deleteStockItem
+            await deleteStockItem(stockID, itemID);
+
+            const deletedItem = stockItems.find(item => item.ID === itemID);
+            if (deletedItem) {
+                const indexToDelete = stockItems.indexOf(deletedItem);
+                stockItems.splice(indexToDelete, 1);
+            }
+
+            refreshStockOnView(stockItems);
+        } catch (error) {
+            console.error('Error in deleting stock item:', error);
+        }
+    };
 
     if (!stockItems) {
         return <div>Loading...</div>;
@@ -106,6 +129,13 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                         <button onClick={() => handleQuantityUpdate(item.STOCK_ID, index)}
                                 className="bg-violet-400 text-purple-200 hover:bg-violet-600 font-bold py-1 px-2 rounded text-xs w-2/3 mr-1 mt-0.5">
                             Update
+                        </button>
+                    </div>
+
+                    <div className="ml-auto flex items-start w-32">
+                        <button onClick={() => handleItemDelete(item.STOCK_ID, item.ID)}
+                                className="bg-red-500 text-white hover:bg-red-700 font-bold py-1 px-2 rounded text-xs w-2/3 mr-1 mt-0.5">
+                            Delete
                         </button>
                     </div>
 
