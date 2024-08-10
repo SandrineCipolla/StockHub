@@ -10,7 +10,7 @@ import ItemDetails from "./components/ItemDetails.tsx";
 
 
 function App() {
-    //const {ID} = useParams<{ ID: string }>();
+
     return (
         <Router>
             <div >

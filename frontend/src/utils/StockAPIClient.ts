@@ -83,6 +83,20 @@ export const addStockItem = async (stockID: number, item: { LABEL: string; DESCR
     return await response.json();
 };
 
+export const addStock = async (LABEL: string,DESCRIPTION:string):Promise<Stock> => {
+    const body = { LABEL,DESCRIPTION };
+    console.debug('Sending request with body:', body);
+    const postConfig = ConfigManager.postFetchConfig(body);
+    const response = await fetch(`${apiUrl}/stocks/`, postConfig);
+
+    if (!response.ok) {
+        console.error('Error in addStock');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
 export const deleteStockItem = async (stockID: number, itemID: number) => {
     const body = {ITEM : itemID}
     const deleteConfig = ConfigManager.deleteFetchConfig(body);
