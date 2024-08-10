@@ -8,6 +8,7 @@ import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
 import {readAllStocks} from "../repositories/readStockRepository";
 
+//TODO move sql request in readStockrepository or stockRepository (change name)
 export const getAllStocks = async (
     req: Request,
     res: Response,

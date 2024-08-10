@@ -11,7 +11,7 @@ export const readAllStocks = async (
         return stocks[0]
     }
     catch(err :any) {
-        console.log('Error occured when retrieving all items', err);
+        console.log('Error occured when retrieving all stocks', err);
         throw err;
     }
 }
