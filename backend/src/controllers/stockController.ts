@@ -6,7 +6,7 @@ import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock, UpdateStockRequest} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
-
+import {readAllStocks} from "../repositories/readStockRepository";
 
 export const getAllStocks = async (
     req: Request,
@@ -14,10 +14,7 @@ export const getAllStocks = async (
     connection: PoolConnection
 ) => {
     try {
-        const [stocks] = (await connection.query("SELECT * FROM stocks")) as [
-            RowDataPacket[],
-            FieldPacket[]
-        ];
+        const stocks=(await readAllStocks(connection))
 
         if (res) {
             res.status(200).json(stocks);
