@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {fetchItemDetails, updateStockItemQuantity, deleteStockItem} from "../utils/StockAPIClient.ts";
+import {deleteStockItem, fetchItemDetails, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
 import {faArrowLeft, faSync, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -18,7 +18,7 @@ const ItemDetails: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchItemDetails(stockID,itemID);
+                const data = await fetchItemDetails(stockID, itemID);
                 setItemDetail(data);
                 setQuantity(data.QUANTITY);
                 setIsLoading(false);
@@ -28,22 +28,24 @@ const ItemDetails: React.FC = () => {
             }
         };
         fetchData();
-    }, [stockID,itemID]);
+    }, [stockID, itemID]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuantity(Number(event.target.value));
     };
 
     const handleQuantityUpdate = async () => {
-        if (itemDetail && quantity !== null) {
-            try {
-                await updateStockItemQuantity(itemDetail.STOCK_ID, itemDetail.ID, quantity);
-                const updatedItem = await fetchItemDetails(stockID,itemID);
-                setItemDetail(updatedItem);
-            } catch (error) {
-                console.error('Error in updating stock quantity', error);
-            }
+        if (!itemDetail || quantity == null) {
+            return
         }
+        try {
+            await updateStockItemQuantity(itemDetail.STOCK_ID, itemDetail.ID, quantity);
+            const updatedItem = await fetchItemDetails(stockID, itemID);
+            setItemDetail(updatedItem);
+        } catch (error) {
+            console.error('Error in updating stock quantity', error);
+        }
+
     };
 
     const handleItemDelete = async () => {
@@ -81,7 +83,7 @@ const ItemDetails: React.FC = () => {
                             onClick={handleQuantityUpdate}
                             className="ml-2 p-1 bg-violet-400 text-white rounded"
                         >
-                            <FontAwesomeIcon icon={faSync} />
+                            <FontAwesomeIcon icon={faSync}/>
                         </button>
                     </div>
                 </div>
@@ -92,7 +94,7 @@ const ItemDetails: React.FC = () => {
                     onClick={handleItemDelete}
                     className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded"
                 >
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon icon={faTrash}/>
                 </button>
             </div>
             <div className="self-center mt-4 mb-4">
@@ -100,7 +102,7 @@ const ItemDetails: React.FC = () => {
                     onClick={() => navigate(`/stocks/${itemDetail.STOCK_ID}`)}
                     className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
                 >
-                    <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+                    <FontAwesomeIcon icon={faArrowLeft} className="mr-2"/>
                 </button>
             </div>
         </div>
