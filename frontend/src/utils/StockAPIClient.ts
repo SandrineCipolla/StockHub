@@ -1,4 +1,4 @@
-import {Stock, StockDetail, StockItem} from "../dataModels.ts";
+import {Item, Stock, StockDetail, StockItem} from "../dataModels.ts";
 import ConfigManager from "./ConfigManager.ts";
 
 const apiUrl = ConfigManager.getApiServerUrl();
@@ -55,6 +55,7 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     }
 
     const data:StockItem[] = await response.json();
+    console.log(data);
 
     if (Array.isArray(data)) {
         return data
@@ -94,6 +95,35 @@ export const deleteStockItem = async (stockID: number, itemID: number) => {
     }
 
     return await response.json();
+};
+
+export const fetchItemsList = async (): Promise<Item[]> => {
+    const targetUrl = `${apiUrl}/items`;
+    const response = await fetch(targetUrl, getConfig);
+
+    if (!response.ok) {
+        console.error('Error in fetching items list. [httpStatus]:${response.status} - [targetUrl] : ${targetUrl}');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data as Item[];
+};
+
+export const fetchItemDetails = async (stockID:number,itemID: number): Promise<Item> => {
+
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, getConfig);
+
+    if (!response.ok) {
+        console.error('Error in fetching item details');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data:Item  = await response.json();
+    console.log(data);
+
+    return data as Item;
+
 };
 
 

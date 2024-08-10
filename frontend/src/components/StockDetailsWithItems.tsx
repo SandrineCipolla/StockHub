@@ -4,6 +4,8 @@ import StockDetails from "./StockDetails.tsx";
 import StockItems from "./StockItems.tsx";
 import AddStockItem from "./AddStockItem.tsx";
 import {StockItemsProvider} from "../contexts/StockItemsContext.tsx";
+import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 const StockDetailsWithItems: React.FC = () => {
@@ -22,7 +24,8 @@ const StockDetailsWithItems: React.FC = () => {
                 </div>
                 <div className="self-center">
                     <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950"
-                            onClick={() => navigate('/stocks')}>Retour à la liste des stocks
+                            onClick={() => navigate('/stocks')}>
+                        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                     </button>
                 </div>
             </div>

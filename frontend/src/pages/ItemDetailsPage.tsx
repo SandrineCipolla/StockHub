@@ -6,7 +6,7 @@ const Home: React.FC = () => {
     return (
 
         <div>
-            <h1>Page d'accueil</h1>
+            <h1>Page produit</h1>
             <nav>
                 <ul>
                     <li className="nav-item">

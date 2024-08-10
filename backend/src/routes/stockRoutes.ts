@@ -1,6 +1,7 @@
 import {Router} from "express";
 import * as stockController from "../controllers/stockController";
 import {connectToDatabase} from "../dbUtils";
+import {getItemDetails} from "../controllers/stockController";
 
 const configureStockRoutes = (): Router => {
     const router = Router();
@@ -8,7 +9,6 @@ const configureStockRoutes = (): Router => {
     //Route pour récupération de la liste des stocks
     router.get("/stocks", async (req, res) => {
         try {
-
             const connection = await connectToDatabase();
             await stockController.getAllStocks(req, res, connection);
             connection.release();
@@ -103,6 +103,32 @@ const configureStockRoutes = (): Router => {
         }
     });
 
+    //Route pour récupérer la liste des items
+    router.get("/items", async (req, res) => {
+        try {
+            const connection = await connectToDatabase();
+            await stockController.getAllItems(req, res, connection);
+            connection.release();
+           // res.json(items)
+        } catch (error) {
+            //TODO :affiner les message d'erreur ( ex: ajouter la route et le verbe utilisés pour faciliter le debug)
+            console.error(`Error in route /items:`, error);
+            res.status(500).json({error: "Error while querying the database for items list."});
+        }
+    });
+
+    // Route pour afficher un item spécifique d'un stock
+    router.get("/stocks/:stockID/items/:itemID", async (req, res) => {
+        const {  itemID } = req.params;
+        try {
+            const connection = await connectToDatabase();
+            await stockController.getItemDetails(req, res, connection, Number(itemID));
+            connection.release();
+        } catch (error) {
+            console.error(`Error in route /items/${itemID}:`, error);
+            res.status(500).json({ error: "Error while querying the database." });
+        }
+    });
     return router;
 };
 

@@ -6,18 +6,16 @@ import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock, UpdateStockRequest} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
+import {readAllStocks} from "../repositories/readStockRepository";
 
-
+//TODO move sql request in readStockrepository or stockRepository (change name)
 export const getAllStocks = async (
     req: Request,
     res: Response,
     connection: PoolConnection
 ) => {
     try {
-        const [stocks] = (await connection.query("SELECT * FROM stocks")) as [
-            RowDataPacket[],
-            FieldPacket[]
-        ];
+        const stocks=(await readAllStocks(connection))
 
         if (res) {
             res.status(200).json(stocks);
@@ -177,8 +175,6 @@ export const addStockItem = async (
             res.status(500).json({error: 'Error while updating the database.'});
         }
     }
-
-
 };
 
 export const deleteStockItem = async (
@@ -206,5 +202,56 @@ export const deleteStockItem = async (
     } catch (err: any) {
         console.error(`Error in deleteStockItem:`, err);
         res.status(500).json({ error: "Error while deleting the stock item from the database." });
+    }
+};
+
+export const getAllItems = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection
+) => {
+    try {
+        const [items] = (await connection.query("SELECT * FROM items")) as [
+            RowDataPacket[],
+            FieldPacket[]
+        ];
+
+        if (res) {
+            res.status(200).json(items);
+        } else {
+            throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
+        }
+    } catch (err: any) {
+        console.error(err);
+        if (res) {
+            //TODO :affiner les message d'erreur.
+            //TODO :créer une const pour le console.error
+            res.status(500).json({error: err.message});
+        }
+        throw err;
+    }
+};
+
+export const getItemDetails = async (
+    req: Request,
+    res: Response,
+    connection: PoolConnection,
+    itemID: number
+) => {
+    try {
+        // Requête SQL pour récupérer les détails d'un item spécifique dans un stock donné
+        const query = "SELECT * FROM items WHERE ID = ?";
+        const [rows] = await connection.query(query, [itemID]);
+
+        const items = rows as RowDataPacket[]
+        // Vérification si l'item existe
+        if (items.length > 0) {
+            res.json(items[0]);
+        } else {
+            res.status(404).json({ error: "Item not found." });
+        }
+    } catch (error) {
+        console.error(`Error in getItemDetails:`, error);
+        res.status(500).json({ error: "Error while querying the database." });
     }
 };
