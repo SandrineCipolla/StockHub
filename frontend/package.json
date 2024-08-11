@@ -7,6 +7,7 @@
   "scripts": {
     "start": "npm run dev",
     "start:host": "vite --host",
+    "build:prod": "tsc && vite build --mode production",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -48,6 +49,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "5.2.6"
   }
 }

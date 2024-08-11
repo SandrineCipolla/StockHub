@@ -59,6 +59,7 @@ const configureStockRoutes = (): Router => {
             res.status(500).json({error: "Error while querying the database."});
         }
     });
+
     //Route pour mettre à jour un stock (via l'id?)
     router.put("/stocks/:stockID/items/:itemID", async (req, res) => {
         const itemID = Number(req.params.itemID);

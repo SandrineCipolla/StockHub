@@ -1,0 +1,26 @@
+services:
+  frontend:
+    image: frontend_stockhub:latest
+    ports:
+      - 5174:80
+  backend:
+    image: backend_stockhub:latest
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_USER: stockhub_user
+      DB_PASSWORD: stockhub_password
+      DB_PORT: 3306
+      DB_DATABASE: stockhub
+    ports:
+      - 3002:3000
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stockhub
+      MYSQL_USER: stockhub_user
+      MYSQL_PASSWORD: stockhub_password
+    ports:
+      - 3320:3306

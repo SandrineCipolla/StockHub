@@ -98,11 +98,13 @@ export const deleteStockItem = async (stockID: number, itemID: number) => {
 };
 
 export const fetchItemsList = async (): Promise<Item[]> => {
+
     const targetUrl = `${apiUrl}/items`;
     const response = await fetch(targetUrl, getConfig);
 
     if (!response.ok) {
         console.error('Error in fetching items list. [httpStatus]:${response.status} - [targetUrl] : ${targetUrl}');
+
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 

@@ -5,6 +5,10 @@ import * as path from "node:path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: parseInt(process.env.VITE_SERVER_PORT),
+    host: process.env.VITE_SERVER_NAME,
+  },
   build: {
     rollupOptions: {
       input: path.resolve(__dirname, 'index.html'),

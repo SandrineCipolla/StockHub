@@ -5,7 +5,7 @@ const INCLUDE = 'include';
 
 class ConfigManager {
     static getApiServerUrl() {
-        return import.meta.env.VITE_API_SERVER_URL || 'http://localhost:3000/api/v1';
+        return import.meta.env.VITE_API_SERVER_URL;
     }
 
     static getFetchConfig() {

@@ -50,6 +50,9 @@ button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
+.menu:hover {
+  color: #5b21b6;
+}
 
 body {
     margin: auto;

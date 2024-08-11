@@ -9,6 +9,7 @@ const Home: React.FC = () => {
             <h1>Page produit</h1>
             <nav>
                 <ul>
+
                     <li className="nav-item">
                         <Link to="/stocks" className="menu">Mes stocks</Link>
                         <span className="separator"></span>
