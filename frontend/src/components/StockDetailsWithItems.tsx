@@ -25,7 +25,7 @@ const StockDetailsWithItems: React.FC = () => {
                 <div className="self-center">
                     <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950"
                             onClick={() => navigate('/stocks')}>
-                        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+                        <FontAwesomeIcon icon={faArrowLeft} className="mr-2"/>
                     </button>
                 </div>
             </div>

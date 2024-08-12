@@ -53,6 +53,9 @@ button:focus-visible {
 .menu:hover {
   color: #5b21b6;
 }
+.menu:hover {
+  color: #5b21b6;
+}
 
 body {
     margin: auto;

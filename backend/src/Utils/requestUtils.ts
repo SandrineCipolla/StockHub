@@ -1,11 +1,11 @@
 import { Request } from 'express';
-import {Stock} from "../models";
+import {Stock, StockToCreate} from "../models";
 
 
 export const extractDataFromRequestBody = (req: Request, keys: string[]) => {
-    const data: Partial<Stock> = {};
+    const data: Partial<StockToCreate> = {};
     keys.forEach(key => {
-        data[key as keyof Stock] = req.body[key];
+        data[key as keyof StockToCreate] = req.body[key];
     });
     return data;
 };

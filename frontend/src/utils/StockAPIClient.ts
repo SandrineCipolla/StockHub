@@ -55,7 +55,6 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     }
 
     const data:StockItem[] = await response.json();
-    console.log(data);
 
     if (Array.isArray(data)) {
         return data
@@ -78,6 +77,20 @@ export const addStockItem = async (stockID: number, item: { LABEL: string; DESCR
 
     if (!response.ok) {
         console.error('Error in addStockItem');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
+export const addStock = async (LABEL: string,DESCRIPTION:string):Promise<Stock> => {
+    const body = { LABEL,DESCRIPTION };
+    console.debug('Sending request with body:', body);
+    const postConfig = ConfigManager.postFetchConfig(body);
+    const response = await fetch(`${apiUrl}/stocks/`, postConfig);
+
+    if (!response.ok) {
+        console.error('Error in addStock');
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 

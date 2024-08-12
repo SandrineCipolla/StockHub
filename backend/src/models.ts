@@ -5,6 +5,11 @@ export interface Stock {
     quantity: number;
 }
 
+export interface StockToCreate {
+    LABEL: string;
+    DESCRIPTION: string;
+}
+
 export class UpdateStockRequest {
     itemID: number;
     quantity: number;

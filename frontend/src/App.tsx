@@ -10,12 +10,11 @@ import ItemDetails from "./components/ItemDetails.tsx";
 
 
 function App() {
-    //const {ID} = useParams<{ ID: string }>();
     return (
         <Router>
-            <div >
+            <div>
                 <Header/>
-                <main >
+                <main>
                     <Routes>
                         <Route path="/" element={<Navigate to="/home"/>}/>
                         <Route path="/home" element={<Home/>}/>
@@ -28,7 +27,7 @@ function App() {
                 <Footer/>
             </div>
         </Router>
-);
+    );
 }
 
 export default App;

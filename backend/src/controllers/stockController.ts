@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 import {FieldPacket, OkPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
 import {StockRepository} from "../repositories/stockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
-import {Stock, UpdateStockRequest} from "../models";
+import {Stock, StockToCreate, UpdateStockRequest} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
 import {readAllStocks} from "../repositories/readStockRepository";
@@ -39,11 +39,10 @@ export const createStock = async (
     connection: PoolConnection,
 ) => {
     try {
-        const stock: Partial<Stock> = extractDataFromRequestBody(req, ['id', 'label', 'description']);
-        await connection.query("INSERT INTO stocks VALUES (?, ?, ?)", [
-            stock.id,
-            stock.label,
-            stock.description,
+        const stock :Partial<StockToCreate> = extractDataFromRequestBody(req, [ 'LABEL', 'DESCRIPTION']);
+        await connection.query("INSERT INTO stocks(LABEL, DESCRIPTION) VALUES (?, ?)", [
+            stock.LABEL,
+            stock.DESCRIPTION,
         ]);
 
         if (res && res.json) {
