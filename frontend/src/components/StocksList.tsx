@@ -6,7 +6,6 @@ import AddStock from "./AddStock.tsx";
 
 
 const StocksList: React.FC = () => {
-
     const [stocks, setStocks] = useState<Stock[]>([]);
     const navigate = useNavigate();
 

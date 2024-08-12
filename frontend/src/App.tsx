@@ -10,12 +10,11 @@ import ItemDetails from "./components/ItemDetails.tsx";
 
 
 function App() {
-
     return (
         <Router>
-            <div >
+            <div>
                 <Header/>
-                <main >
+                <main>
                     <Routes>
                         <Route path="/" element={<Navigate to="/home"/>}/>
                         <Route path="/home" element={<Home/>}/>
