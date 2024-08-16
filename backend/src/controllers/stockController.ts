@@ -1,165 +1,86 @@
 import {Request, Response} from "express";
-
-import {FieldPacket, OkPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
-import {WriteStockRepository} from "../repositories/writeStockRepository";
+import {PoolConnection} from "mysql2/promise";
+import {StockService} from "../services/stockService";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
-import {Stock, StockToCreate, UpdateStockRequest} from "../models";
-import {createUpdatedItemQuantity} from "../Utils/itemFactory";
+import {StockToCreate, UpdateStockRequest} from "../models";
 import {ValidationError} from "../errors";
-import {
-    readAllItems,
-    readAllStocks,
-    readItemDetails,
-    readStockDetails,
-    readStockItems
-} from "../repositories/readStockRepository";
 
-//TODO move sql request in readStockrepository or stockRepository (change name)
-export const getAllStocks = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection
-) => {
+export const getAllStocks = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
-        const stocks = await readAllStocks(connection)
-
-        if (res) {
-            res.status(200).json(stocks);
-        } else {
-            throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
-        }
+        const stockService = new StockService(connection);
+        const stocks = await stockService.getAllStocks();
+        res.status(200).json(stocks);
     } catch (err: any) {
         console.error(err);
-        if (res) {
-            //TODO :affiner les message d'erreur.
-            //TODO :créer une const pour le console.error
-            res.status(500).json({error: err.message});
-        }
-        throw err;
+        res.status(500).json({error: err.message});
     }
 };
 
-export const createStock = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-) => {
+export const createStock = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
         const stock: Partial<StockToCreate> = extractDataFromRequestBody(req, ['LABEL', 'DESCRIPTION']);
-        await WriteStockRepository.createStock(connection, stock);
-
-        if (res && res.json) {
-            res.json({message: "Stock created successfully."});
-        } else {
-            throw new Error(
-                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
-            );
-        }
+        const stockService = new StockService(connection);
+        await stockService.createStock( stock);
+        res.json({message: "Stock created successfully."});
     } catch (err: any) {
         console.error(err);
-        if (res && res.json) {
-            //TODO :affiner les message d'erreur.
-            res.json({error: err.message});
-        }
-        throw err;
+        res.json({error: err.message});
     }
 };
 
-export const getStockDetails = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-    ID: number
-) => {
+export const getStockDetails = async (req: Request, res: Response, connection: PoolConnection, ID: number) => {
     try {
-        const stock = await readStockDetails(connection, ID);
-
-        if (res && res.json) {
-            res.json(stock);
-        } else {
-            throw new Error(
-                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
-            );
-        }
+        const stockService = new StockService(connection);
+        const stock = await stockService.getStockDetails(ID);
+        res.json(stock);
     } catch (err: any) {
         console.error(err);
-        if (res && res.json) {
-            //TODO :affiner les message d'erreur.
-            res.json({error: err.message});
-        }
-        throw err;
+        res.json({error: err.message});
     }
 };
 
-export const getStockItems = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-    ID: number
-) => {
+export const getStockItems = async (req: Request, res: Response, connection: PoolConnection, ID: number) => {
     try {
-        const items = await readStockItems(connection, ID);
-        if (res && res.json) {
-            res.json(items);
-        } else {
-            throw new Error(
-                "Response or res.json is undefined. Cannot call res.status and res.json for error handling."
-            );
-        }
+        const stockService = new StockService(connection);
+        const items = await stockService.getStockItems(ID);
+        res.json(items);
     } catch (err: any) {
         console.error(err);
-        if (res && res.json) {
-            //TODO :affiner les message d'erreur.
-            res.json({error: err.message});
-        }
-        throw err;
+        res.json({error: err.message});
     }
 };
 
-export const updateStockItemQuantity = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-) => {
+export const updateStockItemQuantity = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
         const itemID = Number(req.params.itemID);
         const {QUANTITY} = req.body;
         const stockID = Number(req.params.stockID);
 
-        const updatedItemQuantity: Partial<Stock> = createUpdatedItemQuantity(itemID, QUANTITY);
-
-        console.info('Stock item update', updatedItemQuantity, 'with stock id', stockID)
-
+        const updatedItemQuantity = {id: itemID, quantity: QUANTITY};
         if (updatedItemQuantity.id === undefined || updatedItemQuantity.quantity === undefined) {
             res.status(400).json({error: 'ID and QUANTITY must be provided.'});
             return;
         }
+        const stockService = new StockService(connection);
         const updateRequest = new UpdateStockRequest(updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
-        await WriteStockRepository.updateStockItemQuantity(connection, updateRequest);
+        await stockService.updateStockItemQuantity(updateRequest);
         res.json({message: "Stock updated successfully."});
-    } catch (err) {
-        //TODO :affiner les message d'erreur.
+    } catch (err: any) {
         console.error('Error in updateStockItemQuantity:', err);
         res.status(500).json({error: 'Error while updating the database.'});
     }
 };
 
-export const addStockItem = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-    stockID: number,
-) => {
+export const addStockItem = async (req: Request, res: Response, connection: PoolConnection, stockID: number) => {
     try {
-
-        const itemUpdated: Partial<Stock> = {
+        const itemUpdated = {
             id: undefined,
             label: req.body['LABEL'],
             description: req.body['DESCRIPTION'],
             quantity: req.body['QUANTITY']
-        }
-
-        await WriteStockRepository.addStockItem(connection, itemUpdated, stockID);
+        };
+        const stockService = new StockService(connection);
+        await stockService.addStockItem(itemUpdated, stockID);
         res.status(201).json({message: "Stock item added successfully."});
     } catch (err: any) {
         console.error('Error in addStockItem:', err);
@@ -171,27 +92,17 @@ export const addStockItem = async (
     }
 };
 
-export const deleteStockItem = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-    stockID: number,
-    itemID: number
-) => {
+export const deleteStockItem = async (req: Request, res: Response, connection: PoolConnection, stockID: number, itemID: number) => {
     try {
         const {ITEM} = req.body;
-        // Vérification si l'ITEM dans le corps de la requête correspond à l'itemID dans l'URL
         if (ITEM !== itemID) {
             return res.status(400).json({error: "Item ID in the body does not match item ID in the URL"});
         }
-        // Suppression de la BDD
-        const result = await WriteStockRepository.deleteStockItem(connection, stockID, itemID);
-
-        // Vérification de la suppression de l'item
+        const stockService = new StockService(connection);
+        const result = await stockService.deleteStockItem(stockID, itemID);
         if (result.affectedRows === 0) {
             return res.status(404).json({error: "Item not found or already deleted"});
         }
-
         res.status(200).json({message: "Stock item deleted successfully."});
     } catch (err: any) {
         console.error(`Error in deleteStockItem:`, err);
@@ -199,40 +110,21 @@ export const deleteStockItem = async (
     }
 };
 
-export const getAllItems = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection
-) => {
+export const getAllItems = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
-        const items = await readAllItems(connection);
-
-        if (res) {
-            res.status(200).json(items);
-        } else {
-            throw new Error("Response is undefined. Cannot call res.status and res.json for error handling.");
-        }
+        const stockService = new StockService(connection);
+        const items = await stockService.getAllItems();
+        res.status(200).json(items);
     } catch (err: any) {
         console.error(err);
-        if (res) {
-            //TODO :affiner les message d'erreur.
-            //TODO :créer une const pour le console.error
-            res.status(500).json({error: err.message});
-        }
-        throw err;
+        res.status(500).json({error: err.message});
     }
 };
 
-export const getItemDetails = async (
-    req: Request,
-    res: Response,
-    connection: PoolConnection,
-    itemID: number
-) => {
+export const getItemDetails = async (req: Request, res: Response, connection: PoolConnection, itemID: number) => {
     try {
-        // Requête SQL pour récupérer les détails d'un item spécifique dans un stock donné
-        const items = await readItemDetails(connection, itemID);
-        // Vérification si l'item existe
+        const stockService = new StockService(connection);
+        const items = await stockService.getItemDetails(itemID);
         if (items.length > 0) {
             res.json(items[0]);
         } else {
