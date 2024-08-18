@@ -1,12 +1,18 @@
 import {Request, Response} from "express";
 
 import {FieldPacket, OkPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
-import {StockRepository} from "../repositories/stockRepository";
+import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {Stock, StockToCreate, UpdateStockRequest} from "../models";
 import {createUpdatedItemQuantity} from "../Utils/itemFactory";
 import {ValidationError} from "../errors";
-import {readAllStocks} from "../repositories/readStockRepository";
+import {
+    readAllItems,
+    readAllStocks,
+    readItemDetails,
+    readStockDetails,
+    readStockItems
+} from "../repositories/readStockRepository";
 
 //TODO move sql request in readStockrepository or stockRepository (change name)
 export const getAllStocks = async (
@@ -15,7 +21,7 @@ export const getAllStocks = async (
     connection: PoolConnection
 ) => {
     try {
-        const stocks=(await readAllStocks(connection))
+        const stocks = await readAllStocks(connection)
 
         if (res) {
             res.status(200).json(stocks);
@@ -39,11 +45,8 @@ export const createStock = async (
     connection: PoolConnection,
 ) => {
     try {
-        const stock :Partial<StockToCreate> = extractDataFromRequestBody(req, [ 'LABEL', 'DESCRIPTION']);
-        await connection.query("INSERT INTO stocks(LABEL, DESCRIPTION) VALUES (?, ?)", [
-            stock.LABEL,
-            stock.DESCRIPTION,
-        ]);
+        const stock: Partial<StockToCreate> = extractDataFromRequestBody(req, ['LABEL', 'DESCRIPTION']);
+        await WriteStockRepository.createStock(connection, stock);
 
         if (res && res.json) {
             res.json({message: "Stock created successfully."});
@@ -69,10 +72,7 @@ export const getStockDetails = async (
     ID: number
 ) => {
     try {
-        const [stock] = (await connection.query(
-            "SELECT * FROM stocks WHERE ID = ?",
-            [ID]
-        )) as [RowDataPacket[], FieldPacket[]];
+        const stock = await readStockDetails(connection, ID);
 
         if (res && res.json) {
             res.json(stock);
@@ -98,11 +98,7 @@ export const getStockItems = async (
     ID: number
 ) => {
     try {
-        const [items] = (await connection.query(
-            "SELECT * FROM items WHERE STOCK_ID = ?",
-            [ID]
-        )) as [RowDataPacket[], FieldPacket[]];
-
+        const items = await readStockItems(connection, ID);
         if (res && res.json) {
             res.json(items);
         } else {
@@ -138,9 +134,8 @@ export const updateStockItemQuantity = async (
             res.status(400).json({error: 'ID and QUANTITY must be provided.'});
             return;
         }
-        //await StockRepository.updateStockItemQuantity(connection, updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
         const updateRequest = new UpdateStockRequest(updatedItemQuantity.id, updatedItemQuantity.quantity, stockID);
-        await StockRepository.updateStockItemQuantity(connection, updateRequest);
+        await WriteStockRepository.updateStockItemQuantity(connection, updateRequest);
         res.json({message: "Stock updated successfully."});
     } catch (err) {
         //TODO :affiner les message d'erreur.
@@ -164,7 +159,7 @@ export const addStockItem = async (
             quantity: req.body['QUANTITY']
         }
 
-        await StockRepository.addStockItem(connection, itemUpdated, stockID);
+        await WriteStockRepository.addStockItem(connection, itemUpdated, stockID);
         res.status(201).json({message: "Stock item added successfully."});
     } catch (err: any) {
         console.error('Error in addStockItem:', err);
@@ -184,23 +179,23 @@ export const deleteStockItem = async (
     itemID: number
 ) => {
     try {
-        const { ITEM } = req.body;
+        const {ITEM} = req.body;
         // Vérification si l'ITEM dans le corps de la requête correspond à l'itemID dans l'URL
         if (ITEM !== itemID) {
-            return res.status(400).json({ error: "Item ID in the body does not match item ID in the URL" });
+            return res.status(400).json({error: "Item ID in the body does not match item ID in the URL"});
         }
         // Suppression de la BDD
-        const [result] = await connection.query<OkPacket>("DELETE FROM items WHERE ID = ? AND STOCK_ID = ?", [itemID, stockID]);
+        const result = await WriteStockRepository.deleteStockItem(connection, stockID, itemID);
 
         // Vérification de la suppression de l'item
         if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "Item not found or already deleted" });
+            return res.status(404).json({error: "Item not found or already deleted"});
         }
 
-        res.status(200).json({ message: "Stock item deleted successfully." });
+        res.status(200).json({message: "Stock item deleted successfully."});
     } catch (err: any) {
         console.error(`Error in deleteStockItem:`, err);
-        res.status(500).json({ error: "Error while deleting the stock item from the database." });
+        res.status(500).json({error: "Error while deleting the stock item from the database."});
     }
 };
 
@@ -210,10 +205,7 @@ export const getAllItems = async (
     connection: PoolConnection
 ) => {
     try {
-        const [items] = (await connection.query("SELECT * FROM items")) as [
-            RowDataPacket[],
-            FieldPacket[]
-        ];
+        const items = await readAllItems(connection);
 
         if (res) {
             res.status(200).json(items);
@@ -239,18 +231,15 @@ export const getItemDetails = async (
 ) => {
     try {
         // Requête SQL pour récupérer les détails d'un item spécifique dans un stock donné
-        const query = "SELECT * FROM items WHERE ID = ?";
-        const [rows] = await connection.query(query, [itemID]);
-
-        const items = rows as RowDataPacket[]
+        const items = await readItemDetails(connection, itemID);
         // Vérification si l'item existe
         if (items.length > 0) {
             res.json(items[0]);
         } else {
-            res.status(404).json({ error: "Item not found." });
+            res.status(404).json({error: "Item not found."});
         }
     } catch (error) {
         console.error(`Error in getItemDetails:`, error);
-        res.status(500).json({ error: "Error while querying the database." });
+        res.status(500).json({error: "Error while querying the database."});
     }
 };

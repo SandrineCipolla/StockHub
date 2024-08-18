@@ -1,8 +1,8 @@
-import {PoolConnection} from "mysql2/promise";
-import {Stock, UpdateStockRequest} from "../models";
+import {OkPacket, PoolConnection, ResultSetHeader} from "mysql2/promise";
+import {Stock, StockToCreate, UpdateStockRequest} from "../models";
 import {ValidationError} from "../errors";
 
-export class StockRepository {
+export class WriteStockRepository {
     static async updateStockItemQuantity(connection: PoolConnection, updateRequest: UpdateStockRequest) {
         const {itemID, quantity, stockID} = updateRequest;
 
@@ -31,5 +31,17 @@ export class StockRepository {
             item.quantity,
             stockID
         ]);
+    }
+
+    static async createStock(connection: PoolConnection, stock: Partial<StockToCreate>) {
+        await connection.query("INSERT INTO stocks(LABEL, DESCRIPTION) VALUES (?, ?)", [
+            stock.LABEL,
+            stock.DESCRIPTION,
+        ]);
+    }
+
+    static async deleteStockItem(connection: PoolConnection, stockID: number, itemID: number): Promise<ResultSetHeader> {
+        const [result] = await connection.execute<ResultSetHeader>("DELETE FROM items WHERE ID = ? AND STOCK_ID = ?", [itemID, stockID]);
+        return result;
     }
 }
