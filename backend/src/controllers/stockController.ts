@@ -3,7 +3,7 @@ import {PoolConnection} from "mysql2/promise";
 import {StockService} from "../services/stockService";
 import {extractDataFromRequestBody} from "../Utils/requestUtils";
 import {StockToCreate, UpdateStockRequest} from "../models";
-import {ValidationError} from "../errors";
+import {ErrorMessages, sendError, ValidationError} from "../errors";
 
 export const getAllStocks = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
@@ -11,8 +11,7 @@ export const getAllStocks = async (req: Request, res: Response, connection: Pool
         const stocks = await stockService.getAllStocks();
         res.status(200).json(stocks);
     } catch (err: any) {
-        console.error(err);
-        res.status(500).json({error: err.message});
+        sendError(res, ErrorMessages.GetAllStocks, err);
     }
 };
 
@@ -23,8 +22,7 @@ export const createStock = async (req: Request, res: Response, connection: PoolC
         await stockService.createStock( stock);
         res.json({message: "Stock created successfully."});
     } catch (err: any) {
-        console.error(err);
-        res.json({error: err.message});
+        sendError(res, ErrorMessages.CreateStock, err);
     }
 };
 
@@ -34,8 +32,7 @@ export const getStockDetails = async (req: Request, res: Response, connection: P
         const stock = await stockService.getStockDetails(ID);
         res.json(stock);
     } catch (err: any) {
-        console.error(err);
-        res.json({error: err.message});
+        sendError(res, ErrorMessages.GetStockDetails, err);
     }
 };
 
@@ -45,8 +42,7 @@ export const getStockItems = async (req: Request, res: Response, connection: Poo
         const items = await stockService.getStockItems(ID);
         res.json(items);
     } catch (err: any) {
-        console.error(err);
-        res.json({error: err.message});
+        sendError(res, ErrorMessages.GetStockItems, err);
     }
 };
 
@@ -66,8 +62,7 @@ export const updateStockItemQuantity = async (req: Request, res: Response, conne
         await stockService.updateStockItemQuantity(updateRequest);
         res.json({message: "Stock updated successfully."});
     } catch (err: any) {
-        console.error('Error in updateStockItemQuantity:', err);
-        res.status(500).json({error: 'Error while updating the database.'});
+        sendError(res, ErrorMessages.UpdateStockItemQuantity, err);
     }
 };
 
@@ -87,7 +82,7 @@ export const addStockItem = async (req: Request, res: Response, connection: Pool
         if (err instanceof ValidationError) {
             res.status(400).json({error: err.message, data: err.data});
         } else {
-            res.status(500).json({error: 'Error while updating the database.'});
+            sendError(res, ErrorMessages.AddStockItem, err);
         }
     }
 };
@@ -105,8 +100,7 @@ export const deleteStockItem = async (req: Request, res: Response, connection: P
         }
         res.status(200).json({message: "Stock item deleted successfully."});
     } catch (err: any) {
-        console.error(`Error in deleteStockItem:`, err);
-        res.status(500).json({error: "Error while deleting the stock item from the database."});
+        sendError(res, ErrorMessages.DeleteStockItem, err);
     }
 };
 
@@ -116,8 +110,7 @@ export const getAllItems = async (req: Request, res: Response, connection: PoolC
         const items = await stockService.getAllItems();
         res.status(200).json(items);
     } catch (err: any) {
-        console.error(err);
-        res.status(500).json({error: err.message});
+        sendError(res, ErrorMessages.GetAllItems, err);
     }
 };
 
@@ -130,8 +123,7 @@ export const getItemDetails = async (req: Request, res: Response, connection: Po
         } else {
             res.status(404).json({error: "Item not found."});
         }
-    } catch (error) {
-        console.error(`Error in getItemDetails:`, error);
-        res.status(500).json({error: "Error while querying the database."});
+    } catch (err: any) {
+        sendError(res, ErrorMessages.GetItemDetails, err);
     }
 };
