@@ -94,10 +94,10 @@ export const addStockItem = async (req: Request, res: Response, connection: Pool
 
 export const deleteStockItem = async (req: Request, res: Response, connection: PoolConnection, stockID: number, itemID: number) => {
     try {
-        const {ITEM} = req.body;
-        if (ITEM !== itemID) {
-            return res.status(400).json({error: "Item ID in the body does not match item ID in the URL"});
-        }
+        //const {ITEM} = req.body;
+      //  if (ITEM !== itemID) {
+        //    return res.status(400).json({error: "Item ID in the body does not match item ID in the URL"});
+        //}
         const stockService = new StockService(connection);
         const result = await stockService.deleteStockItem(stockID, itemID);
         if (result.affectedRows === 0) {

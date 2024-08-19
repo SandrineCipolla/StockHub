@@ -27,9 +27,9 @@ export class WriteStockRepository {
         if (!item.label || !item.description || item.quantity === undefined) {
             throw new ValidationError("Label, description and quantity must be provided.");
         }
-        if (item.quantity < 1) {
-            throw new ValidationError("Quantity must be a positive number.");
-        }
+        //if (item.quantity < 1) {
+          //  throw new ValidationError("Quantity must be a positive number.");
+        //}
         await this.connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
             item.id,
             item.label,
