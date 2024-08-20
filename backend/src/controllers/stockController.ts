@@ -2,33 +2,40 @@ import {Request, Response} from "express";
 import {PoolConnection} from "mysql2/promise";
 import {StockService} from "../services/stockService";
 import {UpdateStockRequest} from "../models";
-import {BadRequestError, ErrorMessages, NotFoundError, sendError, ValidationError} from "../errors";
+import {BadRequestError, CustomError, ErrorMessages, NotFoundError, sendError, ValidationError} from "../errors";
 
 
-//TODO voir le warn des throw
+
 //TODO voir si + messages d'erreurs selon les situations
 export const getAllStocks = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
         const stockService = new StockService(connection);
         const stocks = await stockService.getAllStocks();
+
+        if (!stocks) {
+            sendError(res, new NotFoundError("Stock not found.", ErrorMessages.GetAllStocks));
+            return;
+        }
+
         res.status(200).json(stocks);
     } catch (err: any) {
-        sendError(res, ErrorMessages.GetAllStocks, err);
+        sendError(res, err as CustomError);
     }
 };
 
 export const createStock = async (req: Request, res: Response, connection: PoolConnection) => {
     try {
-        // const stock: Partial<StockToCreate> = extractDataFromRequestBody(req, ['LABEL', 'DESCRIPTION']);
+
         const {LABEL, DESCRIPTION} = req.body;
         if (!LABEL || !DESCRIPTION) {
-            throw new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock);
+            sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
+            return;
         }
         const stockService = new StockService(connection);
         await stockService.createStock({LABEL, DESCRIPTION});
         res.json({message: "Stock created successfully."});
     } catch (err: any) {
-        sendError(res, ErrorMessages.CreateStock, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -36,10 +43,13 @@ export const getStockDetails = async (req: Request, res: Response, connection: P
     try {
         const stockService = new StockService(connection);
         const stock = await stockService.getStockDetails(ID);
-        if (!stock) throw new NotFoundError("Stock not found.", ErrorMessages.GetStockDetails);
+
+        if (!stock)
+            sendError(res, new NotFoundError("Stock not found.", ErrorMessages.GetStockDetails));
+
         res.json(stock);
     } catch (err: any) {
-        sendError(res, ErrorMessages.GetStockDetails, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -49,7 +59,7 @@ export const getStockItems = async (req: Request, res: Response, connection: Poo
         const items = await stockService.getStockItems(ID);
         res.json(items);
     } catch (err: any) {
-        sendError(res, ErrorMessages.GetStockItems, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -59,14 +69,15 @@ export const updateStockItemQuantity = async (req: Request, res: Response, conne
         const {QUANTITY} = req.body;
         const stockID = Number(req.params.stockID);
 
-        if (!itemID || QUANTITY === undefined) throw new ValidationError("ID and QUANTITY must be provided.", ErrorMessages.UpdateStockItemQuantity);
+        if (!itemID || QUANTITY === undefined)
+            sendError(res, new ValidationError("ID and QUANTITY must be provided.", ErrorMessages.UpdateStockItemQuantity));
 
         const stockService = new StockService(connection);
         const updateRequest = new UpdateStockRequest(itemID, QUANTITY, stockID);
         await stockService.updateStockItemQuantity(updateRequest);
         res.json({message: "Stock updated successfully."});
     } catch (err: any) {
-        sendError(res, ErrorMessages.UpdateStockItemQuantity, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -83,9 +94,9 @@ export const addStockItem = async (req: Request, res: Response, connection: Pool
         res.status(201).json({message: "Stock item added successfully."});
     } catch (err: any) {
         if (err instanceof ValidationError) {
-            sendError(res, ErrorMessages.ValidationError, err);
+            sendError(res, err as CustomError);
         } else {
-            sendError(res, ErrorMessages.AddStockItem, err);
+            sendError(res, err as CustomError);
         }
     }
 };
@@ -94,10 +105,11 @@ export const deleteStockItem = async (req: Request, res: Response, connection: P
     try {
         const stockService = new StockService(connection);
         const result = await stockService.deleteStockItem(stockID, itemID);
-        if (result.affectedRows === 0) throw new NotFoundError("Item not found or already deleted.", ErrorMessages.DeleteStockItem);
+        if (result.affectedRows === 0)
+            sendError(res, new NotFoundError("Item not found or already deleted.", ErrorMessages.DeleteStockItem));
         res.status(200).json({message: "Stock item deleted successfully."});
     } catch (err: any) {
-        sendError(res, ErrorMessages.DeleteStockItem, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -107,7 +119,7 @@ export const getAllItems = async (req: Request, res: Response, connection: PoolC
         const items = await stockService.getAllItems();
         res.status(200).json(items);
     } catch (err: any) {
-        sendError(res, ErrorMessages.GetAllItems, err);
+        sendError(res, err as CustomError);
     }
 };
 
@@ -115,9 +127,10 @@ export const getItemDetails = async (req: Request, res: Response, connection: Po
     try {
         const stockService = new StockService(connection);
         const items = await stockService.getItemDetails(itemID);
-        if (items.length === 0) throw new NotFoundError("Item not found.", ErrorMessages.GetItemDetails);
+        if (items.length === 0)
+            sendError(res, new NotFoundError("Item not found.", ErrorMessages.GetItemDetails));
         res.json(items[0]);
     } catch (err: any) {
-        sendError(res, ErrorMessages.GetItemDetails, err);
+        sendError(res, err as CustomError);
     }
 };
