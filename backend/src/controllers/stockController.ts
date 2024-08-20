@@ -22,7 +22,7 @@ export const createStock = async (req: Request, res: Response, connection: PoolC
         // const stock: Partial<StockToCreate> = extractDataFromRequestBody(req, ['LABEL', 'DESCRIPTION']);
         const {LABEL, DESCRIPTION} = req.body;
         if (!LABEL || !DESCRIPTION) {
-            throw new BadRequestError("LABEL and DESCRIPTION are required to create a stock.");
+            throw new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock);
         }
         const stockService = new StockService(connection);
         await stockService.createStock({LABEL, DESCRIPTION});
@@ -36,7 +36,7 @@ export const getStockDetails = async (req: Request, res: Response, connection: P
     try {
         const stockService = new StockService(connection);
         const stock = await stockService.getStockDetails(ID);
-        if (!stock) throw new NotFoundError("Stock not found.");
+        if (!stock) throw new NotFoundError("Stock not found.", ErrorMessages.GetStockDetails);
         res.json(stock);
     } catch (err: any) {
         sendError(res, ErrorMessages.GetStockDetails, err);
@@ -59,7 +59,7 @@ export const updateStockItemQuantity = async (req: Request, res: Response, conne
         const {QUANTITY} = req.body;
         const stockID = Number(req.params.stockID);
 
-        if (!itemID || QUANTITY === undefined) throw new ValidationError("ID and QUANTITY must be provided.");
+        if (!itemID || QUANTITY === undefined) throw new ValidationError("ID and QUANTITY must be provided.", ErrorMessages.UpdateStockItemQuantity);
 
         const stockService = new StockService(connection);
         const updateRequest = new UpdateStockRequest(itemID, QUANTITY, stockID);
@@ -94,7 +94,7 @@ export const deleteStockItem = async (req: Request, res: Response, connection: P
     try {
         const stockService = new StockService(connection);
         const result = await stockService.deleteStockItem(stockID, itemID);
-        if (result.affectedRows === 0) throw new NotFoundError("Item not found or already deleted.");
+        if (result.affectedRows === 0) throw new NotFoundError("Item not found or already deleted.", ErrorMessages.DeleteStockItem);
         res.status(200).json({message: "Stock item deleted successfully."});
     } catch (err: any) {
         sendError(res, ErrorMessages.DeleteStockItem, err);
@@ -115,7 +115,7 @@ export const getItemDetails = async (req: Request, res: Response, connection: Po
     try {
         const stockService = new StockService(connection);
         const items = await stockService.getItemDetails(itemID);
-        if (items.length === 0) throw new NotFoundError("Item not found.");
+        if (items.length === 0) throw new NotFoundError("Item not found.", ErrorMessages.GetItemDetails);
         res.json(items[0]);
     } catch (err: any) {
         sendError(res, ErrorMessages.GetItemDetails, err);

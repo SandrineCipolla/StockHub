@@ -1,6 +1,6 @@
 import {PoolConnection, ResultSetHeader} from "mysql2/promise";
 import {Stock, StockToCreate, UpdateStockRequest} from "../models";
-import {ValidationError} from "../errors";
+import {ErrorMessages, ValidationError} from "../errors";
 
 export class WriteStockRepository {
     private connection: PoolConnection;
@@ -13,7 +13,7 @@ export class WriteStockRepository {
         const {itemID, quantity, stockID} = updateRequest;
 
         if (quantity === undefined) {
-            throw new ValidationError("Quantity is undefined");
+            throw new ValidationError("Quantity is undefined.",ErrorMessages.UpdateStockItemQuantity,updateRequest);
         }
         await this.connection.execute(
             "UPDATE items SET QUANTITY = ? WHERE ID = ? AND STOCK_ID = ?",
@@ -25,11 +25,9 @@ export class WriteStockRepository {
 
     async addStockItem(item: Partial<Stock>, stockID: number) {
         if (!item.label || !item.description || item.quantity === undefined) {
-            throw new ValidationError("Label, description and quantity must be provided.");
+            throw new ValidationError("Label, description and quantity must be provided.",ErrorMessages.AddStockItem,item);
         }
-        //if (item.quantity < 1) {
-          //  throw new ValidationError("Quantity must be a positive number.");
-        //}
+
         await this.connection.query("INSERT INTO items VALUES (?, ?, ?, ? ,?)", [
             item.id,
             item.label,
