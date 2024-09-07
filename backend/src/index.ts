@@ -4,6 +4,8 @@ import express from "express";
 import cors from "cors";
 
 import configureStockRoutes from "./routes/stockRoutes";
+import dotenv from "dotenv";
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -58,3 +60,5 @@ export async function initializeApp() {
 if (process.env.NODE_ENV !== "test") {
     initializeApp();
 }
+
+export {app}

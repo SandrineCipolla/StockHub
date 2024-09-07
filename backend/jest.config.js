@@ -8,5 +8,6 @@ module.exports = {
         }],
     },
     setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
+    setupFiles: ['dotenv/config'],
     testMatch: ['<rootDir>/tests/**/*.test.(ts|tsx)'],
 };

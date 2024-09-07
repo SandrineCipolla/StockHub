@@ -1,20 +1,30 @@
 import request from "supertest";
-import {initializeApp} from "../../src";
+import { app, initializeApp } from "../../src";
+import dotenv from "dotenv";
+import * as path from "node:path";
 
+// Load environment variables from a specific .env file
+// dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
 
 describe("Stock Routes", () => {
     const HTTP_CODE_OK = 200;
 
-
     beforeAll(async () => {
-
         await initializeApp();
     });
 
     it("should handle GET /stocks route", async () => {
-        const response = await request(`http://localhost:3000}`).get("/api/v1/stocks");
+        const response = await request(app).get("/api/v1/stocks");
 
         expect(response.status).toBe(HTTP_CODE_OK);
         expect(response.body).toBeDefined();
+        expect(Array.isArray(response.body)).toBe(true);
+
+        if (response.body.length > 0) {
+            expect(response.body[0]).toHaveProperty('description');
+            expect(response.body[0]).toHaveProperty('id');
+            expect(response.body[0]).toHaveProperty('label');
+        }
     });
 });
+
