@@ -28,7 +28,8 @@ export async function initializeApp() {
     app.use(express.json());
 
     // Utilisation des routes définies dans stockRoutes.ts
-    app.use("/api/v1", configureStockRoutes());
+    const stockRoutes = await configureStockRoutes();
+    app.use("/api/v1", stockRoutes);
 
     // Gestion des erreurs 404
     app.use((req, res, next) => {
