@@ -38,10 +38,10 @@ export const expectedTableStructure: TableColumn[] = [
 export const newStocks: Stock[] = [{ id: 4, label: "MyNewStock", description: "MyNewDescription", quantity: 40}];
 
 export const fakeStocksAsRowDataPacket: RowDataPacket[] = fakeStocks.map(stock => ({
-  id: stock.id,
-  label: stock.label,
-  description: stock.description,
-  quantity: stock.quantity,
+  ID: stock.id,
+  LABEL: stock.label,
+  DESCRIPTION: stock.description,
+  QUANTITY: stock.quantity,
 } as RowDataPacket));
 
 export const mockReadRepo = new ReadStockRepository(createFakeDatabaseConnection()) as jest.Mocked< ReadStockRepository>;
