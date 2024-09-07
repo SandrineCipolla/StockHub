@@ -1,8 +1,8 @@
 import {Dispatch, SetStateAction} from "react";
 
 export interface Stock {
-    ID: number;
-    LABEL: string;
+    id: number;
+    label: string;
 }
 
 export interface StockDetail {
