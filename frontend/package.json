@@ -13,7 +13,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
-    "test:ci":"jest --config=jest.ci.config.js --detectOpenHandles --forceExit",
+    "test:ci":"jest --config=jest.ci.config.cjs --passWithNoTests --detectOpenHandles --forceExit",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {

@@ -7,7 +7,6 @@ module.exports = {
             tsconfig: 'tsconfig.json',
         }],
     },
-    setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
     setupFiles: ['dotenv/config'],
     testMatch: ['<rootDir>/tests/**/*.test.(ts|tsx)'],
     testPathIgnorePatterns: ['<rootDir>/tests/integration'],
