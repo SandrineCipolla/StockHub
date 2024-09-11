@@ -1,11 +1,6 @@
 import request from "supertest";
-import { app, initializeApp } from "../../src";
-import dotenv from "dotenv";
-import * as path from "node:path";
+import {app, initializeApp} from "../../src";
 import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
-
-// Load environment variables from a specific .env file
-// dotenv.config({ path: path.resolve(__dirname, '../../.env.test') });
 
 describe("Stock Routes", () => {
 

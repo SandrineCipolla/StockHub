@@ -60,20 +60,27 @@ export enum ErrorMessages {
 }
 
 export const sendError = (res: Response, err: CustomError) => {
-    console.error(err.typology, err);
 
-    if (err instanceof ValidationError) {
-        res.status(HTTP_CODE_BAD_REQUEST).json({error: err.message,type:err.typology, details: err});
-    } else if (err instanceof BadRequestError) {
-        res.status(HTTP_CODE_BAD_REQUEST).json({error: err.message,type:err.typology});
-    } else if (err instanceof NotFoundError) {
-        res.status(HTTP_CODE_NOT_FOUND).json({error: err.message,type:err.typology});
-    } else if (err instanceof ConflictError) {
-        res.status(HTTP_CODE_CONFLICT).json({error: err.message,type:err.typology});
-    } else if (err instanceof DatabaseError) {
-        console.error("Original database error:", err.originalError);
-        res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "A database error occurred. Please try again later.",type:err.typology});
-    } else {
-        res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "An unexpected error occurred. Please try again later."});
+    switch (true) {
+        case err instanceof ValidationError:
+            return res.status(HTTP_CODE_BAD_REQUEST).json({ error: err.message, type: err.typology, details: err });
+
+        case err instanceof BadRequestError:
+            return res.status(HTTP_CODE_BAD_REQUEST).json({ error: err.message, type: err.typology });
+
+        case err instanceof NotFoundError:
+            return res.status(HTTP_CODE_NOT_FOUND).json({ error: err.message, type: err.typology });
+
+        case err instanceof ConflictError:
+            return res.status(HTTP_CODE_CONFLICT).json({ error: err.message, type: err.typology });
+
+        case err instanceof DatabaseError:
+            console.error("Original database error:", err.originalError);
+            return res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({ error: "A database error occurred. Please try again later.", type: err.typology });
+
+        default:
+            return res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({ error: "An unexpected error occurred. Please try again later." });
     }
 };
+
+
