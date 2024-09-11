@@ -11,15 +11,16 @@ describe("Stock Routes", () => {
 
     it("should handle GET /stocks route", async () => {
         const response = await request(app).get("/api/v1/stocks");
+        const result = response.body[0];
 
         expect(response.status).toBe(HTTP_CODE_OK);
         expect(response.body).toBeDefined();
         expect(Array.isArray(response.body)).toBe(true);
 
         if (response.body.length > 0) {
-            expect(response.body[0]).toHaveProperty('description');
-            expect(response.body[0]).toHaveProperty('id');
-            expect(response.body[0]).toHaveProperty('label');
+            expect(result).toHaveProperty('description');
+            expect(result).toHaveProperty('id');
+            expect(result).toHaveProperty('label');
         }
     });
 });
