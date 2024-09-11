@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 
 
 const app = express();
-const port = process.env.PORT || 3001; //Normalement 3000 mais 3001 car déjà utilisé par ma machine.
+const port = process.env.PORT || 3000;
 
 let isDatabaseConnected: boolean = false;
 
