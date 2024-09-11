@@ -20,10 +20,8 @@ export async function getTableStructure(
             FROM information_schema.columns
             WHERE table_name = ?
         `;
-        console.log("Executing query:", query);
 
         const [rows] = await connection.query(query, [tableName]);
-        console.log("rows", rows);
         if (!rows) {
             throw new Error(`No data returned for table ${tableName}`);
         }
@@ -49,7 +47,7 @@ export async function insertStock(
             quantity:stock.quantity
         }));
         console.info("Formatted values:", values);
-        const query = "INSERT INTO stocks (id,label,description,quantity) VALUES ?";
+        const query = "INSERT INTO stocks (id,label,description) VALUES ?";
         console.info("query", query);
         await connection.query(query, [values]);
         console.info("Stocks inserted successfully!");

@@ -65,13 +65,10 @@ export class StockService {
 
     async getAllStocks(): Promise<Stock[]> {
         const rows = await this.readStockRepository.readAllStocks();
-        console.log('Rows from repository in getAllStocks:', rows);
         if (!rows) {
             throw new Error("No rows returned from readAllStocks");
         }
-        const stocks = StockMapper.mapRowDataPacketsToStocks(rows);
-        console.log("Mapped Stocks:", stocks);
-        return stocks;
+        return StockMapper.mapRowDataPacketsToStocks(rows);
     }
 
     async createStock(stock: Partial<StockToCreate>) {
