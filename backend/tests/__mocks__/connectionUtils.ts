@@ -27,7 +27,7 @@ export function createMockedResponse(): MockedResponse {
     const mockedResponse: Partial<MockedResponse> = {
         status: ((code: number) => {
             statusCode = code;
-            return mockedResponse;
+            return mockedResponse as MockedResponse;
         }) as (code: number) => MockedResponse,
         json: jest.fn() as (body: any) => MockedResponse,
         getStatusCode: () => statusCode,
