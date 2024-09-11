@@ -30,10 +30,18 @@ jobs:
         working-directory: ./backend
         run: npm run build
 
-      - name: Install dependencies for FRONTEND
+      - name: Tests BACKEND
         working-directory: ./backend
+        run: npm run test:ci
+
+      - name: Install dependencies for FRONTEND
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build FRONTEND
-        working-directory: ./backend
+        working-directory: ./frontend
         run: npm run build
+
+#      - name: Tests FRONTEND
+#        working-directory: ./frontend
+#        run: npm run test

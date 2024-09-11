@@ -13,10 +13,15 @@ import {
     HTTP_CODE_INTERNAL_SERVER_ERROR,
     HTTP_CODE_NOT_FOUND
 } from "../src/Utils/httpCodes";
+import spyOn = jest.spyOn;
 
 
 describe('sendError', () => {
     let res: any;
+
+    beforeAll(() => {
+        spyOn(console, 'error').mockImplementation();
+    });
 
     beforeEach(() => {
         res = {
