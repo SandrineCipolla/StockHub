@@ -5,6 +5,7 @@ import {CustomError, sendError} from '../../src/errors';
 import {mockReadRepo, mockWriteRepo} from "../__mocks__/mockedData";
 import {ReadStockRepository} from "../../src/repositories/readStockRepository";
 import {WriteStockRepository} from "../../src/repositories/writeStockRepository";
+import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
 
 
 jest.mock('../../src/services/stockService');
@@ -47,7 +48,7 @@ describe('StockController', () => {
                 await stockController.getAllStocks(req as Request, res as Response);
                 const result = res.json.mock.calls[0][0];
 
-                expect(res.status).toHaveBeenCalledWith(200);
+                expect(res.status).toHaveBeenCalledWith(HTTP_CODE_OK);
                 expect(res.json).toHaveBeenCalledWith(mockStocks);
                 expect(result).toStrictEqual(mockStocks);
             });

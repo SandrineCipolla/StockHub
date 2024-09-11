@@ -3,6 +3,7 @@ import {StockService} from "../services/stockService";
 import {BadRequestError, CustomError, ErrorMessages, sendError, ValidationError} from "../errors";
 import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {ReadStockRepository} from "../repositories/readStockRepository";
+import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 //
 //
 //
@@ -151,7 +152,7 @@ export class StockController {
    public async getAllStocks(req: Request, res: Response) {
         try {
             const stocks = await this.stockService.getAllStocks();
-            res.status(200).json(stocks);
+            res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -164,7 +165,7 @@ export class StockController {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
             }
             await this.stockService.createStock({LABEL, DESCRIPTION});
-            res.status(201).json({message: "Stock created successfully."});
+            res.status(HTTP_CODE_CREATED).json({message: "Stock created successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -174,7 +175,7 @@ export class StockController {
         try {
             const ID = Number(req.params.ID);
             const stock = await this.stockService.getStockDetails(ID);
-            res.status(200).json(stock);
+            res.status(HTTP_CODE_OK).json(stock);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -184,7 +185,7 @@ export class StockController {
         try {
             const ID = Number(req.params.ID);
             const items = await this.stockService.getStockItems(ID);
-            res.status(200).json(items);
+            res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -201,7 +202,7 @@ export class StockController {
             }
 
             await this.stockService.updateStockItemQuantity(itemID, QUANTITY, stockID);
-            res.status(200).json({message: "Stock updated successfully."});
+            res.status(HTTP_CODE_OK).json({message: "Stock updated successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -216,7 +217,7 @@ export class StockController {
                 quantity: req.body['QUANTITY']
             };
             await this.stockService.addStockItem(item, stockID);
-            res.status(201).json({message: "Stock item added successfully."});
+            res.status(HTTP_CODE_CREATED).json({message: "Stock item added successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -227,7 +228,7 @@ export class StockController {
             const stockID = Number(req.params.stockID);
             const itemID = Number(req.params.itemID);
             await this.stockService.deleteStockItem(stockID, itemID);
-            res.status(200).json({message: "Stock item deleted successfully."});
+            res.status(HTTP_CODE_OK).json({message: "Stock item deleted successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -236,7 +237,7 @@ export class StockController {
     async getAllItems(req: Request, res: Response) {
         try {
             const items = await this.stockService.getAllItems();
-            res.status(200).json(items);
+            res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
@@ -246,7 +247,7 @@ export class StockController {
         try {
             const itemID = Number(req.params.itemID);
             const item = await this.stockService.getItemDetails(itemID);
-            res.status(200).json(item);
+            res.status(HTTP_CODE_OK).json(item);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }

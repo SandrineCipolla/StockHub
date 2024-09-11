@@ -3,6 +3,7 @@ import {StockController} from "../controllers/stockController";
 import {connectToDatabase} from "../dbUtils";
 import {ReadStockRepository} from "../repositories/readStockRepository";
 import {WriteStockRepository} from "../repositories/writeStockRepository";
+import {HTTP_CODE_INTERNAL_SERVER_ERROR} from "../Utils/httpCodes";
 
 
 const configureStockRoutes = async (): Promise<Router> => {
@@ -20,7 +21,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.getAllStocks(req, res);
         } catch (error) {
             console.error("Error in GET /stocks:", error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
 
@@ -31,7 +32,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.getStockDetails(req, res);
         } catch (error) {
             console.error(`Error in GET /stocks/${ID}:`, error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
 
@@ -42,7 +43,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.getStockItems(req, res);
         } catch (error) {
             console.error(`Error in GET /stocks/${ID}/items:`, error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
 
@@ -52,7 +53,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.createStock(req, res);
         } catch (error) {
             console.error("Error in POST /stocks:", error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
 
@@ -66,7 +67,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.updateStockItemQuantity(req, res);
         } catch (error) {
             console.error(`Error in PUT /stocks/${stockID}/items/${itemID}:`, error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
 
@@ -77,7 +78,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.addStockItem(req, res);
         } catch (error) {
             console.error("Error in POST /stocks/:stockID/items", error);
-            res.status(500).json({error: "Error in adding stock item to database(POST)."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error in adding stock item to database(POST)."});
         }
     });
 
@@ -89,7 +90,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.deleteStockItem(req, res);
         } catch (error) {
             console.error(`Error in DELETE /stocks/${stockID}/items/${itemID}:`, error);
-            res.status(500).json({error: "Error while deleting the stock item from the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while deleting the stock item from the database."});
         }
     });
 
@@ -99,7 +100,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.getAllItems(req, res);
         } catch (error) {
             console.error(`Error in GET /items:`, error);
-            res.status(500).json({error: "Error while querying the database for items list."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database for items list."});
         }
     });
 
@@ -110,7 +111,7 @@ const configureStockRoutes = async (): Promise<Router> => {
             await stockController.getItemDetails(req, res);
         } catch (error) {
             console.error(`Error in GET /items/${itemID}:`, error);
-            res.status(500).json({error: "Error while querying the database."});
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
     return router;

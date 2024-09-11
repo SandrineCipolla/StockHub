@@ -1,4 +1,10 @@
 import {Response} from "express";
+import {
+    HTTP_CODE_BAD_REQUEST,
+    HTTP_CODE_CONFLICT,
+    HTTP_CODE_INTERNAL_SERVER_ERROR,
+    HTTP_CODE_NOT_FOUND
+} from "./Utils/httpCodes";
 
 export interface CustomError extends Error {
     typology?: ErrorMessages;
@@ -57,17 +63,17 @@ export const sendError = (res: Response, err: CustomError) => {
     console.error(err.typology, err);
 
     if (err instanceof ValidationError) {
-        res.status(400).json({error: err.message,type:err.typology, details: err});
+        res.status(HTTP_CODE_BAD_REQUEST).json({error: err.message,type:err.typology, details: err});
     } else if (err instanceof BadRequestError) {
-        res.status(400).json({error: err.message,type:err.typology});
+        res.status(HTTP_CODE_BAD_REQUEST).json({error: err.message,type:err.typology});
     } else if (err instanceof NotFoundError) {
-        res.status(404).json({error: err.message,type:err.typology});
+        res.status(HTTP_CODE_NOT_FOUND).json({error: err.message,type:err.typology});
     } else if (err instanceof ConflictError) {
-        res.status(409).json({error: err.message,type:err.typology});
+        res.status(HTTP_CODE_CONFLICT).json({error: err.message,type:err.typology});
     } else if (err instanceof DatabaseError) {
         console.error("Original database error:", err.originalError);
-        res.status(500).json({error: "A database error occurred. Please try again later.",type:err.typology});
+        res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "A database error occurred. Please try again later.",type:err.typology});
     } else {
-        res.status(500).json({error: "An unexpected error occurred. Please try again later."});
+        res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "An unexpected error occurred. Please try again later."});
     }
 };
