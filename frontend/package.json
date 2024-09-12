@@ -14,6 +14,7 @@
     "preview": "vite preview",
     "test": "jest",
     "test:ci":"jest --config=jest.ci.config.cjs --passWithNoTests --detectOpenHandles --forceExit",
+    "test:coverage": "COVERAGE=true jest --config=jest.ci.config.cjs --passWithNoTests --detectOpenHandles --forceExit",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
