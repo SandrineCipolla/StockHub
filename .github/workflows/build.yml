@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: "20"
 
+
+      # --- BACKEND STEPS ---
+
       - name: Install dependencies for BACKEND
         working-directory: ./backend
         run: npm ci
@@ -34,6 +37,18 @@ jobs:
         working-directory: ./backend
         run: npm run test:ci
 
+      - name: Tests with coverage for BACKEND
+        working-directory: ./backend
+        run: npm run test:coverage
+
+      - name: Upload BACKEND coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-coverage
+          path: ./backend/coverage
+
+      # --- FRONTEND STEPS ---
+
       - name: Install dependencies for FRONTEND
         working-directory: ./frontend
         run: npm ci
@@ -45,3 +60,23 @@ jobs:
       - name: Tests FRONTEND
         working-directory: ./frontend
         run: npm run test:ci
+
+      - name: Tests with coverage for FRONTEND
+        working-directory: ./frontend
+        run: npm run test:coverage
+
+      - name: Upload FRONTEND coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-coverage
+          path: ./frontend/coverage
+
+      # --- OPTIONAL: UPLOAD TO CODECOV ---
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Add Codecov token to GitHub secrets
+          files: ./backend/coverage/lcov.info,./frontend/coverage/lcov.info # Paths to coverage reports
+          flags: backend,frontend
+          name: code-coverage-report
