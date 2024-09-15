@@ -1,0 +1,37 @@
+services:
+  frontend:
+    image: frontend_stockhub:latest
+    ports:
+      - 5174:80
+  backend:
+    image: backend_stockhub:latest
+    #    build:
+    #      context: .
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_USER: stockhub_user
+      DB_PASSWORD: stockhub_password
+      DB_PORT: 3306
+      DB_DATABASE: stockhub
+      PORT: 3002
+
+    ports:
+      - 3002:3002 #ext/int
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stockhub
+      MYSQL_USER: stockhub_user
+      MYSQL_PASSWORD: stockhub_password
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
