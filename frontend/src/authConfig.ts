@@ -3,11 +3,11 @@ import { Configuration, LogLevel } from '@azure/msal-browser';
 export const msalConfig: Configuration = {
     auth: {
         clientId: "0dc4acfb-ecde-4f9b-81eb-9af050fb52d9",
-        authority: "https://stockhub.b2clogin.com/stockhub.onmicrosoft.com/b2c_1_signupsignin",
-        redirectUri: "http://localhost:3000", // L'URI de redirection après la connexion
+        authority: "https://stockhubb2c.b2clogin.com/stockhubb2c.onmicrosoft.com/B2C_1_signupsignin",
+        redirectUri: "http://localhost:3000/home", // L'URI de redirection après la connexion
     },
     cache: {
-        cacheLocation: "sessionStorage",// bdd? pas geré par msal
+        cacheLocation: "localStorage",// bdd? pas geré par msal
         storeAuthStateInCookie: false, // Si Internet Explorer
     },
     system: {

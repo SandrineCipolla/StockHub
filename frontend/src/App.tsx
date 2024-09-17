@@ -11,26 +11,9 @@ import ItemDetails from "./components/ItemDetails.tsx";
 import {MsalAuthenticationTemplate, useIsAuthenticated, useMsal} from "@azure/msal-react";
 import {loginRequest} from "./authConfig.ts";
 import {InteractionType} from "@azure/msal-browser";
+import {useEffect} from "react";
 
 function App() {
-    // return (
-    //     <Router>
-    //         <div>
-    //             <Header/>
-    //             <main>
-    //                 <Routes>
-    //                     <Route path="/" element={<Navigate to="/home"/>}/>
-    //                     <Route path="/home" element={<Home/>}/>
-    //                     <Route path="/stocks" element={<StocksList/>}/>
-    //                     <Route path="/items" element={<ItemsList/>}/>
-    //                     <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
-    //                     <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
-    //                 </Routes>
-    //             </main>
-    //             <Footer/>
-    //         </div>
-    //     </Router>
-    // );
     const {instance} = useMsal();
     const isAuthenticated = useIsAuthenticated();
 
@@ -41,6 +24,17 @@ function App() {
     const handleLogout = () => {
         instance.logoutRedirect();
     };
+
+    useEffect(() => {
+        // MSAL traite automatiquement la redirection ici après le login
+        instance.handleRedirectPromise().then((response) => {
+            if (response) {
+                console.log("Authentication successful", response);
+            }
+        }).catch((error) => {
+            console.error("Error during redirect:", error);
+        });
+    }, [instance]);
 
     return (
         <Router>
@@ -73,8 +67,9 @@ function App() {
                         <Route
                             path="/items"
                             element={
-                                <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
-                                                            authenticationRequest={loginRequest}>
+                                <MsalAuthenticationTemplate
+                                    interactionType={InteractionType.Redirect}
+                                    authenticationRequest={loginRequest}>
                                     <ItemsList/>
                                 </MsalAuthenticationTemplate>
                             }
@@ -82,8 +77,9 @@ function App() {
                         <Route
                             path="/stocks/:ID"
                             element={
-                                <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
-                                                            authenticationRequest={loginRequest}>
+                                <MsalAuthenticationTemplate
+                                    interactionType={InteractionType.Redirect}
+                                    authenticationRequest={loginRequest}>
                                     <StockDetailsWithItems/>
                                 </MsalAuthenticationTemplate>
                             }
@@ -98,6 +94,9 @@ function App() {
                                 </MsalAuthenticationTemplate>
                             }
                         />
+
+                        {/* Redirection après login */}
+                        <Route path="/redirect" element={<div>Redirection en cours...</div>}/>
                     </Routes>
                 </main>
                 <Footer/>
