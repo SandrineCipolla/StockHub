@@ -10,9 +10,8 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
 
     const numericID = Number(ID);
-
-
     const {stockItems, setStockItems} = useContext(StockItemsContext);
+    const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
     }, [stockItems]);
@@ -24,16 +23,25 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                 if (setStockItems) {
                     setStockItems(data);
                 }
+                setLoading(false);
             } catch (error) {
                 console.error('Error in recovering stock items', error);
+                setLoading(false);
             }
         };
         fetchData().catch(error => console.error('Error in fetching data:', error));
     }, [ID, numericID, setStockItems]);
 
 
-    if (!stockItems) {
+    // if (!stockItems) {
+    //     return <div>Loading...</div>;
+    // }
+    if (loading) {
         return <div>Loading...</div>;
+    }
+
+    if (stockItems.length === 0) {
+        return <div>No items found</div>;
     }
 
     //TODO: check if it is possible to create a "graphic" component to put in the return
