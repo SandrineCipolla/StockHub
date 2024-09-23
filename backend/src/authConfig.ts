@@ -16,7 +16,7 @@ const passportConfig = {
         isB2C: true,
         validateIssuer: false,
         passReqToCallback: true,
-        loggingLevel: 'info',
+        loggingLevel: 'warn' as 'warn',
         loggingNoPII: false,
     },
     protectedRoutes: {
@@ -30,4 +30,4 @@ const passportConfig = {
     },
 };
 
-module.exports = passportConfig;
+export default passportConfig;

@@ -24,8 +24,11 @@ function ProtectedComponent() {
                  * https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
                  */
 
-                // const payload = event.payload as AuthenticationResult;
-                // const idTokenClaims = payload.idTokenClaims as idTokenClaims;
+                const payload = event.payload as AuthenticationResult;
+                //const idTokenClaims = payload.idTokenClaims as idTokenClaims;
+                const token = payload.accessToken
+                localStorage.setItem('authToken', token);
+                console.log("Token acquired:", token);
 
                 // if (compareIssuingPolicy(payload.idTokenClaims, b2cPolicies.names.editProfile)) {
                 //     // retrieve the account from initial sing-in to the app
