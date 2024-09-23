@@ -4,7 +4,7 @@ import {fetchStocksList} from "../utils/StockAPIClient.ts";
 import {Stock} from "../dataModels.ts";
 import AddStock from "./AddStock.tsx";
 import {AuthenticatedTemplate, useMsal} from "@azure/msal-react";
-import {b2cPolicies, protectedResources} from "../authConfig.ts";
+
 
 
 const StocksList: React.FC = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {EventType, PublicClientApplication} from "@azure/msal-browser";
+import {AuthenticationResult, EventType, PublicClientApplication} from "@azure/msal-browser";
 import {msalConfig} from "./authConfig.ts";
 import {MsalProvider} from "@azure/msal-react";
 import App from "./App.tsx";
@@ -21,9 +21,9 @@ msalInstance.addEventCallback((event) => {
         (event.eventType === EventType.LOGIN_SUCCESS ||
             event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS ||
             event.eventType === EventType.SSO_SILENT_SUCCESS) &&
-        event.payload?.account
+        event.payload && (event.payload as AuthenticationResult).account
     ) {
-        msalInstance.setActiveAccount(event.payload.account);
+        msalInstance.setActiveAccount((event.payload as AuthenticationResult).account);
     }
 });
 

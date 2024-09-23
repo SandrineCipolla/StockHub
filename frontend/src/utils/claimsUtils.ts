@@ -3,8 +3,8 @@
  * @param {Object} claims ID token claims
  * @returns claimsObject
  */
-export const createClaimsTable = (claims) => {
-    let claimsObj = {};
+export const createClaimsTable = (claims: { [key: string]: string | number }): { [key: number]: [string, string | number, string] } => {
+    const claimsObj: { [key: number]: [string, string | number, string] } = {};
     let index = 0;
 
     Object.keys(claims).forEach((key) => {
@@ -33,7 +33,7 @@ export const createClaimsTable = (claims) => {
             case 'iat':
                 populateClaim(
                     key,
-                    changeDateFormat(claims[key]),
+                    changeDateFormat(claims[key] as string),
                     'Issued At indicates when the authentication for this token occurred.',
                     index,
                     claimsObj
@@ -43,7 +43,7 @@ export const createClaimsTable = (claims) => {
             case 'nbf':
                 populateClaim(
                     key,
-                    changeDateFormat(claims[key]),
+                    changeDateFormat(claims[key] as string),
                     'The nbf (not before) claim identifies the time (as UNIX timestamp) before which the JWT must not be accepted for processing.',
                     index,
                     claimsObj
@@ -53,7 +53,7 @@ export const createClaimsTable = (claims) => {
             case 'exp':
                 populateClaim(
                     key,
-                    changeDateFormat(claims[key]),
+                    changeDateFormat(claims[key] as string),
                     "The exp (expiration time) claim identifies the expiration time (as UNIX timestamp) on or after which the JWT must not be accepted for processing. It's important to note that in certain circumstances, a resource may reject the token before this time. For example, if a change in authentication is required or a token revocation has been detected.",
                     index,
                     claimsObj
@@ -205,11 +205,8 @@ export const createClaimsTable = (claims) => {
  * @param {Number} index
  * @param {Object} claimsObject
  */
-const populateClaim = (claim, value, description, index, claimsObject) => {
-    let claimsArray = [];
-    claimsArray[0] = claim;
-    claimsArray[1] = value;
-    claimsArray[2] = description;
+const populateClaim = (claim: string, value: string | number, description: string, index: number, claimsObject: { [key: number]: [string, string | number, string] }) => {
+    const claimsArray: [string, string | number, string] = [claim, value, description];
     claimsObject[index] = claimsArray;
 };
 
@@ -218,8 +215,8 @@ const populateClaim = (claim, value, description, index, claimsObject) => {
  * @param {String} date Unix timestamp
  * @returns
  */
-const changeDateFormat = (date) => {
-    let dateObj = new Date(date * 1000);
+const changeDateFormat = (date: string): string => {
+    const dateObj = new Date(parseInt(date) * 1000);
     return `${date} - [${dateObj.toString()}]`;
 };
 
@@ -229,14 +226,14 @@ const changeDateFormat = (date) => {
  * @param {string} policyToCompare - ID/Name of the policy as expressed in the Azure portal
  * @returns {boolean}
  */
-export function compareIssuingPolicy(idTokenClaims, policyToCompare) {
+export function compareIssuingPolicy(idTokenClaims: { [key: string]: string }, policyToCompare: string): boolean {
 
     if(!idTokenClaims || !policyToCompare) {
         console.warn('No claims or policy to compare');
         return false;
     }
 
-    let tfpMatches = idTokenClaims.hasOwnProperty('tfp') && idTokenClaims['tfp'] && idTokenClaims['tfp'].toLowerCase() === policyToCompare.toLowerCase();
-    let acrMatches = idTokenClaims.hasOwnProperty('acr') && idTokenClaims['acr'] && idTokenClaims['acr'].toLowerCase() === policyToCompare.toLowerCase();
-    return tfpMatches || acrMatches;
+    const tfpMatches = Object.prototype.hasOwnProperty.call(idTokenClaims, 'tfp') && idTokenClaims['tfp'] && idTokenClaims['tfp'].toLowerCase() === policyToCompare.toLowerCase();
+    const acrMatches = Object.prototype.hasOwnProperty.call(idTokenClaims, 'acr') && idTokenClaims['acr'] && idTokenClaims['acr'].toLowerCase() === policyToCompare.toLowerCase();
+    return Boolean(tfpMatches || acrMatches) ;
 }

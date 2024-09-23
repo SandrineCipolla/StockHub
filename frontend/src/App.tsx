@@ -1,10 +1,9 @@
 import {useMsal} from "@azure/msal-react";
 import Home from "./pages/home/Home.tsx";
 import StocksList from "./components/StocksList.tsx";
-import  {useEffect} from "react";
-import {EventType} from "@azure/msal-browser";
+import {useEffect} from "react";
+import {AuthenticationResult, EventType} from "@azure/msal-browser";
 import {b2cPolicies, protectedResources} from "./authConfig.ts";
-import {compareIssuingPolicy} from "./utils/claimsUtils.ts";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
 function ProtectedComponent() {
@@ -16,7 +15,7 @@ function ProtectedComponent() {
         const callbackId = instance.addEventCallback((event) => {
             if (
                 (event.eventType === EventType.LOGIN_SUCCESS || event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) &&
-                event.payload && event.payload.account
+                event.payload && (event.payload as AuthenticationResult).account
             ) {
                 /**
                  * For the purpose of setting an active account for UI update, we want to consider only the auth
@@ -24,25 +23,29 @@ function ProtectedComponent() {
                  * policies may use "acr" instead of "tfp"). To learn more about B2C tokens, visit:
                  * https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
                  */
-                if (compareIssuingPolicy(event.payload.idTokenClaims, b2cPolicies.names.editProfile)) {
-                    // retrieve the account from initial sing-in to the app
-                    const originalSignInAccount = instance
-                        .getAllAccounts()
-                        .find(
-                            (account) =>
-                                account.idTokenClaims?.oid === event.payload?.idTokenClaims.oid &&
-                                account.idTokenClaims?.sub === event.payload?.idTokenClaims.sub &&
-                                compareIssuingPolicy(account.idTokenClaims, b2cPolicies.names.signUpSignIn)
-                        );
 
-                    let signUpSignInFlowRequest = {
-                        authority: b2cPolicies.authorities.signUpSignIn.authority,
-                        account: originalSignInAccount,
-                    };
+                // const payload = event.payload as AuthenticationResult;
+                // const idTokenClaims = payload.idTokenClaims as idTokenClaims;
 
-                    // silently login again with the signUpSignIn policy
-                    instance.ssoSilent(signUpSignInFlowRequest);
-                }
+                // if (compareIssuingPolicy(payload.idTokenClaims, b2cPolicies.names.editProfile)) {
+                //     // retrieve the account from initial sing-in to the app
+                //     const originalSignInAccount = instance
+                //         .getAllAccounts()
+                //         .find(
+                //             (account) =>
+                //                 (account.idTokenClaims as idTokenClaims).oid === idTokenClaims.oid &&
+                //                 (account.idTokenClaims as idTokenClaims).sub === idTokenClaims.sub &&
+                //                 compareIssuingPolicy(account.idTokenClaims, b2cPolicies.names.signUpSignIn)
+                //         );
+                //
+                //     const signUpSignInFlowRequest = {
+                //         authority: b2cPolicies.authorities.signUpSignIn.authority,
+                //         account: originalSignInAccount,
+                //     };
+                //
+                //     // silently login again with the signUpSignIn policy
+                //     instance.ssoSilent(signUpSignInFlowRequest);
+                // }
 
                 /**
                  * Below we are checking if the user is returning from the reset password flow.
@@ -51,29 +54,29 @@ function ProtectedComponent() {
                  * you can replace the code below with the same pattern used for handling the return from
                  * profile edit flow
                  */
-                if (compareIssuingPolicy(event.payload.idTokenClaims, b2cPolicies.names.forgotPassword)) {
-                    let signUpSignInFlowRequest = {
-                        authority: b2cPolicies.authorities.signUpSignIn.authority,
-                        scopes: [
-                            ...protectedResources.stockHubApi.scopes.read,
-                            ...protectedResources.stockHubApi.scopes.write,
-                        ],
-                    };
-                    instance.loginRedirect(signUpSignInFlowRequest);
-                }
+                // if (compareIssuingPolicy(payload.idTokenClaims, b2cPolicies.names.forgotPassword)) {
+                //     const signUpSignInFlowRequest = {
+                //         authority: b2cPolicies.authorities.signUpSignIn.authority,
+                //         scopes: [
+                //             ...protectedResources.stockHubApi.scopes.read,
+                //             ...protectedResources.stockHubApi.scopes.write,
+                //         ],
+                //     };
+                //     instance.loginRedirect(signUpSignInFlowRequest);
+                // }
             }
 
-            if (event.eventType === EventType.LOGIN_FAILURE) {
-                // Check for forgot password error
-                // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
-                if (event.error && event.error.errorMessage.includes('AADB2C90118')) {
-                    const resetPasswordRequest = {
-                        authority: b2cPolicies.authorities.forgotPassword.authority,
-                        scopes: [],
-                    };
-                    instance.loginRedirect(resetPasswordRequest);
-                }
-            }
+            // if (event.eventType === EventType.LOGIN_FAILURE) {
+            //     // Check for forgot password error
+            //     // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
+            //     if (event.error && (event.error as AuthError).errorMessage.includes('AADB2C90118')) {
+            //         const resetPasswordRequest = {
+            //             authority: b2cPolicies.authorities.forgotPassword.authority,
+            //             scopes: [],
+            //         };
+            //         instance.loginRedirect(resetPasswordRequest);
+            //     }
+            // }
         });
 
         return () => {
@@ -107,10 +110,10 @@ function App() {
     const {instance} = useMsal();
     const signUpSignInFlowRequest = {
         authority: b2cPolicies.authorities.signUpSignIn.authority,
-        /*   scopes: [
-               ...protectedResources.stockHubApi.scopes.read,
-               ...protectedResources.stockHubApi.scopes.write,
-           ],*/
+        scopes: [
+            ...protectedResources.stockHubApi.scopes.read,
+            ...protectedResources.stockHubApi.scopes.write,
+        ],
     };
 
     return (
