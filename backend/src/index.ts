@@ -15,10 +15,16 @@ const port = process.env.PORT || 3000;
 let isDatabaseConnected: boolean = false;
 
 export async function initializeApp() {
+    const clientID = authConfig.credentials.clientID;
+    const audience = authConfig.credentials.clientID;
+
+    if (!clientID || !audience) {
+        throw new Error('clientID or audience is not defined in authConfig');
+    }
     const options = {
         identityMetadata: `https://${authConfig.metadata.b2cDomain}/${authConfig.credentials.tenantName}/${authConfig.policies.policyName}/${authConfig.metadata.version}/${authConfig.metadata.discovery}`,
-        clientID: authConfig.credentials.clientID,
-        audience: authConfig.credentials.clientID,
+        clientID: clientID,
+        audience: audience,
         policyName: authConfig.policies.policyName,
         isB2C: authConfig.settings.isB2C,
         validateIssuer: authConfig.settings.validateIssuer,
