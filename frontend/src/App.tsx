@@ -120,6 +120,7 @@ function ProtectedComponent() {
 
 function App() {
     const {instance} = useMsal();
+    const activeAccount = instance.getActiveAccount();
     const signUpSignInFlowRequest = {
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         scopes: [
@@ -127,12 +128,27 @@ function App() {
             ...protectedResources.stockHubApi.scopes.write,
         ],
     };
+    const handleLogin = () => {
+        instance.loginRedirect(signUpSignInFlowRequest);
+    };
+
+    const handleLogout = () => {
+        instance.logoutRedirect(
+            {
+                postLogoutRedirectUri: "/",
+            }
+        );
+    };
 
     return (
         <div>
-            <h1>Protected Component</h1>
+
             <ProtectedComponent/>
-            <button onClick={() => instance.loginRedirect(signUpSignInFlowRequest)}>Login test</button>
+            {activeAccount ? (
+                <button onClick={handleLogout}>Logout test</button>
+            ) : (
+                <button onClick={handleLogin}>Login test</button>
+            )}
         </div>
 
 
