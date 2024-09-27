@@ -39,7 +39,7 @@ const StocksList: React.FC = () => {
                 </ul>
                 <AddStock onStockAdded={fetchData}/>
                 <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950"
-                        onClick={() => navigate('/home')}>Retour à l'accueil
+                        onClick={() => navigate('/')}>Retour à l'accueil
                 </button>
 
             </div>

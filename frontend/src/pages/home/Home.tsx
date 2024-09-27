@@ -1,12 +1,17 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {useMsal} from "@azure/msal-react";
+import { getUsername } from '../../utils/msalUtils';
 
 
 const Home: React.FC = () => {
+    const msalInstance = useMsal();
     return (
 
         <div>
+
             <h1>Page d'accueil</h1>
+            <h2>Bienvenue {getUsername(msalInstance.accounts)}</h2>
             <nav>
                 <ul>
                     <li className="nav-item">
