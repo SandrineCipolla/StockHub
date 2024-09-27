@@ -1,10 +1,14 @@
-import {useMsal} from "@azure/msal-react";
+import {BrowserRouter as Router, Navigate, Route, Routes} from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import StocksList from "./components/StocksList";
+import "./App.css";
 import Home from "./pages/home/Home.tsx";
-import StocksList from "./components/StocksList.tsx";
 import {useEffect} from "react";
 import {AuthenticationResult, EventType} from "@azure/msal-browser";
 import {b2cPolicies, protectedResources} from "./authConfig.ts";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+
+import {useMsal} from "@azure/msal-react";
 
 function ProtectedComponent() {
     const {instance} = useMsal();
@@ -93,16 +97,18 @@ function ProtectedComponent() {
     return (
         <Router>
             <div>
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-
-                    <Route
-                        path="/stocks"
-                        element={
-                            <StocksList/>
-                        }
-                    />
-                </Routes>
+                <Header/>
+                <main>
+                    <Routes>
+                       /* <Route path="/" element={<Navigate to="/home"/>}/>*/
+                        <Route path="/home" element={<Home/>}/>
+                        <Route path="/stocks" element={<StocksList/>}/>
+                        <Route path="/items" element={<ItemsList/>}/>
+                        <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
+                        <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
+                    </Routes>
+                </main>
+                <Footer/>
             </div>
         </Router>
 
