@@ -4,6 +4,9 @@ import {AuthenticationResult, EventType, PublicClientApplication} from "@azure/m
 import {msalConfig} from "./authConfig.ts";
 import {MsalProvider} from "@azure/msal-react";
 import App from "./App.tsx";
+import {ThemeProvider, createTheme } from "@mui/material";
+// import "../src/styles/berry-free-react-admin-template/remix/app/styles/style.css";
+import berryTheme from "./styles/theme.ts";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -26,11 +29,14 @@ msalInstance.addEventCallback((event) => {
         msalInstance.setActiveAccount((event.payload as AuthenticationResult).account);
     }
 });
+const theme = createTheme(berryTheme);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <MsalProvider instance={msalInstance}>
+            <ThemeProvider  theme={theme}>
             <App/>
+            </ThemeProvider>
         </MsalProvider>
     </React.StrictMode>
 );

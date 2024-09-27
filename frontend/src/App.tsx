@@ -3,7 +3,6 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import StocksList from "./components/StocksList";
 import "./App.css";
-import Home from "./pages/home/Home.tsx";
 import {useEffect} from "react";
 import {AuthenticationResult, EventType} from "@azure/msal-browser";
 import {b2cPolicies, protectedResources} from "./authConfig.ts";
@@ -12,8 +11,10 @@ import {useMsal} from "@azure/msal-react";
 import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
 import ItemsList from "./components/ItemsList.tsx";
 import ItemDetails from "./components/ItemDetails.tsx";
+import Home from "./pages/ItemDetailsPage.tsx";
+import {ProtectedComponentProps} from "./utils/models.ts";
 
-function ProtectedComponent() {
+function ProtectedComponent({onLogin}:ProtectedComponentProps) {
     const {instance} = useMsal();
 
     useEffect(() => {
@@ -100,7 +101,7 @@ function ProtectedComponent() {
     return (
         <Router>
             <div>
-                <Header/>
+                <Header onLogin={onLogin}/>
                 <main>
                     <Routes>
                         {/*<Route path="/" element={<Navigate to="/home"/>}/>*/}
@@ -120,7 +121,7 @@ function ProtectedComponent() {
 
 function App() {
     const {instance} = useMsal();
-    const activeAccount = instance.getActiveAccount();
+    // const activeAccount = instance.getActiveAccount();
     const signUpSignInFlowRequest = {
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         scopes: [
@@ -132,23 +133,22 @@ function App() {
         instance.loginRedirect(signUpSignInFlowRequest);
     };
 
-    const handleLogout = () => {
-        instance.logoutRedirect(
-            {
-                postLogoutRedirectUri: "/",
-            }
-        );
-    };
+    // const handleLogout = () => {
+    //     instance.logoutRedirect(
+    //         {
+    //             postLogoutRedirectUri: "/",
+    //         }
+    //     );
+    // };
 
     return (
         <div>
 
-            <ProtectedComponent/>
-            {activeAccount ? (
-                <button onClick={handleLogout}>Logout test</button>
-            ) : (
-                <button onClick={handleLogin}>Login test</button>
-            )}
+            <ProtectedComponent onLogin={handleLogin}/>
+
+            {/*{!activeAccount && (*/}
+            {/*    <Button variant="contained"  onClick={handleLogin}>Login test</Button>*/}
+            {/*)}*/}
         </div>
 
 
