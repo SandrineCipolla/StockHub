@@ -1,7 +1,7 @@
 const passportConfig = {
     credentials: {
         tenantName: 'stockhubb2c.onmicrosoft.com',
-        clientID: 'dc30ef57-cdc1-4a3e-aac5-9647506a72ef',
+        clientID: process.env.CLIENT_ID,
     },
     policies: {
         policyName: 'B2C_1_signupsignin',
@@ -16,7 +16,7 @@ const passportConfig = {
         isB2C: true,
         validateIssuer: false,
         passReqToCallback: true,
-        loggingLevel: 'info',
+        loggingLevel: 'warn' as 'warn',
         loggingNoPII: false,
     },
     protectedRoutes: {
@@ -30,4 +30,4 @@ const passportConfig = {
     },
 };
 
-module.exports = passportConfig;
+export default passportConfig;

@@ -1,12 +1,12 @@
 import {Item, Stock, StockDetail, StockItem} from "../dataModels.ts";
-import ConfigManager from "./ConfigManager.ts";
+import {getApiConfig} from "./utils.ts";
 
-const apiUrl = ConfigManager.getApiServerUrl();
-const getConfig:RequestInit = ConfigManager.getFetchConfig();
 
 async function putFetch(url: string, body: Record<string, unknown>) {
-    const putConfig = ConfigManager.putFetchConfig(body);
-    const response = await fetch(url, putConfig);
+    const {config} = await getApiConfig('PUT', body);
+
+
+    const response = await fetch(url, config);
 
     if (!response.ok) {
         console.error(`Error in PUT request to ${url}`);
@@ -17,19 +17,30 @@ async function putFetch(url: string, body: Record<string, unknown>) {
 }
 
 export const fetchStocksList = async (): Promise<Stock[]> => {
-    const response = await fetch(`${apiUrl}/stocks`,getConfig);
+    try {
 
-    if (!response.ok) {
-        console.error('Error in fetching stocks list');
-        throw new Error(`HTTP response with a status ${response.status}`);
+        const {apiUrl, config} = await getApiConfig();
+        console.log("Fetching stocks list with config:", config);
+
+        const response = await fetch(`${apiUrl}/stocks`, config);
+
+        if (!response.ok) {
+            console.error('Error in fetching stocks list');
+            new Error(`HTTP response with a status ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Stocks data received:", data);
+        return data as Stock[];
+    } catch (error) {
+        console.error("Error in fetchStocksList:", error);
+        throw error;
     }
-
-    const data = await response.json();
-    return data as Stock[];
 };
 
 export const fetchStockDetails = async (numericID: number): Promise<StockDetail> => {
-    const response = await fetch(`${apiUrl}/stocks/${numericID}`, getConfig);
+    const {apiUrl, config} = await getApiConfig();
+    const response = await fetch(`${apiUrl}/stocks/${numericID}`, config);
 
     if (!response.ok) {
         console.error('Error in fetching stock details');
@@ -47,14 +58,15 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
 };
 
 export const fetchStockItems = async (numericID: number): Promise<StockItem[]> => {
-    const response = await fetch(`${apiUrl}/stocks/${numericID}/items`, getConfig);
+    const {apiUrl, config} = await getApiConfig();
+    const response = await fetch(`${apiUrl}/stocks/${numericID}/items`, config);
 
     if (!response.ok) {
         console.error('Error in fetching stock details');
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data:StockItem[] = await response.json();
+    const data: StockItem[] = await response.json();
 
     if (Array.isArray(data)) {
         return data
@@ -64,16 +76,17 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     }
 };
 
-export const updateStockItemQuantity = async (stockID:number,itemID:number, quantity: number) => {
+export const updateStockItemQuantity = async (stockID: number, itemID: number, quantity: number) => {
+    const {apiUrl} = await getApiConfig();
     const body = {QUANTITY: quantity};
     return putFetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, body);
 };
 
 export const addStockItem = async (stockID: number, item: { LABEL: string; DESCRIPTION: string; QUANTITY: number }) => {
-    const body = { ...item, STOCK_ID: stockID };
-    console.debug('Sending request with body:', body);
-    const postConfig = ConfigManager.postFetchConfig(body);
-    const response = await fetch(`${apiUrl}/stocks/${stockID}/items`, postConfig);
+    const body = {...item, STOCK_ID: stockID};
+    const {apiUrl, config} = await getApiConfig('POST', body);
+
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items`, config);
 
     if (!response.ok) {
         console.error('Error in addStockItem');
@@ -83,11 +96,13 @@ export const addStockItem = async (stockID: number, item: { LABEL: string; DESCR
     return await response.json();
 };
 
-export const addStock = async (LABEL: string,DESCRIPTION:string):Promise<Stock> => {
-    const body = { LABEL,DESCRIPTION };
+export const addStock = async (LABEL: string, DESCRIPTION: string): Promise<Stock> => {
+    const body = {LABEL, DESCRIPTION};
+    const {apiUrl, config} = await getApiConfig('POST', body);
+
     console.debug('Sending request with body:', body);
-    const postConfig = ConfigManager.postFetchConfig(body);
-    const response = await fetch(`${apiUrl}/stocks/`, postConfig);
+
+    const response = await fetch(`${apiUrl}/stocks/`, config);
 
     if (!response.ok) {
         console.error('Error in addStock');
@@ -98,9 +113,9 @@ export const addStock = async (LABEL: string,DESCRIPTION:string):Promise<Stock> 
 };
 
 export const deleteStockItem = async (stockID: number, itemID: number) => {
-    const body = {ITEM : itemID}
-    const deleteConfig = ConfigManager.deleteFetchConfig(body);
-    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, deleteConfig);
+    const body = {ITEM: itemID}
+    const {apiUrl, config} = await getApiConfig('DELETE', body);
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
 
     if (!response.ok) {
         console.error('Error in deleteStockItem');
@@ -111,9 +126,9 @@ export const deleteStockItem = async (stockID: number, itemID: number) => {
 };
 
 export const fetchItemsList = async (): Promise<Item[]> => {
-
+    const {apiUrl, config} = await getApiConfig();
     const targetUrl = `${apiUrl}/items`;
-    const response = await fetch(targetUrl, getConfig);
+    const response = await fetch(targetUrl, config);
 
     if (!response.ok) {
         console.error('Error in fetching items list. [httpStatus]:${response.status} - [targetUrl] : ${targetUrl}');
@@ -125,16 +140,16 @@ export const fetchItemsList = async (): Promise<Item[]> => {
     return data as Item[];
 };
 
-export const fetchItemDetails = async (stockID:number,itemID: number): Promise<Item> => {
-
-    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, getConfig);
+export const fetchItemDetails = async (stockID: number, itemID: number): Promise<Item> => {
+    const {apiUrl, config} = await getApiConfig();
+    const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
 
     if (!response.ok) {
         console.error('Error in fetching item details');
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data:Item  = await response.json();
+    const data: Item = await response.json();
     console.log(data);
 
     return data as Item;

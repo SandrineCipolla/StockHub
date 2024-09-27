@@ -8,6 +8,7 @@ import {
 
 export interface CustomError extends Error {
     typology?: ErrorMessages;
+    status?: number;
 }
 
 export class ValidationError extends Error implements CustomError {

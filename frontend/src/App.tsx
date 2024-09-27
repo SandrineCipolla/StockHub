@@ -1,10 +1,17 @@
-import {useMsal} from "@azure/msal-react";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import StocksList from "./components/StocksList";
+import "./App.css";
 import Home from "./pages/home/Home.tsx";
-import StocksList from "./components/StocksList.tsx";
 import {useEffect} from "react";
 import {AuthenticationResult, EventType} from "@azure/msal-browser";
 import {b2cPolicies, protectedResources} from "./authConfig.ts";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+
+import {useMsal} from "@azure/msal-react";
+import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
+import ItemsList from "./components/ItemsList.tsx";
+import ItemDetails from "./components/ItemDetails.tsx";
 
 function ProtectedComponent() {
     const {instance} = useMsal();
@@ -24,8 +31,11 @@ function ProtectedComponent() {
                  * https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
                  */
 
-                // const payload = event.payload as AuthenticationResult;
-                // const idTokenClaims = payload.idTokenClaims as idTokenClaims;
+                const payload = event.payload as AuthenticationResult;
+                //const idTokenClaims = payload.idTokenClaims as idTokenClaims;
+                const token = payload.accessToken
+                localStorage.setItem('authToken', token);
+                console.log("Token acquired:", token);
 
                 // if (compareIssuingPolicy(payload.idTokenClaims, b2cPolicies.names.editProfile)) {
                 //     // retrieve the account from initial sing-in to the app
@@ -90,16 +100,18 @@ function ProtectedComponent() {
     return (
         <Router>
             <div>
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-
-                    <Route
-                        path="/stocks"
-                        element={
-                            <StocksList/>
-                        }
-                    />
-                </Routes>
+                <Header/>
+                <main>
+                    <Routes>
+                        {/*<Route path="/" element={<Navigate to="/home"/>}/>*/}
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/stocks" element={<StocksList/>}/>
+                        <Route path="/items" element={<ItemsList/>}/>
+                        <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
+                        <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
+                    </Routes>
+                </main>
+                <Footer/>
             </div>
         </Router>
 
