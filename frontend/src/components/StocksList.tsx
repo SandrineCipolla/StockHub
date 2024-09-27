@@ -27,7 +27,7 @@ const StocksList: React.FC = () => {
     return (
 <AuthenticatedTemplate>
         <div>
-            <h2 className="text-lg font-bold mb-2 mt-2">Liste des stocks {msalInstance.accounts[0].username}</h2>
+            <h2 className="text-lg font-bold mb-2 mt-2">Liste des stocks  {msalInstance.accounts.length > 0 ? msalInstance.accounts[0].username : 'Utilisateur inconnu'}</h2>
             <ul>
                 {stocks.map(stock => (
                     <li className="mb-2 text-purple-600 hover:text-violet-300" key={stock.id}>
