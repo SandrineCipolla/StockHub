@@ -92,7 +92,7 @@ const Header: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
                 {menuItems}
             </Drawer>
             {/* Ligne de séparation */}
-            <Box sx={{ height: '2px', backgroundColor: '#A855F7', marginTop: 1 }} />
+            <Box sx={{ height: '2px', backgroundColor: '#A855F7', marginTop:3 }} />
         </>
     );
 };

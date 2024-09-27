@@ -1,17 +1,15 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {useMsal} from "@azure/msal-react";
-import { getUsername } from '../../utils/msalUtils';
+
+import {Box, Typography} from '@mui/material';
 
 
 const HomeLoggedIn: React.FC = () => {
-    const msalInstance = useMsal();
+
     return (
-
-        <div>
-
-            <h1>Page d'accueil</h1>
-            <h2>Bienvenue {getUsername(msalInstance.accounts)}</h2>
+        <Box sx={{marginTop: 4}}> {/* 4 correspond à un espacement de 32px */}
+            <Typography variant="h6" marginBottom={3}>Page d'accueil après connexion</Typography>
+            <Typography variant="body1">Bienvenue dans votre espace de gestion de Stocks</Typography>
             <nav>
                 <ul>
                     <li className="nav-item">
@@ -21,10 +19,7 @@ const HomeLoggedIn: React.FC = () => {
                     </li>
                 </ul>
             </nav>
-
-
-        </div>
-
+        </Box>
     );
 };
 

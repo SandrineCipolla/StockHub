@@ -5,17 +5,14 @@ import {msalConfig} from "./authConfig.ts";
 import {MsalProvider} from "@azure/msal-react";
 import App from "./App.tsx";
 import {ThemeProvider, createTheme } from "@mui/material";
-// import "../src/styles/berry-free-react-admin-template/remix/app/styles/style.css";
 import berryTheme from "./styles/theme.ts";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
 // Default to using the first account if no account is active on page load
 if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
-    // Account selection logic is app dependent. Adjust as needed for different use cases.
     msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
 }
-
 msalInstance.addEventCallback((event) => {
 
     console.debug('Event received:', event.eventType);

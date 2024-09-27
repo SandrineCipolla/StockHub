@@ -11,10 +11,10 @@ import {useMsal} from "@azure/msal-react";
 import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
 import ItemsList from "./components/ItemsList.tsx";
 import ItemDetails from "./components/ItemDetails.tsx";
-import Home from "./pages/ItemDetailsPage.tsx";
+import Home from "./pages/home/Home.tsx";
 import {ProtectedComponentProps} from "./utils/models.ts";
 
-function ProtectedComponent({onLogin}:ProtectedComponentProps) {
+function ProtectedComponent({onLogin}: ProtectedComponentProps) {
     const {instance} = useMsal();
 
     useEffect(() => {
@@ -121,7 +121,6 @@ function ProtectedComponent({onLogin}:ProtectedComponentProps) {
 
 function App() {
     const {instance} = useMsal();
-    // const activeAccount = instance.getActiveAccount();
     const signUpSignInFlowRequest = {
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         scopes: [
@@ -133,22 +132,9 @@ function App() {
         instance.loginRedirect(signUpSignInFlowRequest);
     };
 
-    // const handleLogout = () => {
-    //     instance.logoutRedirect(
-    //         {
-    //             postLogoutRedirectUri: "/",
-    //         }
-    //     );
-    // };
-
     return (
         <div>
-
             <ProtectedComponent onLogin={handleLogin}/>
-
-            {/*{!activeAccount && (*/}
-            {/*    <Button variant="contained"  onClick={handleLogin}>Login test</Button>*/}
-            {/*)}*/}
         </div>
 
 
