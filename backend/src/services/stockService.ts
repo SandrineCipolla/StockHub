@@ -24,10 +24,11 @@ export class StockService {
         return StockMapper.mapRowDataPacketsToStocks(rows);
     }
 
-    async createStock(stock: Partial<StockToCreate>) {
+    async createStock(stock: Partial<StockToCreate>,userID:number) {
         if (!stock.LABEL || !stock.DESCRIPTION) {
             throw new BadRequestError("LABEL and DESCRIPTION are required.", ErrorMessages.CreateStock);
         }
+        stock.USER_ID = userID;
         await this.writeStockRepository.createStock(stock);
     }
 
