@@ -22,7 +22,8 @@ export class StockController {
 
    public async getAllStocks(req: Request, res: Response) {
         try {
-            const stocks = await this.stockService.getAllStocks();
+            const userID = Number(req.headers['user-id']);
+            const stocks = await this.stockService.getAllStocks(userID);
             res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -31,11 +32,12 @@ export class StockController {
 
     async createStock(req: Request, res: Response) {
         try {
+            const userID = Number(req.headers['user-id']);
             const {LABEL, DESCRIPTION} = req.body;
             if (!LABEL || !DESCRIPTION) {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
             }
-            await this.stockService.createStock({LABEL, DESCRIPTION});
+            await this.stockService.createStock({LABEL, DESCRIPTION}, userID);
             res.status(HTTP_CODE_CREATED).json({message: "Stock created successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -44,8 +46,9 @@ export class StockController {
 
     async getStockDetails(req: Request, res: Response) {
         try {
+            const userID = Number(req.headers['user-id']);
             const ID = Number(req.params.ID);
-            const stock = await this.stockService.getStockDetails(ID);
+            const stock = await this.stockService.getStockDetails(ID,userID);
             res.status(HTTP_CODE_OK).json(stock);
         } catch (err: any) {
             sendError(res, err as CustomError);
