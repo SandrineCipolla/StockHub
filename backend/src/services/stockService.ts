@@ -16,8 +16,8 @@ export class StockService {
         this.writeStockRepository = writeStock;
     }
 
-    async getAllStocks(): Promise<Stock[]> {
-        const rows = await this.readStockRepository.readAllStocks();
+    async getAllStocks(userID:number): Promise<Stock[]> {
+        const rows = await this.readStockRepository.readAllStocks(userID);
         if (!rows) {
             throw new Error("No rows returned from readAllStocks");
         }
@@ -31,8 +31,8 @@ export class StockService {
         await this.writeStockRepository.createStock(stock);
     }
 
-    async getStockDetails(ID: number) {
-        const stock = await this.readStockRepository.readStockDetails(ID);
+    async getStockDetails(ID: number,userID: number) {
+        const stock = await this.readStockRepository.readStockDetails(ID,userID);
         if (!stock) {
             throw new NotFoundError("Stock not found.", ErrorMessages.GetStockDetails);
         }
