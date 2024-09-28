@@ -1,15 +1,17 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
+import {Box, Typography} from '@mui/material';
 
-const Home: React.FC = () => {
+
+const HomeLoggedIn: React.FC = () => {
+
     return (
-
-        <div>
-            <h1>Page produit</h1>
+        <Box sx={{marginTop: 4}}> {/* 4 correspond à un espacement de 32px */}
+            <Typography variant="h6" marginBottom={3}>Page d'accueil après connexion</Typography>
+            <Typography variant="body1">Bienvenue dans votre espace de gestion de Stocks</Typography>
             <nav>
                 <ul>
-
                     <li className="nav-item">
                         <Link to="/stocks" className="menu">Mes stocks</Link>
                         <span className="separator"></span>
@@ -17,11 +19,8 @@ const Home: React.FC = () => {
                     </li>
                 </ul>
             </nav>
-
-
-        </div>
-
+        </Box>
     );
 };
 
-export default Home;
+export default HomeLoggedIn;

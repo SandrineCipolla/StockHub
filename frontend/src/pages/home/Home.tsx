@@ -1,25 +1,17 @@
 import React from 'react';
-import {Link} from "react-router-dom";
-
+import { useMsal } from "@azure/msal-react";
+import HomeLoggedIn from './HomeLoggedIn';
+import HomeLoggedOut from './HomeLoggedOut';
+import { Box } from '@mui/material';
 
 const Home: React.FC = () => {
+    const { instance } = useMsal();
+    const activeAccount = instance.getActiveAccount();
+
     return (
-
-        <div>
-            <h1>Page d'accueil</h1>
-            <nav>
-                <ul>
-                    <li className="nav-item">
-                        <Link to="/stocks" className="menu">Mes stocks</Link>
-                        <span className="separator"></span>
-                        <Link to="/items" className="menu">Mes produits</Link>
-                    </li>
-                </ul>
-            </nav>
-
-
-        </div>
-
+        <Box sx={{ marginBottom:25 }}> {/* 4 correspond à 32px */}
+            {activeAccount ? <HomeLoggedIn /> : <HomeLoggedOut />}
+        </Box>
     );
 };
 

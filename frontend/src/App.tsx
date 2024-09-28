@@ -3,7 +3,6 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import StocksList from "./components/StocksList";
 import "./App.css";
-import Home from "./pages/home/Home.tsx";
 import {useEffect} from "react";
 import {AuthenticationResult, EventType} from "@azure/msal-browser";
 import {b2cPolicies, protectedResources} from "./authConfig.ts";
@@ -12,8 +11,10 @@ import {useMsal} from "@azure/msal-react";
 import StockDetailsWithItems from "./components/StockDetailsWithItems.tsx";
 import ItemsList from "./components/ItemsList.tsx";
 import ItemDetails from "./components/ItemDetails.tsx";
+import Home from "./pages/home/Home.tsx";
+import {ProtectedComponentProps} from "./utils/models.ts";
 
-function ProtectedComponent() {
+function ProtectedComponent({onLogin}: ProtectedComponentProps) {
     const {instance} = useMsal();
 
     useEffect(() => {
@@ -100,7 +101,7 @@ function ProtectedComponent() {
     return (
         <Router>
             <div>
-                <Header/>
+                <Header onLogin={onLogin}/>
                 <main>
                     <Routes>
                         {/*<Route path="/" element={<Navigate to="/home"/>}/>*/}
@@ -127,12 +128,13 @@ function App() {
             ...protectedResources.stockHubApi.scopes.write,
         ],
     };
+    const handleLogin = () => {
+        instance.loginRedirect(signUpSignInFlowRequest);
+    };
 
     return (
         <div>
-            <h1>Protected Component</h1>
-            <ProtectedComponent/>
-            <button onClick={() => instance.loginRedirect(signUpSignInFlowRequest)}>Login test</button>
+            <ProtectedComponent onLogin={handleLogin}/>
         </div>
 
 

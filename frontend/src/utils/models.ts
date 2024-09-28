@@ -7,3 +7,7 @@ export interface authenticationResult {
     account: any;
     idTokenClaims: any;
 }
+
+export interface ProtectedComponentProps {
+     onLogin: () => void;
+ }
