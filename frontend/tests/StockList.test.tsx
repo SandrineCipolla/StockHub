@@ -18,7 +18,7 @@ vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
     return {
         ...actual,
-        useNavigate: () => mockNavigate, // Mock de useNavigate
+        useNavigate: () => mockNavigate,
     };
 });
 
@@ -43,8 +43,8 @@ describe('StocksList Component', () => {
             );
         });
 
-        // Log the HTML output to inspect it
-        //screen.debug();
+        //Log the HTML output to inspect it
+        screen.debug();
 
         await waitFor(() => {
             expect(screen.getByText('Liste des stocks')).toBeInTheDocument();
@@ -62,7 +62,15 @@ describe('StocksList Component', () => {
             );
         });
 
-        const button = screen.getByText("Retour à l'accueil");
+        // const button = screen.getByText("Retour à l'accueil");
+        // expect(button).toBeInTheDocument();
+        //
+        // await act(async () => {
+        //     button.click();
+        // });
+        const button = await screen.findByText((content, element) =>
+            element?.tagName.toLowerCase() === 'button' && content.includes("Retour à l'accueil")
+        );
         expect(button).toBeInTheDocument();
 
         await act(async () => {

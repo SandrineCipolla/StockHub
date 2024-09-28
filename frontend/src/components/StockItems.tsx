@@ -32,10 +32,6 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         fetchData().catch(error => console.error('Error in fetching data:', error));
     }, [ID, numericID, setStockItems]);
 
-
-    // if (!stockItems) {
-    //     return <div>Loading...</div>;
-    // }
     if (loading) {
         return <div>Loading...</div>;
     }
