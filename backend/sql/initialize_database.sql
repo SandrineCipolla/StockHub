@@ -20,3 +20,15 @@ create table items
 
 create index STOCK_ID
     on items (STOCK_ID);
+
+create table users
+(
+    ID    int auto_increment
+        primary key,
+    EMAIL varchar(255) not null
+);
+
+alter table stocks
+    add column USER_ID int null,
+    add constraint stocks_ibfk_1
+        foreign key (USER_ID) references users (ID);
