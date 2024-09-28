@@ -62,20 +62,13 @@ describe('StocksList Component', () => {
             );
         });
 
-        // const button = screen.getByText("Retour à l'accueil");
-        // expect(button).toBeInTheDocument();
-        //
-        // await act(async () => {
-        //     button.click();
-        // });
-        const button = await screen.findByText((content, element) =>
-            element?.tagName.toLowerCase() === 'button' && content.includes("Retour à l'accueil")
-        );
+        const button = screen.getByText("Retour à l'accueil");
         expect(button).toBeInTheDocument();
 
         await act(async () => {
             button.click();
         });
+
         // Vérifie que la fonction de navigation a été appelée
         expect(mockNavigate).toHaveBeenCalledWith('/home');
     });
