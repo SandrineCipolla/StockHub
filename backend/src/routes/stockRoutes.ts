@@ -15,6 +15,7 @@ const configureStockRoutes = async (): Promise<Router> => {
     const writeStockRepository = new WriteStockRepository(connection);
     const stockController = new StockController(readStockRepository, writeStockRepository);
 
+
     //Route pour récupération de la liste des stocks
     router.get("/stocks", async (req, res) => {
         try {

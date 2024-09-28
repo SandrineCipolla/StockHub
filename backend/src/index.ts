@@ -72,6 +72,7 @@ export async function initializeApp() {
                     }
                     if (info) {
                         (req as any).authInfo = info;
+                        req.userID = user.oid;
                         console.log("Authentication successful, proceeding to next middleware");
                         return next();
                     }
