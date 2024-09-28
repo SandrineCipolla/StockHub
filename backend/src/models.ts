@@ -12,12 +12,14 @@ export class Stock  {
     label: string;
     description: string;
     quantity: number;
+    userID: number;
 
-    constructor(id: number, label: string, description: string, quantity: number) {
+    constructor(id: number, label: string, description: string, quantity: number,userID: number) {
         this.id = id;
         this.label = label;
         this.description = description;
         this.quantity = quantity;
+        this.userID= userID;
     }
 
 }
@@ -25,6 +27,7 @@ export class Stock  {
 export interface StockToCreate {
     LABEL: string;
     DESCRIPTION: string;
+    USER_ID: number;
 }
 
 export class UpdateStockRequest {

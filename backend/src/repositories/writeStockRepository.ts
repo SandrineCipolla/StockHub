@@ -38,9 +38,10 @@ export class WriteStockRepository {
     }
 
     async createStock(stock: Partial<StockToCreate>) {
-        await this.connection.query("INSERT INTO stocks(LABEL, DESCRIPTION) VALUES (?, ?)", [
+        await this.connection.query("INSERT INTO stocks(LABEL, DESCRIPTION,USER_ID) VALUES (?, ?,?)", [
             stock.LABEL,
             stock.DESCRIPTION,
+            stock.USER_ID,
         ]);
     }
 
