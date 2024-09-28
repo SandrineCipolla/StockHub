@@ -28,8 +28,7 @@ export class StockService {
         if (!stock.LABEL || !stock.DESCRIPTION) {
             throw new BadRequestError("LABEL and DESCRIPTION are required.", ErrorMessages.CreateStock);
         }
-        stock.USER_ID = userID;
-        await this.writeStockRepository.createStock(stock);
+        await this.writeStockRepository.createStock(stock,userID);
     }
 
     async getStockDetails(ID: number,userID: number) {

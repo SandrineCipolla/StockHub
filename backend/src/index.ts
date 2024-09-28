@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-let isDatabaseConnected: boolean = false;
 
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
@@ -43,7 +42,7 @@ export async function initializeApp() {
     });
 
     try {
-        isDatabaseConnected = true;
+       // isDatabaseConnected = true;
         console.log("Connection to database successful");
     } catch (error) {
         console.error("Error connecting to the database :", error);
@@ -72,7 +71,7 @@ export async function initializeApp() {
                     }
                     if (info) {
                         (req as any).authInfo = info;
-                        req.userID = user.oid;
+                        req.userID = info.emails[0];
                         console.log("Authentication successful, proceeding to next middleware");
                         return next();
                     }

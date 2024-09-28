@@ -4,6 +4,8 @@ import {BadRequestError, CustomError, ErrorMessages, sendError, ValidationError}
 import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {ReadStockRepository} from "../repositories/readStockRepository";
 import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
+import {UserService} from "../services/userService";
+import {ReadUserRepository} from "../services/readUserRepository";
 //
 //
 //
@@ -12,17 +14,21 @@ import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 
 export class StockController {
     private stockService: StockService;
+    private userService: UserService;
 
     constructor(
         readStock: ReadStockRepository,
-        writeStock: WriteStockRepository
+        writeStock: WriteStockRepository,
+        readUser: ReadUserRepository,
     ) {
         this.stockService = new StockService(readStock, writeStock);
+        this.userService = new UserService(readUser);
     }
 
-   public async getAllStocks(req: Request, res: Response) {
+    public async getAllStocks(req: Request, res: Response) {
         try {
-            const userID = Number(req.headers['user-id']);
+            const OID = req.userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
             const stocks = await this.stockService.getAllStocks(userID);
             res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
@@ -48,7 +54,7 @@ export class StockController {
         try {
             const userID = Number(req.headers['user-id']);
             const ID = Number(req.params.ID);
-            const stock = await this.stockService.getStockDetails(ID,userID);
+            const stock = await this.stockService.getStockDetails(ID, userID);
             res.status(HTTP_CODE_OK).json(stock);
         } catch (err: any) {
             sendError(res, err as CustomError);

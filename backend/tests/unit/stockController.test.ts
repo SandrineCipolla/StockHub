@@ -6,6 +6,7 @@ import {mockReadRepo, mockWriteRepo} from "../__mocks__/mockedData";
 import {ReadStockRepository} from "../../src/repositories/readStockRepository";
 import {WriteStockRepository} from "../../src/repositories/writeStockRepository";
 import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
+import {ReadUserRepository} from "../../src/services/readUserRepository";
 
 
 jest.mock('../../src/services/stockService');
@@ -20,11 +21,12 @@ describe('StockController', () => {
     let res: jest.Mocked<Response>;
     let mockedReadRepo: jest.Mocked<ReadStockRepository>;
     let mockedWriteRepo: jest.Mocked<WriteStockRepository>;
+    let mockedReadUserRepo: jest.Mocked<ReadUserRepository>;
 
     beforeEach(() => {
         mockedReadRepo = mockReadRepo
         mockedWriteRepo = mockWriteRepo
-        stockController = new StockController(mockedReadRepo, mockedWriteRepo);
+        stockController = new StockController(mockedReadRepo, mockedWriteRepo,mockedReadUserRepo);
         req = {};
         res = {
             status: jest.fn().mockReturnThis(),
