@@ -17,13 +17,13 @@ export class ReadUserRepository {
 
         if (!rows || rows.length === 0) {
             console.error(`User not found for OID: ${oid}`);
-            throw new NotFoundError("User not found.", ErrorMessages.ConvertOIDtoUserID);
+            return undefined;
         }
 
         const user = rows[0];
         if (!user || !user.ID) {
             console.error(`User ID not found for OID: ${oid}`);
-            throw new NotFoundError("User ID not found.", ErrorMessages.ConvertOIDtoUserID);
+            return undefined;
         }
         console.log(`User ID found: ${user.ID} for OID: ${oid}`)
         return user.ID;

@@ -2,6 +2,16 @@ import {ErrorMessages, NotFoundError} from "../errors";
 import {ReadUserRepository} from "./readUserRepository";
 import {WriteUserRepository} from "./writeUserRepository";
 
+class UserIdentifier {
+    public readonly empty: boolean;
+    public readonly value: number;
+
+    constructor( oid: string){
+        this.empty = !oid;
+        this.value = parseInt(oid);
+    }
+}
+
 export class UserService {
     private readUserRepository: ReadUserRepository;
     private writeUserRepository: WriteUserRepository;
@@ -17,10 +27,7 @@ export class UserService {
     async convertOIDtoUserID(oid: string) {
         try {
             const userID = await this.readUserRepository.readUserByOID(oid);
-            if (!userID) {
-                throw new NotFoundError("User not found.", ErrorMessages.ConvertOIDtoUserID);
-            }
-            return userID;
+            return new UserIdentifier(userID);
         } catch (error) {
             const err = error as Error;
             console.error(`Error converting OID to UserID: ${err.message}`);
@@ -30,7 +37,9 @@ export class UserService {
 
     async addUser(email: string) {
         await this.writeUserRepository.addUser(email);
+        return await this.convertOIDtoUserID(email);
     }
+
 
 
 }

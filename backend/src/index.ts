@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import passport from "passport";
 import passportAzureAd from "passport-azure-ad";
 import authConfig from './authConfig';
-import {CustomError, NotFoundError} from "./errors";
+import {CustomError} from "./errors";
 import {UserService} from "./services/userService";
 import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
@@ -51,37 +51,10 @@ export async function initializeApp() {
         console.log("Token is valid, proceeding with authentication");
         try {
             const email = token.emails[0];
-            // const userID = await userService.convertOIDtoUserID(email);
-            // if (!userID) {
-            //     console.log("User ID not found, adding new user");
-            //     await userService.addUser(email);
-            // }
-            let userID;
-            try {
-                userID = await userService.convertOIDtoUserID(email);
-            // } catch (error) {
-            //     if (error instanceof NotFoundError) {
-            //         console.log("User not found, adding new user");
-            //         await userService.addUser(email);
-            //         userID = await userService.convertOIDtoUserID(email);
-            //     } else {
-            //         throw error;
-            //     }
-            // }
-            } catch (error) {
-                if (error instanceof NotFoundError) {
-                    // Vérification de l'existence de l'utilisateur avant de l'ajouter
-                    console.log("User not found, adding new user");
-                    try {
-                        await userService.addUser(email);
-                    } catch (dbError) {
-                        console.error("Error while adding user to DB", dbError);
-                        return done(new Error("Failed to add user to DB"), null);
-                    }
-                    userID = await userService.convertOIDtoUserID(email);
-                } else {
-                    throw error;
-                }
+            let userID = await userService.convertOIDtoUserID(email);
+            if (userID.empty) {
+                console.log("User ID not found, adding new user");
+                userID = await userService.addUser(email);
             }
             done(null, {userID}, token);
         } catch (error) {
