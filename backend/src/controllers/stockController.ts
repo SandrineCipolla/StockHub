@@ -27,7 +27,8 @@ export class StockController {
 
     public async getAllStocks(req: Request, res: Response) {
         try {
-            const OID = req.userID as string;
+            //const OID = req.userID as string;
+           const OID = (req as any).userID as string;
             const userID = await this.userService.convertOIDtoUserID(OID);
             const stocks = await this.stockService.getAllStocks(userID);
             res.status(HTTP_CODE_OK).json(stocks);
@@ -52,7 +53,8 @@ export class StockController {
 
     async getStockDetails(req: Request, res: Response) {
         try {
-            const userID = Number(req.headers['user-id']);
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
             const ID = Number(req.params.ID);
             const stock = await this.stockService.getStockDetails(ID, userID);
             res.status(HTTP_CODE_OK).json(stock);

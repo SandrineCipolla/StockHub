@@ -7,6 +7,7 @@ import passportAzureAd from "passport-azure-ad";
 import authConfig from './authConfig';
 import {CustomError} from "./errors";
 
+
 dotenv.config();
 
 const app = express();
@@ -71,7 +72,8 @@ export async function initializeApp() {
                     }
                     if (info) {
                         (req as any).authInfo = info;
-                        req.userID = info.emails[0];
+                        (req as any).userID = info.emails[0] as string;
+                        //req.userID = info.emails[0];
                         console.log("Authentication successful, proceeding to next middleware");
                         return next();
                     }
