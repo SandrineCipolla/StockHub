@@ -2,17 +2,23 @@ import {UserService} from '../../src/services/userService';
 
 import {ErrorMessages, NotFoundError} from '../../src/errors';
 import {ReadUserRepository} from "../../src/services/readUserRepository";
+import { WriteUserRepository } from '../../src/services/writeUserRepository';
 
 describe('UserService', () => {
     let userService: UserService;
     let mockReadUserRepository: jest.Mocked<ReadUserRepository>;
+    let mockWriteUserRepository: jest.Mocked<WriteUserRepository>;
 
     beforeEach(() => {
         mockReadUserRepository = {
             readUserByOID: jest.fn(),
         } as unknown as jest.Mocked<ReadUserRepository>;
 
-        userService = new UserService(mockReadUserRepository);
+        mockWriteUserRepository = {
+            addUser: jest.fn(),
+        } as unknown as jest.Mocked<WriteUserRepository>;
+
+        userService = new UserService(mockReadUserRepository, mockWriteUserRepository);
     });
 
     describe('convertOIDtoUserID', () => {
@@ -38,6 +44,16 @@ describe('UserService', () => {
                 .toThrow(new NotFoundError("User not found.", ErrorMessages.ConvertOIDtoUserID));
 
             expect(mockReadUserRepository.readUserByOID).toHaveBeenCalledWith(mockOID);
+        });
+    });
+
+    describe('addUser', () => {
+        it('should add a new user', async () => {
+            const email = 'test@example.com';
+
+            await userService.addUser(email);
+
+            expect(mockWriteUserRepository.addUser).toHaveBeenCalledWith(email);
         });
     });
 });

@@ -32,3 +32,6 @@ alter table stocks
     add column USER_ID int null,
     add constraint stocks_ibfk_1
         foreign key (USER_ID) references users (ID);
+
+alter table users
+    add constraint unique_email UNIQUE (EMAIL);

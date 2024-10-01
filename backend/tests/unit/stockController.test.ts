@@ -31,6 +31,7 @@ describe('StockController', () => {
             connection: {} as PoolConnection,
             readUserByOID: jest.fn().mockResolvedValue(1),
         } as unknown as jest.Mocked<ReadUserRepository>;
+
         stockController = new StockController(mockedReadRepo, mockedWriteRepo, mockedReadUserRepo);
         req = {};
         res = {

@@ -5,7 +5,12 @@ import dotenv from "dotenv";
 import passport from "passport";
 import passportAzureAd from "passport-azure-ad";
 import authConfig from './authConfig';
-import {CustomError} from "./errors";
+import {CustomError, NotFoundError} from "./errors";
+import {UserService} from "./services/userService";
+import {ReadUserRepository} from "./services/readUserRepository";
+import {connectToDatabase} from "./dbUtils";
+import {WriteUserRepository} from "./services/writeUserRepository";
+import configureUserRoutes from "./routes/userRoutes";
 
 
 dotenv.config();
@@ -32,18 +37,60 @@ export async function initializeApp() {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingNoPII: authConfig.settings.loggingNoPII,
     };
+    const connection = await connectToDatabase();
+    const readUserRepository = new ReadUserRepository(connection);
+    const writeUserRepository = new WriteUserRepository(connection);
+    const userService = new UserService(readUserRepository, writeUserRepository);
 
-    const bearerStrategy = new passportAzureAd.BearerStrategy(options, (req: express.Request, token: any, done: (err: CustomError | null, user?: any, info?: any) => void) => {
+    const bearerStrategy = new passportAzureAd.BearerStrategy(options, async (req: express.Request, token: any, done: (err: CustomError | null, user?: any, info?: any) => void) => {
         console.log("Token received:", token);
         if (!token.hasOwnProperty('scp')) {
+            console.error("Token does not have 'scp' property");
             return done(new Error('Unauthorized'), null, 'No delegated permissions found');
         }
         console.log("Token is valid, proceeding with authentication");
-        done(null, {}, token);
+        try {
+            const email = token.emails[0];
+            // const userID = await userService.convertOIDtoUserID(email);
+            // if (!userID) {
+            //     console.log("User ID not found, adding new user");
+            //     await userService.addUser(email);
+            // }
+            let userID;
+            try {
+                userID = await userService.convertOIDtoUserID(email);
+            // } catch (error) {
+            //     if (error instanceof NotFoundError) {
+            //         console.log("User not found, adding new user");
+            //         await userService.addUser(email);
+            //         userID = await userService.convertOIDtoUserID(email);
+            //     } else {
+            //         throw error;
+            //     }
+            // }
+            } catch (error) {
+                if (error instanceof NotFoundError) {
+                    // Vérification de l'existence de l'utilisateur avant de l'ajouter
+                    console.log("User not found, adding new user");
+                    try {
+                        await userService.addUser(email);
+                    } catch (dbError) {
+                        console.error("Error while adding user to DB", dbError);
+                        return done(new Error("Failed to add user to DB"), null);
+                    }
+                    userID = await userService.convertOIDtoUserID(email);
+                } else {
+                    throw error;
+                }
+            }
+            done(null, {userID}, token);
+        } catch (error) {
+            console.error("Error during authentication:", error);
+            done(error as CustomError, null);
+        }
     });
 
     try {
-       // isDatabaseConnected = true;
         console.log("Connection to database successful");
     } catch (error) {
         console.error("Error connecting to the database :", error);
@@ -60,15 +107,15 @@ export async function initializeApp() {
         (req: express.Request, res: express.Response, next: express.NextFunction) => {
             passport.authenticate(
                 'oauth-bearer',
-                { session: false },
+                {session: false},
                 (err: CustomError, user: any, info: any) => {
                     if (err) {
                         console.error("Authentication error:", err.message);
-                        return res.status(401).json({ error: err.message });
+                        return res.status(401).json({error: err.message});
                     }
                     if (!user) {
                         console.error("User not authenticated");
-                        return res.status(401).json({ error: 'Unauthorized' });
+                        return res.status(401).json({error: 'Unauthorized'});
                     }
                     if (info) {
                         (req as any).authInfo = info;
@@ -81,7 +128,6 @@ export async function initializeApp() {
             )(req, res, next);
         },
         (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            // Define your router here or import it
             next();
         },
         (err: CustomError, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -93,6 +139,9 @@ export async function initializeApp() {
 
     const stockRoutes = await configureStockRoutes();
     app.use("/api/v1", stockRoutes);
+
+    const userRoutes = await configureUserRoutes();
+    app.use("/api/v1", userRoutes);
 
     app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.status(404).send("Route not found");
@@ -112,4 +161,4 @@ if (process.env.NODE_ENV !== "test") {
     initializeApp();
 }
 
-export { app };
+export {app};

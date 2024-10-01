@@ -6,6 +6,7 @@ import {ReadStockRepository} from "../repositories/readStockRepository";
 import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 import {UserService} from "../services/userService";
 import {ReadUserRepository} from "../services/readUserRepository";
+import {WriteUserRepository} from "../services/writeUserRepository";
 //
 //
 //
@@ -20,9 +21,10 @@ export class StockController {
         readStock: ReadStockRepository,
         writeStock: WriteStockRepository,
         readUser: ReadUserRepository,
+        writeUser: WriteUserRepository
     ) {
         this.stockService = new StockService(readStock, writeStock);
-        this.userService = new UserService(readUser);
+        this.userService = new UserService(readUser, writeUser);
     }
 
     public async getAllStocks(req: Request, res: Response) {
