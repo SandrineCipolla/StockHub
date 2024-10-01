@@ -27,8 +27,8 @@ export class StockController {
 
     public async getAllStocks(req: Request, res: Response) {
         try {
-            //const OID = req.userID as string;
-           const OID = (req as any).userID as string;
+
+            const OID = (req as any).userID as string;
             const userID = await this.userService.convertOIDtoUserID(OID);
             const stocks = await this.stockService.getAllStocks(userID);
             res.status(HTTP_CODE_OK).json(stocks);
@@ -39,7 +39,8 @@ export class StockController {
 
     async createStock(req: Request, res: Response) {
         try {
-            const userID = Number(req.headers['user-id']);
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
             const {LABEL, DESCRIPTION} = req.body;
             if (!LABEL || !DESCRIPTION) {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
