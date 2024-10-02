@@ -1,6 +1,5 @@
 import {UserService} from '../../src/services/userService';
 
-import {ErrorMessages, NotFoundError} from '../../src/errors';
 import {ReadUserRepository} from "../../src/services/readUserRepository";
 import { WriteUserRepository } from '../../src/services/writeUserRepository';
 
@@ -29,20 +28,18 @@ describe('UserService', () => {
 
             mockReadUserRepository.readUserByOID.mockResolvedValue(mockUserID);
 
-            const userID = await userService.convertOIDtoUserID(mockOID);
-            expect(userID).toBe(mockUserID);
+            const userIdentifier = await userService.convertOIDtoUserID(mockOID);
+            expect(userIdentifier.value).toBe(mockUserID);
             expect(mockReadUserRepository.readUserByOID).toHaveBeenCalledWith(mockOID);
         });
 
-        it('should throw NotFoundError when user is not found', async () => {
+        it('should return a UserIdentifier with NaN value when user is not found', async () => {
             const mockOID = 'mock-oid';
 
             mockReadUserRepository.readUserByOID.mockResolvedValue(undefined);
 
-            await expect(userService.convertOIDtoUserID(mockOID))
-                .rejects
-                .toThrow(new NotFoundError("User not found.", ErrorMessages.ConvertOIDtoUserID));
-
+            const userIdentifier = await userService.convertOIDtoUserID(mockOID);
+            expect(userIdentifier.value).toBeNaN();
             expect(mockReadUserRepository.readUserByOID).toHaveBeenCalledWith(mockOID);
         });
     });
