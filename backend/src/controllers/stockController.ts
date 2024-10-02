@@ -4,6 +4,9 @@ import {BadRequestError, CustomError, ErrorMessages, sendError, ValidationError}
 import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {ReadStockRepository} from "../repositories/readStockRepository";
 import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
+import {UserService} from "../services/userService";
+import {ReadUserRepository} from "../services/readUserRepository";
+import {WriteUserRepository} from "../services/writeUserRepository";
 //
 //
 //
@@ -12,17 +15,24 @@ import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 
 export class StockController {
     private stockService: StockService;
+    private userService: UserService;
 
     constructor(
         readStock: ReadStockRepository,
-        writeStock: WriteStockRepository
+        writeStock: WriteStockRepository,
+        readUser: ReadUserRepository,
+        writeUser: WriteUserRepository
     ) {
         this.stockService = new StockService(readStock, writeStock);
+        this.userService = new UserService(readUser, writeUser);
     }
 
-   public async getAllStocks(req: Request, res: Response) {
+    public async getAllStocks(req: Request, res: Response) {
         try {
-            const stocks = await this.stockService.getAllStocks();
+
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            const stocks = await this.stockService.getAllStocks(userID.value);
             res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -31,11 +41,13 @@ export class StockController {
 
     async createStock(req: Request, res: Response) {
         try {
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
             const {LABEL, DESCRIPTION} = req.body;
             if (!LABEL || !DESCRIPTION) {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
             }
-            await this.stockService.createStock({LABEL, DESCRIPTION});
+            await this.stockService.createStock({LABEL, DESCRIPTION}, userID.value);
             res.status(HTTP_CODE_CREATED).json({message: "Stock created successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -44,8 +56,10 @@ export class StockController {
 
     async getStockDetails(req: Request, res: Response) {
         try {
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
             const ID = Number(req.params.ID);
-            const stock = await this.stockService.getStockDetails(ID);
+            const stock = await this.stockService.getStockDetails(ID, userID.value);
             res.status(HTTP_CODE_OK).json(stock);
         } catch (err: any) {
             sendError(res, err as CustomError);

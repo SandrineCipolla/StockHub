@@ -17,6 +17,7 @@ export const expectedStock: Stock = {
   label: 'Example Label',
   description: 'Example Description',
   quantity: 100,
+
 };
 
 export const fakeStocks: Stock[] = [

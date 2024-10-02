@@ -28,7 +28,8 @@ describe("StockService", () => {
     describe("getAllStocks", () => {
         it("should return stocks with id and label columns", async () => {
             jest.spyOn(mockedReadRepo, "readAllStocks").mockResolvedValue(fakeStocksAsRowDataPacket);
-            const stocks = await stockService.getAllStocks();
+            const userID = 1;
+            const stocks = await stockService.getAllStocks(userID);
             expect(stocks).toEqual(fakeStocks);
         });
     });

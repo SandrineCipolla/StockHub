@@ -57,7 +57,9 @@ export enum ErrorMessages {
     GetStockDetails = "Error while retrieving the stock details:",
     GetStockItems = "Error while retrieving the items of the stock:",
     GetItemDetails = "Error while retrieving the item details:",
-    GetAllItems = "Error while retrieving all items:"
+    GetAllItems = "Error while retrieving all items:",
+    ConvertOIDtoUserID="Error while converting OID to UserID",
+    AddUser="Error while adding user to DB",
 }
 
 export const sendError = (res: Response, err: CustomError) => {

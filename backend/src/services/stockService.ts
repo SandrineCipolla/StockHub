@@ -16,23 +16,23 @@ export class StockService {
         this.writeStockRepository = writeStock;
     }
 
-    async getAllStocks(): Promise<Stock[]> {
-        const rows = await this.readStockRepository.readAllStocks();
+    async getAllStocks(userID:number): Promise<Stock[]> {
+        const rows = await this.readStockRepository.readAllStocks(userID);
         if (!rows) {
             throw new Error("No rows returned from readAllStocks");
         }
         return StockMapper.mapRowDataPacketsToStocks(rows);
     }
 
-    async createStock(stock: Partial<StockToCreate>) {
+    async createStock(stock: Partial<StockToCreate>,userID:number) {
         if (!stock.LABEL || !stock.DESCRIPTION) {
             throw new BadRequestError("LABEL and DESCRIPTION are required.", ErrorMessages.CreateStock);
         }
-        await this.writeStockRepository.createStock(stock);
+        await this.writeStockRepository.createStock(stock,userID);
     }
 
-    async getStockDetails(ID: number) {
-        const stock = await this.readStockRepository.readStockDetails(ID);
+    async getStockDetails(ID: number,userID: number) {
+        const stock = await this.readStockRepository.readStockDetails(ID,userID);
         if (!stock) {
             throw new NotFoundError("Stock not found.", ErrorMessages.GetStockDetails);
         }
