@@ -93,7 +93,6 @@ export async function initializeApp() {
                     if (info) {
                         (req as any).authInfo = info;
                         (req as any).userID = info.emails[0] as string;
-                        //req.userID = info.emails[0];
                         console.log("Authentication successful, proceeding to next middleware");
                         return next();
                     }
@@ -101,6 +100,7 @@ export async function initializeApp() {
             )(req, res, next);
         },
         (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
             next();
         },
         (err: CustomError, req: express.Request, res: express.Response, next: express.NextFunction) => {

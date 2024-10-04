@@ -1,5 +1,6 @@
 import {UserService} from '../../src/services/userService';
 
+import {ErrorMessages, NotFoundError} from '../../src/errors';
 import {ReadUserRepository} from "../../src/services/readUserRepository";
 import { WriteUserRepository } from '../../src/services/writeUserRepository';
 

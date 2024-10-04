@@ -50,7 +50,7 @@ describe('StockController', () => {
     });
 
     describe('StockController', () => {
-
+        
         describe('getAllStocks', () => {
 
             describe('when the service call is successful', () => {
