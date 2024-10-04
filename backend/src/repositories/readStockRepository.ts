@@ -7,13 +7,13 @@ export class ReadStockRepository {
         this.connection = connection;
     }
 
-    async readAllStocks() {
-        const [stocks] = await this.connection.query("SELECT * FROM stocks") as [RowDataPacket[], FieldPacket[]];
+    async readAllStocks(userID: number) {
+        const [stocks] = await this.connection.query("SELECT * FROM stocks WHERE USER_ID = ?", [userID]) as [RowDataPacket[], FieldPacket[]];
         return stocks;
     }
 
-    async readStockDetails(ID: number) {
-        const [stock] = await this.connection.query("SELECT * FROM stocks WHERE ID = ?", [ID]) as [RowDataPacket[], FieldPacket[]];
+    async readStockDetails(ID: number,userID: number) {
+        const [stock] = await this.connection.query("SELECT * FROM stocks WHERE ID = ? AND USER_ID = ?", [ID, userID]) as [RowDataPacket[], FieldPacket[]];
         return stock;
     }
 

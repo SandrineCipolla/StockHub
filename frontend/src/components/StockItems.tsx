@@ -8,10 +8,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
-
     const numericID = Number(ID);
-
-
     const {stockItems, setStockItems} = useContext(StockItemsContext);
 
     useEffect(() => {
@@ -35,6 +32,11 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
     if (!stockItems) {
         return <div>Loading...</div>;
     }
+    if (stockItems.length === 0) {
+        return <div className="mt-5 mb-5">
+                Your stock is empty. Please add items.
+        </div>;
+    }
 
     //TODO: check if it is possible to create a "graphic" component to put in the return
     return (
@@ -54,7 +56,7 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                     <p>{item.QUANTITY}</p>
                     <p><Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
                              className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
-                        <FontAwesomeIcon icon={faSearch} />
+                        <FontAwesomeIcon icon={faSearch}/>
                     </Link></p>
                 </div>
             ))}

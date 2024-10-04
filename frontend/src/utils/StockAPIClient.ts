@@ -62,6 +62,10 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     const response = await fetch(`${apiUrl}/stocks/${numericID}/items`, config);
 
     if (!response.ok) {
+        if (response.status === 404) {
+            console.warn('Stock not found, returning empty array');
+            return [];
+        }
         console.error('Error in fetching stock details');
         throw new Error(`HTTP response with a status ${response.status}`);
     }

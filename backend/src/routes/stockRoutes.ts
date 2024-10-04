@@ -4,6 +4,7 @@ import {connectToDatabase} from "../dbUtils";
 import {ReadStockRepository} from "../repositories/readStockRepository";
 import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {HTTP_CODE_INTERNAL_SERVER_ERROR} from "../Utils/httpCodes";
+import {ReadUserRepository} from "../services/readUserRepository";
 
 
 const configureStockRoutes = async (): Promise<Router> => {
@@ -13,7 +14,9 @@ const configureStockRoutes = async (): Promise<Router> => {
     const connection = await connectToDatabase();
     const readStockRepository = new ReadStockRepository(connection);
     const writeStockRepository = new WriteStockRepository(connection);
-    const stockController = new StockController(readStockRepository, writeStockRepository);
+    const readUser = new ReadUserRepository(connection);
+    const stockController = new StockController(readStockRepository, writeStockRepository,readUser);
+
 
     //Route pour récupération de la liste des stocks
     router.get("/stocks", async (req, res) => {

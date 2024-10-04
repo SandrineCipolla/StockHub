@@ -7,12 +7,12 @@ import passportAzureAd from "passport-azure-ad";
 import authConfig from './authConfig';
 import {CustomError} from "./errors";
 
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-let isDatabaseConnected: boolean = false;
 
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
@@ -43,7 +43,6 @@ export async function initializeApp() {
     });
 
     try {
-        isDatabaseConnected = true;
         console.log("Connection to database successful");
     } catch (error) {
         console.error("Error connecting to the database :", error);
@@ -72,6 +71,7 @@ export async function initializeApp() {
                     }
                     if (info) {
                         (req as any).authInfo = info;
+                        (req as any).userID = info.emails[0] as string;
                         console.log("Authentication successful, proceeding to next middleware");
                         return next();
                     }
@@ -79,7 +79,7 @@ export async function initializeApp() {
             )(req, res, next);
         },
         (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            // Define your router here or import it
+
             next();
         },
         (err: CustomError, req: express.Request, res: express.Response, next: express.NextFunction) => {
