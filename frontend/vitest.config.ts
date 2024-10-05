@@ -13,7 +13,7 @@ export default defineConfig({
             provider: 'v8',
             enabled: process.env.COVERAGE === 'true',
             reportsDirectory: './coverage',
-            include: ['src/**/*.ts'],
+            include: ['src/**/*.{ts,tsx}'],
             exclude: ['tests/**', 'src/**/*.d.ts'],
         },
     },

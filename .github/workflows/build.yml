@@ -80,3 +80,19 @@ jobs:
           files: ./backend/coverage/lcov.info,./frontend/coverage/lcov.info # Paths to coverage reports
           flags: backend,frontend
           name: code-coverage-report
+            
+      # --- DEBUGGING STEPS ---
+
+      - name: Print Node version
+        run: node -v
+
+      - name: Print npm version
+        run: npm -v
+
+      - name: List installed dependencies for FRONTEND
+        working-directory: ./frontend
+        run: npm list
+
+      - name: List installed dependencies for BACKEND
+        working-directory: ./backend
+        run: npm list

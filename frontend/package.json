@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ci": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "cross-env COVERAGE=true vitest run --coverage",
     "test:watch": "vitest watch"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^2.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
