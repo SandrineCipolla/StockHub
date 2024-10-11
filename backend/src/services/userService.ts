@@ -1,4 +1,4 @@
-import {ErrorMessages, NotFoundError} from "../errors";
+
 import {ReadUserRepository} from "./readUserRepository";
 import {WriteUserRepository} from "./writeUserRepository";
 
@@ -36,6 +36,13 @@ export class UserService {
     }
 
     async addUser(email: string) {
+        const existingUser = await this.readUserRepository.readUserByOID(email);
+
+        if (existingUser) {
+            console.log(`User with email ${email} already exists.`);
+            return new UserIdentifier(existingUser);
+        }
+
         await this.writeUserRepository.addUser(email);
         return await this.convertOIDtoUserID(email);
     }

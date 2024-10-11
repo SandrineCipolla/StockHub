@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {fetchStockItems} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import {StockItemsProps} from "../frontModels.ts";
@@ -10,23 +10,25 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
     const numericID = Number(ID);
     const {stockItems, setStockItems} = useContext(StockItemsContext);
+    const hasFetched = useRef(false);
 
-    useEffect(() => {
-    }, [stockItems]);
+    const fetchDataInner = async () => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchStockItems(numericID);
-                if (setStockItems) {
-                    setStockItems(data);
-                }
-            } catch (error) {
-                console.error('Error in recovering stock items', error);
+        try {
+            const data = await fetchStockItems(numericID);
+            if (setStockItems) {
+                setStockItems(data);
             }
-        };
-        fetchData().catch(error => console.error('Error in fetching data:', error));
-    }, [ID, numericID, setStockItems]);
+        } catch (error) {
+            console.error('Error in recovering stock items', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataInner();
+    }, [ID, numericID, stockItems]);
 
 
     if (!stockItems) {
@@ -34,7 +36,7 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
     }
     if (stockItems.length === 0) {
         return <div className="mt-5 mb-5">
-                Your stock is empty. Please add items.
+            Your stock is empty. Please add items.
         </div>;
     }
 

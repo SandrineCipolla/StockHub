@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {fetchStockDetails} from "../utils/StockAPIClient.ts";
 import {StockDetail} from "../dataModels.ts";
@@ -9,23 +9,23 @@ const StockDetails: React.FC = () => {
     const numericID = Number(ID);
 
     const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
+    const hasFetched = useRef(false);
 
+    const fetchDataInner = async () => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        try {
+            const data = await fetchStockDetails(numericID);
+            setStockDetail(data);
+        } catch (error) {
+            console.error('Error in recovering stock detail', error);
+        }
+    };
 
     useEffect(() => {
-    }, [stockDetail]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchStockDetails(numericID);
-                setStockDetail(data);
-            } catch (error) {
-                console.error('Error in recovering stock detail', error);
-            }
-        };
-        //TODO affiner message d'erreur si la requete fetch ne fonctionne pas
-        fetchData().catch(error => console.error('Error in fetching data:', error));
-    }, [ID, numericID]);
+        fetchDataInner();
+    }, [ID, numericID, stockDetail]);
 
     if (!stockDetail) {
         return <div>Loading...</div>;

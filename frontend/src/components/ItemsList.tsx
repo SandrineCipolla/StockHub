@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {fetchItemsList} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
@@ -7,20 +7,24 @@ import {Item} from "../dataModels.ts";
 const ItemsList: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const navigate = useNavigate();
+    const hasFetched = useRef(false);
+
+    const fetchDataInner = async () => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        try {
+            const data = await fetchItemsList();
+            console.info('JSON data recovered itemslist:', data);
+            console.log('data:', data);
+            setItems(data);
+        } catch (error) {
+            console.error('Error in recovering inventory', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchItemsList();
-                console.info('JSON data recovered itemslist:', data);
-                console.log('data:', data);
-                setItems(data);
-            } catch (error) {
-                console.error('Error in recovering inventory', error);
-            }
-        };
-
-        fetchData();
+        fetchDataInner();
     }, []);
 
 

@@ -1,5 +1,4 @@
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
-import {ErrorMessages, NotFoundError} from "../errors";
 
 export class ReadUserRepository {
     private connection: PoolConnection;
@@ -13,7 +12,7 @@ export class ReadUserRepository {
         // return userID[0][0].ID;
 
         const query = 'SELECT ID FROM users WHERE EMAIL = ?';
-        const [rows]:[RowDataPacket[],FieldPacket[]] = await this.connection.execute(query, [oid]);
+        const [rows]: [RowDataPacket[], FieldPacket[]] = await this.connection.execute(query, [oid]);
 
         if (!rows || rows.length === 0) {
             console.error(`User not found for OID: ${oid}`);
