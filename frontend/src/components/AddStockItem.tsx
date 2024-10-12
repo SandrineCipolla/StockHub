@@ -74,11 +74,11 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col mt-4 space-y-2">
-                            <input type="text" value={label} onChange={e => setLabel(e.target.value)} placeholder="Label"
+                            <input type="text" id="description" name="description" value={label} onChange={e => setLabel(e.target.value)} placeholder="Label"
                                    required className="border p-2 rounded"/>
-                            <input type="text" value={description} onChange={e => setDescription(e.target.value)}
+                            <input type="text" id="description" name="description" value={description} onChange={e => setDescription(e.target.value)}
                                    placeholder="Description" required className="border p-2 rounded"/>
-                            <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}
+                            <input type="number" id="quantity" name="quantity" value={quantity} onChange={e => setQuantity(Number(e.target.value))}
                                    placeholder="Quantity" required className="border p-2 rounded"/>
                         </div>
                         <div className="flex justify-center mt-5">

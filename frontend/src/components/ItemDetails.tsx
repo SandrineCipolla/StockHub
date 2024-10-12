@@ -84,6 +84,7 @@ const ItemDetails: React.FC = () => {
                     <div>
                         <input
                             type="number"
+                            id="quantity" name="quantity"
                             value={quantity !== null ? quantity : ''}
                             onChange={handleQuantityChange}
                             className="ml-2 p-1 border rounded w-16 text-center" // Adjust width here

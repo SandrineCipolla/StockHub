@@ -16,7 +16,6 @@ const ItemsList: React.FC = () => {
         try {
             const data = await fetchItemsList();
             console.info('JSON data recovered itemslist:', data);
-            console.log('data:', data);
             setItems(data);
         } catch (error) {
             console.error('Error in recovering inventory', error);
