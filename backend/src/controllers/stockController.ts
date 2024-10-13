@@ -7,6 +7,7 @@ import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 import {UserService} from "../services/userService";
 import {ReadUserRepository} from "../services/readUserRepository";
 import {WriteUserRepository} from "../services/writeUserRepository";
+import {Item} from "../models";
 //
 //
 //
@@ -133,6 +134,15 @@ export class StockController {
             const itemID = Number(req.params.itemID);
             const item = await this.stockService.getItemDetails(itemID);
             res.status(HTTP_CODE_OK).json(item);
+        } catch (err: any) {
+            sendError(res, err as CustomError);
+        }
+    }
+
+    async getLowStockItems(req:Request,res:Response) {
+        try {
+            const items=await this.stockService.getLowStockItems();
+            res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }

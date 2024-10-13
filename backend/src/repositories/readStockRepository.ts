@@ -1,4 +1,5 @@
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+import {Item} from "../models";
 
 export class ReadStockRepository {
     private connection: PoolConnection;
@@ -12,7 +13,7 @@ export class ReadStockRepository {
         return stocks;
     }
 
-    async readStockDetails(ID: number,userID: number) {
+    async readStockDetails(ID: number, userID: number) {
         const [stock] = await this.connection.query("SELECT * FROM stocks WHERE ID = ? AND USER_ID = ?", [ID, userID]) as [RowDataPacket[], FieldPacket[]];
         return stock;
     }
@@ -29,6 +30,14 @@ export class ReadStockRepository {
 
     async readItemDetails(itemID: number) {
         const [items] = await this.connection.query("SELECT * FROM items WHERE ID = ?", [itemID]) as [RowDataPacket[], FieldPacket[]];
+        return items;
+    }
+
+    async readLowStockItems() {
+        const [items] = await this.connection.query(
+            "SELECT * FROM items WHERE QUANTITY <= 1"
+        ) as [RowDataPacket[], FieldPacket[]];
+
         return items;
     }
 }

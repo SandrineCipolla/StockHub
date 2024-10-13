@@ -77,4 +77,10 @@ export class StockService {
         }
         return items[0];
     }
+
+    async getLowStockItems() {
+        const lowStockItems = await this.readStockRepository.readLowStockItems();
+        console.log('Items à faible stock récupérés:', lowStockItems);
+        return lowStockItems;
+    }
 }

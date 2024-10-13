@@ -163,4 +163,18 @@ export const fetchItemDetails = async (stockID: number, itemID: number): Promise
 
 };
 
+export const fetchLowStockItems = async():Promise<Item[]> =>{
+    const {apiUrl, config} = await getApiConfig();
+    const response = await fetch(`${apiUrl}/low-stock-items`, config);
+
+    if (!response.ok) {
+        console.error('Error in fetching low stock items list');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Données récupérées dans fetchLowStockItems:', data);
+    return data as Item[];
+}
+
 
