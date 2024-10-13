@@ -3,7 +3,7 @@ import {fetchLowStockItems} from '../utils/StockAPIClient';
 import {Item} from "../dataModels.ts";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const LowStockItemsList: React.FC = () => {
     const [lowStockItems, setLowStockItems] = useState<Item[]>([]);
@@ -43,7 +43,11 @@ const LowStockItemsList: React.FC = () => {
                 <ul className="w-full">
                     {lowStockItems.map((item) => (
                         <li key={item.ID} className="flex items-center mb-4 p-4 border-b border-gray-300 pl-4">
-                            <p className="w-1/3 font-bold text-purple-600 hover:text-violet-300 ml-30">{item.LABEL}</p>
+                            <p className="w-1/3 font-bold text-purple-600 hover:text-violet-300 ml-30">
+                                <Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`} className="text-purple-600 hover:text-violet-300">
+                                    {item.LABEL}
+                                </Link>
+                            </p>
                             <p className="w-1/3 ml-30 ">{item.QUANTITY} en stock</p>
                             <p className="w-1/3 ml-30">(Stock ID: {item.STOCK_ID})</p>
                         </li>
