@@ -12,8 +12,8 @@ const StocksList: React.FC = () => {
     const hasFetched = useRef(false);
 
     const fetchDataInner = async () => {
-        if (hasFetched.current) return;
-        hasFetched.current = true;
+        // if (hasFetched.current) return;
+        // hasFetched.current = true;
 
         try {
             const dataStocksList = await fetchStocksList();
@@ -24,9 +24,14 @@ const StocksList: React.FC = () => {
         }
     };
     useEffect(() => {
-        fetchDataInner();
+        if (!hasFetched.current) {
+            fetchDataInner();
+            hasFetched.current = true;
+        }
     }, []);
-
+    const handleStockAdded = () => {
+        fetchDataInner();
+    };
 
     return (
         <AuthenticatedTemplate>
@@ -41,7 +46,7 @@ const StocksList: React.FC = () => {
                         </li>
                     ))}
                 </ul>
-                <AddStock onStockAdded={fetchDataInner}/>
+                <AddStock onStockAdded={handleStockAdded}/>
                 <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950"
                         onClick={() => navigate('/')}>Retour à l'accueil
                 </button>
