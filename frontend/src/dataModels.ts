@@ -27,6 +27,7 @@ export interface Item {
     QUANTITY: number;
     STOCK_ID: number;
     PHOTO_URL: string;
+    isLowStock: boolean;
 }
 
 export interface ItemWithStockLabel extends Item {

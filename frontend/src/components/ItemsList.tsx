@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {fetchItemsList} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 
 
 const ItemsList: React.FC = () => {
@@ -36,6 +38,9 @@ const ItemsList: React.FC = () => {
                         <li className="mb-2 text-purple-600 hover:text-violet-300" key={item.ID}>
                             <Link to={`/items/${item.ID}`}>
                                 {item.LABEL}
+                                {item.isLowStock && (
+                                    <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 ml-2"/>
+                                )}
                             </Link>
                         </li>
                     );

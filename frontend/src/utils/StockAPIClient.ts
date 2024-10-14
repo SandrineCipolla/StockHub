@@ -143,8 +143,17 @@ export const fetchItemsList = async (): Promise<Item[]> => {
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data = await response.json();
-    return data as Item[];
+    const data: Item[] = await response.json();
+
+    if (Array.isArray(data)) {
+        return data.map(item => ({
+            ...item,
+            isLowStock: item.QUANTITY <= 1,
+        }));
+    } else {
+        console.error('Missing necessary data in the response for fetchItemsList');
+        throw new Error('Missing necessary data in the response for fetchItemsList');
+    }
 };
 
 export const fetchItemDetails = async (stockID: number, itemID: number): Promise<Item> => {
