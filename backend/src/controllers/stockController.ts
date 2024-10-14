@@ -7,7 +7,6 @@ import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 import {UserService} from "../services/userService";
 import {ReadUserRepository} from "../services/readUserRepository";
 import {WriteUserRepository} from "../services/writeUserRepository";
-import {Item} from "../models";
 //
 //
 //
