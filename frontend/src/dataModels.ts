@@ -28,6 +28,10 @@ export interface Item {
     STOCK_ID: number;
     PHOTO_URL: string;
 }
+
+export interface ItemWithStockLabel extends Item {
+    stockLabel: string;
+}
 export interface StockItemsProps {
     ID: string | undefined;
 

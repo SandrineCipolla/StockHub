@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {fetchLowStockItems} from '../utils/StockAPIClient';
-import {Item} from "../dataModels.ts";
+import {ItemWithStockLabel} from "../dataModels.ts";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {Link, useNavigate} from "react-router-dom";
 
 const LowStockItemsList: React.FC = () => {
-    const [lowStockItems, setLowStockItems] = useState<Item[]>([]);
+    const [lowStockItems, setLowStockItems] = useState<ItemWithStockLabel[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const hasFetched = useRef(false);
@@ -18,7 +18,8 @@ const LowStockItemsList: React.FC = () => {
         try {
             const data = await fetchLowStockItems();
             console.log('Données des articles à faible stock:', data);
-            setLowStockItems(data);
+
+            setLowStockItems(data as ItemWithStockLabel[]);
         } catch (error) {
             console.error('Erreur lors de la récupération des stocks faibles', error);
         } finally {
@@ -41,15 +42,25 @@ const LowStockItemsList: React.FC = () => {
                 <p>Aucun article à faible stock trouvé.</p>
             ) : (
                 <ul className="w-full">
+                    <li className="flex items-center mb-4 p-4 border-b border-gray-300 pl-4 font-bold">
+                        <p className="w-1/3 ml-30">Item</p>
+                        <p className="w-1/3 ml-30">Quantité</p>
+                        <p className="w-1/3 ml-30">Stock</p>
+                    </li>
                     {lowStockItems.map((item) => (
                         <li key={item.ID} className="flex items-center mb-4 p-4 border-b border-gray-300 pl-4">
                             <p className="w-1/3 font-bold text-purple-600 hover:text-violet-300 ml-30">
-                                <Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`} className="text-purple-600 hover:text-violet-300">
+                                <Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
+                                      className="text-purple-600 hover:text-violet-300">
                                     {item.LABEL}
                                 </Link>
                             </p>
                             <p className="w-1/3 ml-30 ">{item.QUANTITY} en stock</p>
-                            <p className="w-1/3 ml-30">(Stock ID: {item.STOCK_ID})</p>
+                            <p className="w-1/3 ml-30">
+                                <Link to={`/stocks/${item.STOCK_ID}`} className="text-purple-600 hover:text-violet-300">
+                                    {item.stockLabel}
+                                </Link>
+                            </p>
                         </li>
                     ))}
                 </ul>

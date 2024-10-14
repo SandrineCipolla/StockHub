@@ -35,7 +35,7 @@ export class ReadStockRepository {
 
     async readLowStockItems() {
         const [items] = await this.connection.query(
-            "SELECT * FROM items WHERE QUANTITY <= 1"
+            "SELECT items.*, stocks.LABEL AS stockLabel FROM items JOIN stocks ON items.STOCK_ID = stocks.id WHERE items.QUANTITY <= 1"
         ) as [RowDataPacket[], FieldPacket[]];
 
         return items;
