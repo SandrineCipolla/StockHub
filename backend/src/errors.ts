@@ -59,6 +59,7 @@ export enum ErrorMessages {
     GetItemDetails = "Error while retrieving the item details:",
     GetAllItems = "Error while retrieving all items:",
     ConvertOIDtoUserID="Error while converting OID to UserID",
+    AddUser="Error while adding user to DB",
 }
 
 export const sendError = (res: Response, err: CustomError) => {
@@ -77,7 +78,8 @@ export const sendError = (res: Response, err: CustomError) => {
             return res.status(HTTP_CODE_CONFLICT).json({ error: err.message, type: err.typology });
 
         case err instanceof DatabaseError:
-            console.error("Original database error:", err.originalError);
+            const databaseError = err as DatabaseError;
+            console.error("Original database error:", databaseError.originalError);
             return res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({ error: "A database error occurred. Please try again later.", type: err.typology });
 
         default:

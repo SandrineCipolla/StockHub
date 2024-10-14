@@ -5,6 +5,7 @@ import {ReadStockRepository} from "../repositories/readStockRepository";
 import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {HTTP_CODE_INTERNAL_SERVER_ERROR} from "../Utils/httpCodes";
 import {ReadUserRepository} from "../services/readUserRepository";
+import { WriteUserRepository } from "../services/writeUserRepository";
 
 
 const configureStockRoutes = async (): Promise<Router> => {
@@ -15,7 +16,8 @@ const configureStockRoutes = async (): Promise<Router> => {
     const readStockRepository = new ReadStockRepository(connection);
     const writeStockRepository = new WriteStockRepository(connection);
     const readUser = new ReadUserRepository(connection);
-    const stockController = new StockController(readStockRepository, writeStockRepository,readUser);
+    const writeUser = new WriteUserRepository(connection);
+    const stockController = new StockController(readStockRepository, writeStockRepository,readUser,writeUser);
 
 
     //Route pour récupération de la liste des stocks

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {deleteStockItem, fetchItemDetails, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
 import {Item} from "../dataModels.ts";
@@ -14,24 +14,28 @@ const ItemDetails: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
     const navigate = useNavigate();
+    const hasFetched = useRef(false);
+
+    const fetchDataInner = async () => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        try {
+
+            const data = await fetchItemDetails(stockID, itemID);
+
+            setItemDetail(data);
+            setQuantity(data.QUANTITY);
+            setIsLoading(false);
+        } catch (err) {
+            setError('Failed to fetch item details');
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-
-                const data = await fetchItemDetails(stockID,itemID);
-
-                setItemDetail(data);
-                setQuantity(data.QUANTITY);
-                setIsLoading(false);
-            } catch (err) {
-                setError('Failed to fetch item details');
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-
-    }, [stockID,itemID]);
+        fetchDataInner();
+    }, [stockID, itemID]);
 
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +84,7 @@ const ItemDetails: React.FC = () => {
                     <div>
                         <input
                             type="number"
+                            id="quantity" name="quantity"
                             value={quantity !== null ? quantity : ''}
                             onChange={handleQuantityChange}
                             className="ml-2 p-1 border rounded w-16 text-center" // Adjust width here

@@ -6,6 +6,7 @@ import {ReadStockRepository} from "../repositories/readStockRepository";
 import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 import {UserService} from "../services/userService";
 import {ReadUserRepository} from "../services/readUserRepository";
+import {WriteUserRepository} from "../services/writeUserRepository";
 //
 //
 //
@@ -20,9 +21,10 @@ export class StockController {
         readStock: ReadStockRepository,
         writeStock: WriteStockRepository,
         readUser: ReadUserRepository,
+        writeUser: WriteUserRepository
     ) {
         this.stockService = new StockService(readStock, writeStock);
-        this.userService = new UserService(readUser);
+        this.userService = new UserService(readUser, writeUser);
     }
 
     public async getAllStocks(req: Request, res: Response) {
@@ -30,7 +32,7 @@ export class StockController {
 
             const OID = (req as any).userID as string;
             const userID = await this.userService.convertOIDtoUserID(OID);
-            const stocks = await this.stockService.getAllStocks(userID);
+            const stocks = await this.stockService.getAllStocks(userID.value);
             res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -45,7 +47,7 @@ export class StockController {
             if (!LABEL || !DESCRIPTION) {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
             }
-            await this.stockService.createStock({LABEL, DESCRIPTION}, userID);
+            await this.stockService.createStock({LABEL, DESCRIPTION}, userID.value);
             res.status(HTTP_CODE_CREATED).json({message: "Stock created successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -57,7 +59,7 @@ export class StockController {
             const OID = (req as any).userID as string;
             const userID = await this.userService.convertOIDtoUserID(OID);
             const ID = Number(req.params.ID);
-            const stock = await this.stockService.getStockDetails(ID, userID);
+            const stock = await this.stockService.getStockDetails(ID, userID.value);
             res.status(HTTP_CODE_OK).json(stock);
         } catch (err: any) {
             sendError(res, err as CustomError);

@@ -8,6 +8,7 @@ import {WriteStockRepository} from "../../src/repositories/writeStockRepository"
 import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
 import {ReadUserRepository} from "../../src/services/readUserRepository";
 import {PoolConnection} from "mysql2/promise";
+import {WriteUserRepository} from "../../src/services/writeUserRepository";
 
 
 jest.mock('../../src/services/stockService');
@@ -23,6 +24,7 @@ describe('StockController', () => {
     let mockedReadRepo: jest.Mocked<ReadStockRepository>;
     let mockedWriteRepo: jest.Mocked<WriteStockRepository>;
     let mockedReadUserRepo: jest.Mocked<ReadUserRepository>;
+    let mockedWriteUserRepo: jest.Mocked<WriteUserRepository>;
 
     beforeEach(() => {
         mockedReadRepo = mockReadRepo
@@ -31,7 +33,11 @@ describe('StockController', () => {
             connection: {} as PoolConnection,
             readUserByOID: jest.fn().mockResolvedValue(1),
         } as unknown as jest.Mocked<ReadUserRepository>;
-        stockController = new StockController(mockedReadRepo, mockedWriteRepo, mockedReadUserRepo);
+        mockedWriteUserRepo = {
+            connection: {} as PoolConnection,
+            writeUser: jest.fn().mockResolvedValue(1),
+        } as unknown as jest.Mocked<WriteUserRepository>;
+        stockController = new StockController(mockedReadRepo, mockedWriteRepo, mockedReadUserRepo,mockedWriteUserRepo);
         req = {};
         res = {
             status: jest.fn().mockReturnThis(),
@@ -44,7 +50,7 @@ describe('StockController', () => {
     });
 
     describe('StockController', () => {
-
+        
         describe('getAllStocks', () => {
 
             describe('when the service call is successful', () => {

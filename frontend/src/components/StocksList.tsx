@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {fetchStocksList} from "../utils/StockAPIClient.ts";
 import {Stock} from "../dataModels.ts";
@@ -9,15 +9,24 @@ import {AuthenticatedTemplate} from "@azure/msal-react";
 const StocksList: React.FC = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
     const navigate = useNavigate();
+    const hasFetched = useRef(false);
 
-    const fetchData = async () => {
-        const dataStocksList = await fetchStocksList();
-        console.info('JSON data recovered stocklist:', dataStocksList);
-        setStocks(dataStocksList);
+    const fetchDataInner = async () => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        try {
+            const dataStocksList = await fetchStocksList();
+            console.info('JSON data recovered stocklist:', dataStocksList);
+            setStocks(dataStocksList);
+        } catch (error) {
+            console.error('Error fetching stocks list:', error);
+        }
     };
     useEffect(() => {
-        fetchData();
+        fetchDataInner();
     }, []);
+
 
     return (
         <AuthenticatedTemplate>
@@ -32,7 +41,7 @@ const StocksList: React.FC = () => {
                         </li>
                     ))}
                 </ul>
-                <AddStock onStockAdded={fetchData}/>
+                <AddStock onStockAdded={fetchDataInner}/>
                 <button className="mt-6 mb-3 text-xs bg-violet-400 text-purple-950"
                         onClick={() => navigate('/')}>Retour à l'accueil
                 </button>
