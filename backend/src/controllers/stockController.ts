@@ -141,7 +141,12 @@ export class StockController {
 
     async getLowStockItems(req:Request,res:Response) {
         try {
-            const items=await this.stockService.getLowStockItems();
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            if (!userID) {
+                return res.status(400).json({ error: 'User ID is missing' });
+            }
+            const items=await this.stockService.getLowStockItems(userID.value);
             res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
