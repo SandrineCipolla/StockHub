@@ -23,8 +23,8 @@ export class ReadStockRepository {
         return items;
     }
 
-    async readAllItems() {
-        const [items] = await this.connection.query("SELECT * FROM items") as [RowDataPacket[], FieldPacket[]];
+    async readAllItems(userID: number) {
+        const [items] = await this.connection.query("SELECT items.* FROM items JOIN stocks ON items.stock_ID = stocks.ID WHERE USER_ID = ?",[userID]) as [RowDataPacket[], FieldPacket[]];
         return items;
     }
 

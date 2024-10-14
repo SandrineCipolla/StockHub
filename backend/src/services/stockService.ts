@@ -66,8 +66,8 @@ export class StockService {
         }
     }
 
-    async getAllItems() {
-        return await this.readStockRepository.readAllItems();
+    async getAllItems(userID:number) {
+        return await this.readStockRepository.readAllItems(userID);
     }
 
     async getItemDetails(itemID: number) {

@@ -122,7 +122,9 @@ export class StockController {
 
     async getAllItems(req: Request, res: Response) {
         try {
-            const items = await this.stockService.getAllItems();
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            const items = await this.stockService.getAllItems(userID.value);
             res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
