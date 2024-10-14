@@ -1,0 +1,41 @@
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+comment:
+  layout: "reach, diff, flags, files" # Limite le commentaire aux sections importantes
+  require_changes: yes # N'ajoute des commentaires que s'il y a une différence
+  behavior: default
+  branches:
+    - main
+    - develop
+  after_n_builds: 1 # Commente après un certain nombre de builds réussis
+  show_diff_only: true # Montre uniquement les différences de couverture par rapport au précédent commit
+  show_lines: false # Ne montre pas les avertissements ligne par ligne
+  require_base: no # Evite les comparaisons sur des branches non importantes
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100" # Se concentrer uniquement sur les pourcentages entre 70% et 100%
+  status:
+    patch:
+      default:
+        target: 15%  # Change le pourcentage ici selon tes besoins
+        threshold: 5%  # Ajoute une tolérance (si la couverture baisse légèrement)
+    project:
+      default:
+        target: 60%  # Cible globale pour la couverture du projet
+
+flags:
+  backend:
+    paths:
+      - "backend/"
+    carryforward: true # Permet de "porter" la couverture des fichiers non modifiés
+  frontend:
+    paths:
+      - "frontend/"
+    carryforward: true
+
+ignore:
+  - "backend/tests/*" # Ignore les dossiers de tests ou fichiers non pertinents pour la couverture
