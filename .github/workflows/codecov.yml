@@ -45,6 +45,8 @@ codecov:
 comment:
   enabled: false          # Désactive les commentaires
 
+github_checks:
+  annotations: false
 
 coverage:
   precision: 2
