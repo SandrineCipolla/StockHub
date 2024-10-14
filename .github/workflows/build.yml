@@ -42,7 +42,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload BACKEND coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-coverage
           path: ./backend/coverage
@@ -66,7 +66,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload FRONTEND coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
           path: ./frontend/coverage
@@ -74,9 +74,10 @@ jobs:
       # --- OPTIONAL: UPLOAD TO CODECOV ---
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # Add Codecov token to GitHub secrets
           files: ./backend/coverage/lcov.info,./frontend/coverage/lcov.info # Paths to coverage reports
           flags: backend,frontend
           name: code-coverage-report
+          fail_ci_if_error: true

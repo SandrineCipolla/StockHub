@@ -17,7 +17,7 @@ const configureStockRoutes = async (): Promise<Router> => {
     const writeStockRepository = new WriteStockRepository(connection);
     const readUser = new ReadUserRepository(connection);
     const writeUser = new WriteUserRepository(connection);
-    const stockController = new StockController(readStockRepository, writeStockRepository,readUser,writeUser);
+    const stockController = new StockController(readStockRepository, writeStockRepository, readUser, writeUser);
 
 
     //Route pour récupération de la liste des stocks
@@ -119,7 +119,18 @@ const configureStockRoutes = async (): Promise<Router> => {
             res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
+
+    //Route pour afficher les stocks faibles
+    router.get("/low-stock-items",async (req,res)=>{
+        try {
+            await stockController.getLowStockItems(req, res);
+        } catch (error) {
+            console.error('Error in Get /low-stock-items:',error);
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error:"Error while quering the database for low stock items"})
+        }
+    });
+
     return router;
-};
+}
 
 export default configureStockRoutes;
