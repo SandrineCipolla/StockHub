@@ -25,3 +25,7 @@ import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
 //     });
 // });
 
+describe('Stock Routes', () => {
+    it('should handle GET /stocks route', async () => {});
+});
+

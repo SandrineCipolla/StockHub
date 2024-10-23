@@ -29,3 +29,7 @@ jest.mock("../../src/index", () => mockConnection);
 //         }
 //     });
 // });
+
+describe('Database Connection', () => {
+    it('should connect to the database and execute a simple query', async () => {});
+})
