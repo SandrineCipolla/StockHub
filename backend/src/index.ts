@@ -70,7 +70,11 @@ export async function initializeApp() {
         process.exit(1);
     }
 
-    app.use(cors({ origin: '*' }));
+    app.use(cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+    }));
     app.use(express.json());
     app.use(passport.initialize());
     passport.use(bearerStrategy);
