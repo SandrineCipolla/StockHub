@@ -18,6 +18,10 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
 appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4b14-bb84-b838715ad701')
     .setAutoDependencyCorrelation(true)
     .setAutoCollectRequests(true)
@@ -82,6 +86,7 @@ export async function initializeApp() {
     app.use(cors({
         origin: '*',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     }));
     app.use(express.json());
