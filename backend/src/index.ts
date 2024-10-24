@@ -16,6 +16,15 @@ import appInsights from 'applicationinsights';
 dotenv.config();
 
 const app = express();
+
+// Define the CORS options
+const corsOptions = {
+    credentials: true,
+    origin: ['http://localhost:3000', 'http://localhost:80'] // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
+
 const port = process.env.PORT || 8080;
 
 appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4b14-bb84-b838715ad701')
@@ -79,12 +88,7 @@ export async function initializeApp() {
         process.exit(1);
     }
 
-    app.use(cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-    }));
+
     app.use(express.json());
     app.use(passport.initialize());
     passport.use(bearerStrategy);
