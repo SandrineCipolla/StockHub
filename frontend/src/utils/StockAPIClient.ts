@@ -73,7 +73,10 @@ export const fetchStockItems = async (numericID: number): Promise<StockItem[]> =
     const data: StockItem[] = await response.json();
 
     if (Array.isArray(data)) {
-        return data
+        return data.map(item => ({
+            ...item,
+            isLowStock: item.QUANTITY <=1,
+        }));
     } else {
         console.error('Missing necessary data in the response for fetchStockDetails');
         throw new Error('Missing necessary data in the response for fetchStockDetails');
@@ -140,8 +143,17 @@ export const fetchItemsList = async (): Promise<Item[]> => {
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data = await response.json();
-    return data as Item[];
+    const data: Item[] = await response.json();
+
+    if (Array.isArray(data)) {
+        return data.map(item => ({
+            ...item,
+            isLowStock: item.QUANTITY <= 1,
+        }));
+    } else {
+        console.error('Missing necessary data in the response for fetchItemsList');
+        throw new Error('Missing necessary data in the response for fetchItemsList');
+    }
 };
 
 export const fetchItemDetails = async (stockID: number, itemID: number): Promise<Item> => {
@@ -159,5 +171,19 @@ export const fetchItemDetails = async (stockID: number, itemID: number): Promise
     return data as Item;
 
 };
+
+export const fetchLowStockItems = async():Promise<Item[]> =>{
+    const {apiUrl, config} = await getApiConfig();
+    const response = await fetch(`${apiUrl}/low-stock-items`, config);
+
+    if (!response.ok) {
+        console.error('Error in fetching low stock items list');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Données récupérées dans fetchLowStockItems:', data);
+    return data as Item[];
+}
 
 

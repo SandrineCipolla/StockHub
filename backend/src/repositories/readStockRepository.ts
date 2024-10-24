@@ -1,4 +1,5 @@
 import {FieldPacket, PoolConnection, RowDataPacket} from "mysql2/promise";
+import {Item} from "../models";
 
 export class ReadStockRepository {
     private connection: PoolConnection;
@@ -12,7 +13,7 @@ export class ReadStockRepository {
         return stocks;
     }
 
-    async readStockDetails(ID: number,userID: number) {
+    async readStockDetails(ID: number, userID: number) {
         const [stock] = await this.connection.query("SELECT * FROM stocks WHERE ID = ? AND USER_ID = ?", [ID, userID]) as [RowDataPacket[], FieldPacket[]];
         return stock;
     }
@@ -22,13 +23,22 @@ export class ReadStockRepository {
         return items;
     }
 
-    async readAllItems() {
-        const [items] = await this.connection.query("SELECT * FROM items") as [RowDataPacket[], FieldPacket[]];
+    async readAllItems(userID: number) {
+        const [items] = await this.connection.query("SELECT items.* FROM items JOIN stocks ON items.stock_ID = stocks.ID WHERE USER_ID = ?",[userID]) as [RowDataPacket[], FieldPacket[]];
         return items;
     }
 
     async readItemDetails(itemID: number) {
         const [items] = await this.connection.query("SELECT * FROM items WHERE ID = ?", [itemID]) as [RowDataPacket[], FieldPacket[]];
+        return items;
+    }
+
+    async readLowStockItems(userId: number) {
+        const [items] = await this.connection.query(
+            "SELECT items.*, stocks.LABEL AS stockLabel FROM items JOIN stocks ON items.STOCK_ID = stocks.id WHERE items.QUANTITY <= 1 AND stocks.USER_ID = ?",
+            [userId]
+        ) as [RowDataPacket[], FieldPacket[]];
+
         return items;
     }
 }

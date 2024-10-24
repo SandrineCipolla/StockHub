@@ -17,6 +17,7 @@ export interface StockItem {
     DESCRIPTION: string;
     QUANTITY: number;
     STOCK_ID: number;
+    isLowStock: boolean;
 }
 
 export interface Item {
@@ -26,6 +27,11 @@ export interface Item {
     QUANTITY: number;
     STOCK_ID: number;
     PHOTO_URL: string;
+    isLowStock: boolean;
+}
+
+export interface ItemWithStockLabel extends Item {
+    stockLabel: string;
 }
 export interface StockItemsProps {
     ID: string | undefined;

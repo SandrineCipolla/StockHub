@@ -5,6 +5,7 @@ import {StockItemsProps} from "../frontModels.ts";
 import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
@@ -55,7 +56,13 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
                 <div key={item.ID} className="grid grid-cols-4 gap-4 items-center mb-2 w-full">
                     <p>{index + 1}</p>
                     <p>{item.LABEL}</p>
-                    <p>{item.QUANTITY}</p>
+                    <p>
+                        {item.QUANTITY}
+                        {item.isLowStock && (
+                            <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 ml-2"/>
+                        )}
+                    </p>
+                    {/*<p>{item.QUANTITY}</p>*/}
                     <p><Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
                              className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
                         <FontAwesomeIcon icon={faSearch}/>

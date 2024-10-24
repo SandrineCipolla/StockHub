@@ -16,6 +16,8 @@ const HomeLoggedIn: React.FC = () => {
                         <Link to="/stocks" className="menu">Mes stocks</Link>
                         <span className="separator"></span>
                         <Link to="/items" className="menu">Mes produits</Link>
+                        <span className="separator"></span>
+                        <Link to="/low-stock-items" className="menu">Stocks faibles</Link>
                     </li>
                 </ul>
             </nav>

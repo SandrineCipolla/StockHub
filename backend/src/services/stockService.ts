@@ -66,8 +66,8 @@ export class StockService {
         }
     }
 
-    async getAllItems() {
-        return await this.readStockRepository.readAllItems();
+    async getAllItems(userID:number) {
+        return await this.readStockRepository.readAllItems(userID);
     }
 
     async getItemDetails(itemID: number) {
@@ -76,5 +76,11 @@ export class StockService {
             throw new NotFoundError("Item not found.", ErrorMessages.GetItemDetails);
         }
         return items[0];
+    }
+
+    async getLowStockItems(UserID: number) {
+        const lowStockItems = await this.readStockRepository.readLowStockItems(UserID);
+        console.log('Items à faible stock récupérés:', lowStockItems);
+        return lowStockItems;
     }
 }

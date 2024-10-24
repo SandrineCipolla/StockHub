@@ -121,7 +121,9 @@ export class StockController {
 
     async getAllItems(req: Request, res: Response) {
         try {
-            const items = await this.stockService.getAllItems();
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            const items = await this.stockService.getAllItems(userID.value);
             res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -133,6 +135,20 @@ export class StockController {
             const itemID = Number(req.params.itemID);
             const item = await this.stockService.getItemDetails(itemID);
             res.status(HTTP_CODE_OK).json(item);
+        } catch (err: any) {
+            sendError(res, err as CustomError);
+        }
+    }
+
+    async getLowStockItems(req:Request,res:Response) {
+        try {
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            if (!userID) {
+                return res.status(400).json({ error: 'User ID is missing' });
+            }
+            const items=await this.stockService.getLowStockItems(userID.value);
+            res.status(HTTP_CODE_OK).json(items);
         } catch (err: any) {
             sendError(res, err as CustomError);
         }
