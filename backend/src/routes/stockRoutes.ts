@@ -9,7 +9,7 @@ import { WriteUserRepository } from "../services/writeUserRepository";
 
 
 const configureStockRoutes = async (): Promise<Router> => {
-    const router = Router();
+    const router = Router({ mergeParams: true });
 
     // création instance de stockController
     const connection = await connectToDatabase();
