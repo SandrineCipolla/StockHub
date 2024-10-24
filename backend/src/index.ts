@@ -11,13 +11,22 @@ import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
 import {WriteUserRepository} from "./services/writeUserRepository";
 import configureUserRoutes from "./routes/userRoutes";
-
+import appInsights from 'applicationinsights';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8080;
 
+appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'YOUR_INSTRUMENTATION_KEY')
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true,1000)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true)
+    .setSendLiveMetrics(true)
+    .start();
 
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
