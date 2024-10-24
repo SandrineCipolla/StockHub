@@ -20,7 +20,9 @@ const app = express();
 // Define the CORS options
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net'] // Whitelist the domains you want to allow
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ['http://localhost:5173','https://stockhubappback.azurewebsites.net'] // Whitelist the domains you want to allow
 };
 
 app.use(cors(corsOptions));
