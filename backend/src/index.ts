@@ -11,13 +11,32 @@ import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
 import {WriteUserRepository} from "./services/writeUserRepository";
 import configureUserRoutes from "./routes/userRoutes";
-
+//import appInsights from 'applicationinsights';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
+// Define the CORS options
+const corsOptions = {
+    credentials: true,
+    origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net'] // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
+
+const port = process.env.PORT || 8080;
+
+/*
+appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4b14-bb84-b838715ad701')
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true,1000)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true)
+    .setSendLiveMetrics(true)
+    .start();*/
 
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
@@ -70,7 +89,7 @@ export async function initializeApp() {
         process.exit(1);
     }
 
-    app.use(cors());
+
     app.use(express.json());
     app.use(passport.initialize());
     passport.use(bearerStrategy);
@@ -115,6 +134,10 @@ export async function initializeApp() {
 
     const userRoutes = await configureUserRoutes();
     app.use("/api/v1", userRoutes);
+
+    app.get('/hello', (req: express.Request, res: express.Response) => {
+        res.status(200).send('Hello World');
+    });
 
     app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.status(404).send("Route not found");

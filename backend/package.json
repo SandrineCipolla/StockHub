@@ -9,12 +9,13 @@
     "test": "jest --detectOpenHandles --forceExit",
     "test:ci": "jest --config=jest.ci.config.js --detectOpenHandles --forceExit",
     "test:coverage": "COVERAGE=true jest --config=jest.ci.config.js --passWithNoTests --detectOpenHandles --forceExit",
-    "build": "tsc"
+    "build": "tsc --project tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "applicationinsights": "^3.3.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.20.0",
