@@ -134,6 +134,10 @@ export async function initializeApp() {
     const userRoutes = await configureUserRoutes();
     app.use("/api/v1", userRoutes);
 
+    app.get('/hello', (req: express.Request, res: express.Response) => {
+        res.status(200).send('Hello World');
+    });
+
     app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.status(404).send("Route not found");
     });
