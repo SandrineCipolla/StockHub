@@ -87,7 +87,7 @@ jobs:
           reportDirectory: "$(sourceFolderBackend)/src/coverage"
 
   - job: continuousDeploymentFront
-    displayName: "Continuous deployment"
+    displayName: "Continuous deployment front"
     steps:
       - script: |
           yarn install
