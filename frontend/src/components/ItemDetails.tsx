@@ -87,7 +87,7 @@ const ItemDetails: React.FC = () => {
                             id="quantity" name="quantity"
                             value={quantity !== null ? quantity : ''}
                             onChange={handleQuantityChange}
-                            className="ml-2 p-1 border rounded w-16 text-center" // Adjust width here
+                            className="ml-2 p-1 border rounded w-16 text-center bg-gray-800 text-white border-gray-600" // Adjust width here
                         />
                         <button
                             onClick={handleQuantityUpdate}
