@@ -17,9 +17,11 @@ const Home: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                //justifyContent: 'center',
+                justifyContent: 'flex-start',
                 height: '100%',
                 background: 'linear-gradient(135deg, #2D2A4A, #5A538A)',
+                padding: '20px 0'
             }}
         >
             {activeAccount ? <HomeLoggedIn/> : <HomeLoggedOut/>}
