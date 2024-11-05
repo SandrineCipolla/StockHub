@@ -74,54 +74,100 @@ const ItemDetails: React.FC = () => {
     if (error) return <div>{error}</div>;
     if (!itemDetail) return <div>Item not found.</div>;
 
+    // return (
+    //     <div className="flex flex-col h-full justify-between">
+    //         <div>
+    //             <h2 className="text-lg font-bold mb-2 mt-2">{itemDetail.LABEL}</h2>
+    //             <p className="text-m font-semibold">{itemDetail.DESCRIPTION}</p>
+    //             <div className="flex items-center justify-center mt-2">
+    //                 <p className="text-m font-semibold">Quantité : {itemDetail.QUANTITY}</p>
+    //                 <div>
+    //                     <input
+    //                         type="number"
+    //                         id="quantity" name="quantity"
+    //                         value={quantity !== null ? quantity : ''}
+    //                         onChange={handleQuantityChange}
+    //                         className="ml-2 p-1 border rounded w-16 text-center bg-gray-800 text-white border-gray-600" // Adjust width here
+    //                     />
+    //                     <button
+    //                         onClick={handleQuantityUpdate}
+    //                         className="ml-2 p-1 bg-violet-400 text-white rounded"
+    //                     >
+    //
+    //                         <FontAwesomeIcon icon={faSync}/>
+    //
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //             <p className="text-m font-semibold">Stock : {itemDetail.STOCK_ID}</p>
+    //         </div>
+    //         <div className="self-center mt-4 mb-4">
+    //             <button
+    //                 onClick={handleItemDelete}
+    //                 className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded"
+    //             >
+    //
+    //                 <FontAwesomeIcon icon={faTrash}/>
+    //
+    //             </button>
+    //         </div>
+    //         <div className="self-center mt-4 mb-4">
+    //             <button
+    //                 onClick={() => navigate(`/stocks/${itemDetail.STOCK_ID}`)}
+    //                 className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
+    //             >
+    //
+    //                 <FontAwesomeIcon icon={faArrowLeft} className="mr-2"/>
+    //             </button>
+    //         </div>
+    //     </div>
+    // );
     return (
-        <div className="flex flex-col h-full justify-between">
-            <div>
-                <h2 className="text-lg font-bold mb-2 mt-2">{itemDetail.LABEL}</h2>
-                <p className="text-m font-semibold">{itemDetail.DESCRIPTION}</p>
-                <div className="flex items-center justify-center mt-2">
-                    <p className="text-m font-semibold">Quantité : {itemDetail.QUANTITY}</p>
-                    <div>
-                        <input
-                            type="number"
-                            id="quantity" name="quantity"
-                            value={quantity !== null ? quantity : ''}
-                            onChange={handleQuantityChange}
-                            className="ml-2 p-1 border rounded w-16 text-center bg-gray-800 text-white border-gray-600" // Adjust width here
-                        />
-                        <button
-                            onClick={handleQuantityUpdate}
-                            className="ml-2 p-1 bg-violet-400 text-white rounded"
-                        >
+        // <div className="max-w-sm mx-auto bg-gray-800 bg-opacity-50 border-2 border-violet-300 rounded-lg shadow-md hover:shadow-xl hover:shadow-violet-300 transition-shadow duration-200 p-4 my-4 hover:border-violet-400">
+        <div
+            className="max-w-sm mx-auto bg-gray-800 bg-opacity-50 border-2 border-violet-300 rounded-lg shadow-[0_-4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(255,255,255,0.3)] hover:shadow-[0_-8px_30px_rgba(255,255,255,0.5),0_8px_30px_rgba(255,255,255,0.5)] transition-shadow duration-200 p-4 my-4 hover:border-violet-400">
+            <h2 className="text-lg font-bold mb-2">{itemDetail.LABEL}</h2>
+            <p className="text-m font-semibold text-gray-300 mb-4">{itemDetail.DESCRIPTION}</p>
 
-                            <FontAwesomeIcon icon={faSync}/>
-
-                        </button>
-                    </div>
+            <div className="flex items-center justify-between">
+                <p className="text-m font-semibold text-violet-400">Quantité : {itemDetail.QUANTITY}</p>
+                <div className="flex items-center">
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        value={quantity !== null ? quantity : ''}
+                        onChange={handleQuantityChange}
+                        className="ml-2 p-1 border rounded w-16 text-center bg-gray-900 text-white border-gray-600" // Adjust width here
+                    />
+                    <button
+                        onClick={handleQuantityUpdate}
+                        className="ml-2 p-1 bg-violet-400 text-white rounded transition duration-200 hover:bg-violet-500"
+                    >
+                        <FontAwesomeIcon icon={faSync}/>
+                    </button>
                 </div>
-                <p className="text-m font-semibold">Stock : {itemDetail.STOCK_ID}</p>
             </div>
-            <div className="self-center mt-4 mb-4">
+
+            <p className="text-m font-semibold text-gray-400 mt-2">Stock : {itemDetail.STOCK_ID}</p>
+
+            <div className="flex justify-between mt-4">
                 <button
                     onClick={handleItemDelete}
-                    className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded"
+                    className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-200"
                 >
-
                     <FontAwesomeIcon icon={faTrash}/>
-
                 </button>
-            </div>
-            <div className="self-center mt-4 mb-4">
                 <button
                     onClick={() => navigate(`/stocks/${itemDetail.STOCK_ID}`)}
-                    className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded transition duration-200"
                 >
-
                     <FontAwesomeIcon icon={faArrowLeft} className="mr-2"/>
                 </button>
             </div>
         </div>
     );
+
 };
 
 export default ItemDetails;

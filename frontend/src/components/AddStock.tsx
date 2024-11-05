@@ -74,12 +74,12 @@ const AddStock: React.FC<AddStockProps> = ({onStockAdded}) => {
                         <div className="flex flex-col mt-4 space-y-2">
                             <input type="text" id="label" name="label" value={label} onChange={e => setLabel(e.target.value)}
                                    placeholder="Label"
-                                   required className="border p-2 rounded bg-gray-800 text-white"/>
+                                   required className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
                             <input type="text" id="description" name="description" value={description} onChange={e => setDescription(e.target.value)}
                                    placeholder="Description" className="border p-2 rounded bg-gray-800 text-white"/>
                         </div>
                         <div className="flex justify-center mt-5">
-                            <button type="submit" className="p-2 bg-violet-700 text-white rounded">Add Stock</button>
+                            <button type="submit" className="p-2 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105">Add Stock</button>
                         </div>
                     </form>
                 </div>
