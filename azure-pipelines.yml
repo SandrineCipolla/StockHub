@@ -1,0 +1,72 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - develop
+
+pool:
+  vmImage: ubuntu-latest
+variables:
+  - group: "stockhub-front-variable-group"
+  - name: sourceFolder
+    value: "frontend"
+
+jobs:
+  - job: build
+    displayName: "Continuous integration"
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.x"
+        displayName: "Install Node.js"
+
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolder)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolder)
+
+      - script: |
+          yarn run test:ci
+        displayName: "Run tests"
+        workingDirectory: $(sourceFolder)
+
+      - task: PublishTestResults@2
+        displayName: "Publish test results"
+        condition: succeededOrFailed() # because otherwise we won't know what tests failed
+        inputs:
+          testResultsFiles: "src/reports/junit.xml"
+
+      - task: PublishCodeCoverageResults@2
+        displayName: "Publish code coverage"
+        inputs:
+          summaryFileLocation: "src/coverage/cobertura-coverage.xml"
+          reportDirectory: "src/coverage"
+
+  - job: continuousDeployment
+    displayName: "Continuous deployment"
+    steps:
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolder)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolder)
+
+      - task: AzureStaticWebApp@0
+        displayName: "Deploy to Azure Static Web Apps"
+        inputs:
+          # workingDirectory: $(sourceFolder)
+          # app_build_command: "yarn run build"
+          skip_app_build: true
+          app_location: "$(sourceFolder)/dist"
+          azure_static_web_apps_api_token: $(Azure_UI_WebApp_DeploymentToken)
