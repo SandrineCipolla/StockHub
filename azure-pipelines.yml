@@ -86,7 +86,7 @@ jobs:
           summaryFileLocation: "$(sourceFolderBackend)/src/coverage/cobertura-coverage.xml"
           reportDirectory: "$(sourceFolderBackend)/src/coverage"
 
-  - job: continuousDeployment
+  - job: continuousDeploymentFront
     displayName: "Continuous deployment"
     steps:
       - script: |
