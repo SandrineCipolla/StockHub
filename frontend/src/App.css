@@ -17,7 +17,7 @@
 /* Body styles for Dark Mode by default */
 body {
     @apply bg-background text-text; /* cfr dans tailwind.config.js */
-    margin: auto;
+    margin: 0;
     min-width: 320px;
     min-height: 100vh;
 }
@@ -84,3 +84,19 @@ body.light-mode .menu {
         color: #747bff;
     }
 }
+
+@keyframes slide-in {
+    from {
+        transform: translateX(-100%); /* Commence à gauche de l'écran */
+        opacity: 0; /* Invisible au départ */
+    }
+    to {
+        transform: translateX(0); /* Va à sa position d'origine */
+        opacity: 1; /* Devient visible */
+    }
+}
+
+.slide-in {
+    animation: slide-in 0.5s ease forwards; /* Applique l'animation */
+}
+

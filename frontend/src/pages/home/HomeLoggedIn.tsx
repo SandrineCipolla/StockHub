@@ -7,7 +7,7 @@ import {Box, Typography} from '@mui/material';
 const HomeLoggedIn: React.FC = () => {
 
     return (
-        <Box sx={{marginTop: 4}}> {/* 4 correspond à un espacement de 32px */}
+        <Box sx={{ marginTop: 2, padding: 2, overflowY: 'auto' }}> {/* 4 correspond à un espacement de 32px */}
             <Typography variant="h6" marginBottom={3}>Page d'accueil après connexion</Typography>
             <Typography variant="body1">Bienvenue dans votre espace de gestion de Stocks</Typography>
             <nav>
