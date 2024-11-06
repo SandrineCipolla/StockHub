@@ -1,7 +1,7 @@
 // tailwind.config.js
 export default {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  darkMode: false, // Le mode sombre est maintenant par défaut
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {

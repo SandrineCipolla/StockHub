@@ -14,6 +14,7 @@ const HomeLoggedIn: React.FC = () => {
                         padding: 2,
                         width: '100%', // Prendre toute la largeur
                         //backgroundColor: 'rgba(255, 255, 255, 0.8)', // Couleur de fond blanche avec transparence
+                        //backgroundColor: 'primary.main',
                         color: 'text.primary', // Couleur du texte selon le thème
                         borderRadius: '0',
                         marginBottom: 2,
@@ -29,22 +30,22 @@ const HomeLoggedIn: React.FC = () => {
                 </Paper>
 
             {/* Cartes board */}
-            <Box display="flex" justifyContent="center" marginTop={4}>
-                <Box sx={{ margin: 1 }}>
+            <Box display="flex" justifyContent="center" flexDirection={{ xs: 'column', sm: 'row' }} flexWrap="wrap" marginTop={4}>
+                <Box sx={{ margin: 1, flex: '1 1 auto' }}>
                     <div className="max-w-sm mx-auto bg-white border-2 border-violet-500 rounded-lg shadow-[0_-2px_8px_rgba(255,255,255,0.2),0_2px_8px_rgba(255,255,255,0.2)] hover:shadow-[0_-4px_16px_rgba(255,255,255,0.3),0_4px_16px_rgba(255,255,255,0.3)] transition-shadow duration-200 p-4 my-4 hover:border-violet-400">
                         <Link to="/stocks" style={{ textDecoration: 'none', color: 'primary.main' }}>
                             <Typography variant="body1" sx={{ color: 'primary.main' }}>Mes stocks</Typography>
                         </Link>
                     </div>
                 </Box>
-                <Box sx={{ margin: 1 }}>
+                <Box sx={{ margin: 1, flex: '1 1 auto' }}>
                     <div className="max-w-sm mx-auto bg-white border-2 border-violet-500 rounded-lg shadow-[0_-2px_8px_rgba(255,255,255,0.2),0_2px_8px_rgba(255,255,255,0.2)] hover:shadow-[0_-4px_16px_rgba(255,255,255,0.3),0_4px_16px_rgba(255,255,255,0.3)] transition-shadow duration-200 p-4 my-4 hover:border-violet-400">
                         <Link to="/items" style={{ textDecoration: 'none', color: 'primary.main' }}>
                             <Typography variant="body1" sx={{ color: 'primary.main' }}>Mes produits</Typography>
                         </Link>
                     </div>
                 </Box>
-                <Box sx={{ margin: 1 }}>
+                <Box sx={{ margin: 1, flex: '1 1 auto' }}>
                     <div className="max-w-sm mx-auto bg-white border-2 border-violet-500 rounded-lg shadow-[0_-2px_8px_rgba(255,255,255,0.2),0_2px_8px_rgba(255,255,255,0.2)] hover:shadow-[0_-4px_16px_rgba(255,255,255,0.3),0_4px_16px_rgba(255,255,255,0.3)] transition-shadow duration-200 p-4 my-4 hover:border-violet-400">
                         <Link to="/low-stock-items" style={{ textDecoration: 'none', color: 'primary.main' }}>
                             <Typography variant="body1" sx={{ color: 'primary.main' }}>Stocks faibles</Typography>
@@ -52,6 +53,7 @@ const HomeLoggedIn: React.FC = () => {
                     </div>
                 </Box>
             </Box>
+
         </Box>
     );
 };

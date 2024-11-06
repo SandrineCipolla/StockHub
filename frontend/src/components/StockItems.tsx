@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import {Box, Card, CardContent, Typography} from "@mui/material";
 
 
 const StockItems: React.FC<StockItemsProps> = ({ID}) => {
@@ -41,36 +42,50 @@ const StockItems: React.FC<StockItemsProps> = ({ID}) => {
         </div>;
     }
 
-    //TODO: check if it is possible to create a "graphic" component to put in the return
+
     return (
-        <div className="flex flex-col items-center w-full p-10 mr-auto max-w-screen-lg">
+        <Box className="p-10 space-y-6">
+            {/* Grid header */}
+            <Box className="grid grid-cols-4 gap-4 mb-5 w-full">
+                <Typography variant="h6" className="font-bold">N°</Typography>
+                <Typography variant="h6" className="font-bold">Label</Typography>
+                <Typography variant="h6" className="font-bold">Quantity</Typography>
+                <Typography variant="h6" className="font-bold">Details</Typography>
+            </Box>
 
-            <div className="grid grid-cols-4 gap-4 mb-5 w-full">
-                <p>N°</p>
-                <p>Label</p>
-                <p>Quantity</p>
-                <p>Details</p>
-            </div>
+            {/* Stock items list */}
             {stockItems.map((item, index) => (
+                <Card key={item.ID} className="!bg-gray-800 !bg-opacity-50 border border-violet-300 rounded-lg text-violet-500
+    shadow-[0_-2px_10px_rgba(255,255,255,0.2),0_2px_10px_rgba(255,255,255,0.2)]
+    hover:shadow-[0_-4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(255,255,255,0.3)]
+    hover:text-white transition-shadow duration-200">
+                    <CardContent className="grid grid-cols-4 gap-4 p-5">
+                        {/* N° */}
+                        <Typography variant="body1" className="font-medium text-violet-500">{index + 1}</Typography>
 
-                <div key={item.ID} className="grid grid-cols-4 gap-4 items-center mb-2 w-full">
-                    <p>{index + 1}</p>
-                    <p>{item.LABEL}</p>
-                    <p>
-                        {item.QUANTITY}
-                        {item.isLowStock && (
-                            <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 ml-2"/>
-                        )}
-                    </p>
-                    {/*<p>{item.QUANTITY}</p>*/}
-                    <p><Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`}
-                             className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-1 px-2 rounded text-xs w-full text-center">
-                        <FontAwesomeIcon icon={faSearch}/>
-                    </Link></p>
-                </div>
+                        {/* Label */}
+                        <Typography variant="body1" className="text-violet-500">{item.LABEL}</Typography>
+
+                        {/* Quantity with icon if low stock */}
+                        <Box className="flex items-center justify-center space-x-2">
+                            <Typography variant="body1" className="font-semibold text-violet-500">{item.QUANTITY}</Typography>
+                            {item.isLowStock && (
+                                <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500" />
+                            )}
+                        </Box>
+
+                        {/* Details link */}
+                        <Box className="flex justify-center items-center">
+                            <Link to={`/stocks/${item.STOCK_ID}/items/${item.ID}`} className="block text-violet-500 hover:text-white">
+                                <FontAwesomeIcon icon={faSearch} />
+                            </Link>
+                        </Box>
+                    </CardContent>
+                </Card>
+
             ))}
-
-        </div>
+        </Box>
     );
 };
+
 export default StockItems;

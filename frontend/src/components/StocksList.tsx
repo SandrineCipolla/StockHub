@@ -46,8 +46,10 @@ const StocksList: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    backgroundColor: 'rgba(90, 33, 181, 0.8)',
-                    color: 'white',
+                    // backgroundColor: 'rgba(90, 33, 181, 0.8)',
+                    // color: 'white',
+                    backgroundColor: 'primary.main', // Changer pour utiliser la couleur principale
+                    color: 'primary.contrastText', // Texte clair pour contraster avec le fond
                     borderRadius: '0',
                     marginBottom: 2,
                 }}
@@ -60,7 +62,8 @@ const StocksList: React.FC = () => {
                         size="small"
                         sx={{
                             backgroundColor: 'white',
-                            color: 'rgba(90, 33, 181, 0.8)',
+                            // color: 'rgba(90, 33, 181, 0.8)',
+                            color: 'primary.main',
                             '&:hover': {
                                 boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
                                 backgroundColor: 'white', // Le fond reste blanc même au hover
@@ -86,7 +89,7 @@ const StocksList: React.FC = () => {
                         size="small"
                         sx={{
                             backgroundColor: 'white',
-                            color: 'rgba(90, 33, 181, 0.8)',
+                            color: 'primary.main',
                             '&:hover': {
                                 boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
                                 backgroundColor: 'white', // Le fond reste blanc même au hover

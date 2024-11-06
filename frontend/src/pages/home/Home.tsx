@@ -20,7 +20,7 @@ const Home: React.FC = () => {
                 //justifyContent: 'center',
                 justifyContent: 'flex-start',
                 height: '100%',
-                background: 'linear-gradient(135deg, #2D2A4A, #5A538A)',
+                //background: 'linear-gradient(135deg, #2D2A4A, #5A538A)',
                 padding: '20px 0'
             }}
         >
