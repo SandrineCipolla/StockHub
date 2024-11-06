@@ -1,10 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useImperativeHandle, useState} from 'react';
 import {addStockItem, fetchStockItems} from "../utils/StockAPIClient.ts";
 import {StockItemsContext} from "../contexts/StockItemsContext.tsx";
 import Modal from 'react-modal';
 
+interface AddStockItemProps {
+    stockID: number;
+}
 
-const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
+const AddStockItem = forwardRef<{ handleShowForm: () => void }, AddStockItemProps>(({ stockID }, ref) => {
     const [label, setLabel] = useState('');
     const [description, setDescription] = useState('');
     const [quantity, setQuantity] = useState(0);
@@ -23,6 +26,9 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
         }
         setShowForm(!showForm);
     };
+    useImperativeHandle(ref, () => ({
+        handleShowForm
+    }));
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -49,7 +55,7 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
 
     return (
         <div>
-            <button onClick={handleShowForm}>+</button>
+            {/*<button onClick={handleShowForm}>+</button>*/}
             <Modal
                 isOpen={showForm}
                 onRequestClose={handleShowForm}
@@ -89,6 +95,6 @@ const AddStockItem: React.FC<{ stockID: number }> = ({stockID}) => {
             </Modal>
         </div>
     );
-};
+});
 
 export default AddStockItem;
