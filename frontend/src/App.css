@@ -100,3 +100,7 @@ body.light-mode .menu {
     animation: slide-in 0.5s ease forwards; /* Applique l'animation */
 }
 
+
+.main-content {
+    padding-bottom: 60px; /* Ajuste la valeur selon la hauteur de la barre d'actions */
+}

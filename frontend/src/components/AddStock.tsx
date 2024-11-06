@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {addStock} from "../utils/StockAPIClient.ts";
 import Modal from 'react-modal';
 
@@ -7,10 +7,10 @@ interface AddStockProps {
     onStockAdded: () => void;//une fonction sans argument qui est appelée lorsque l'ajout d'un stock est terminé. Cette fonction permet de notifier le composant parent (StocksList) pour qu'il puisse mettre à jour la liste des stocks.
 }
 
-const AddStock: React.FC<AddStockProps> = ({onStockAdded}) => {
+//forwardRef pour passer un ref au composant AddStock
+const AddStock = forwardRef<{ handleShowForm: () => void }, AddStockProps>(({onStockAdded}, ref) => {
     const [label, setLabel] = useState('');
     const [description, setDescription] = useState('');
-
     const [showForm, setShowForm] = useState(false);
 
 
@@ -25,6 +25,10 @@ const AddStock: React.FC<AddStockProps> = ({onStockAdded}) => {
         }
         setShowForm(!showForm);
     };
+//Expose handleShowForm via ref pour pouvoir l’appeler depuis le parent
+    useImperativeHandle(ref, () => ({
+        handleShowForm
+    }));
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -47,7 +51,7 @@ const AddStock: React.FC<AddStockProps> = ({onStockAdded}) => {
 
     return (
         <div>
-            <button onClick={handleShowForm}>+</button>
+            {/*<button onClick={handleShowForm}>+</button>*/}
             <Modal
                 isOpen={showForm}
                 onRequestClose={handleShowForm}
@@ -72,20 +76,26 @@ const AddStock: React.FC<AddStockProps> = ({onStockAdded}) => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col mt-4 space-y-2">
-                            <input type="text" id="label" name="label" value={label} onChange={e => setLabel(e.target.value)}
+                            <input type="text" id="label" name="label" value={label}
+                                   onChange={e => setLabel(e.target.value)}
                                    placeholder="Label"
-                                   required className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
-                            <input type="text" id="description" name="description" value={description} onChange={e => setDescription(e.target.value)}
+                                   required
+                                   className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
+                            <input type="text" id="description" name="description" value={description}
+                                   onChange={e => setDescription(e.target.value)}
                                    placeholder="Description" className="border p-2 rounded bg-gray-800 text-white"/>
                         </div>
                         <div className="flex justify-center mt-5">
-                            <button type="submit" className="p-2 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105">Add Stock</button>
+                            <button type="submit"
+                                    className="p-2 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105">Add
+                                Stock
+                            </button>
                         </div>
                     </form>
                 </div>
             </Modal>
         </div>
     );
-};
+});
 
 export default AddStock;
