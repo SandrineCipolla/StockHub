@@ -1,4 +1,4 @@
-import {Item, Stock, StockDetail, StockItem} from "../dataModels.ts";
+import {Item, ItemWithStockLabel, Stock, StockDetail, StockItem} from "../dataModels.ts";
 import {getApiConfig} from "./utils.ts";
 
 
@@ -41,6 +41,7 @@ export const fetchStocksList = async (): Promise<Stock[]> => {
 export const fetchStockDetails = async (numericID: number): Promise<StockDetail> => {
     const {apiUrl, config} = await getApiConfig();
     const response = await fetch(`${apiUrl}/stocks/${numericID}`, config);
+    console.log('Réponse API:', response);
 
     if (!response.ok) {
         console.error('Error in fetching stock details');
@@ -48,6 +49,7 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
     }
 
     const data = await response.json();
+    console.log('Données du stock récupérées:', data);
 
     if (Array.isArray(data)) {
         return data[0] as StockDetail;
@@ -156,7 +158,7 @@ export const fetchItemsList = async (): Promise<Item[]> => {
     }
 };
 
-export const fetchItemDetails = async (stockID: number, itemID: number): Promise<Item> => {
+export const fetchItemDetails = async (stockID: number, itemID: number): Promise<ItemWithStockLabel> => {
     const {apiUrl, config} = await getApiConfig();
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
 
@@ -165,11 +167,25 @@ export const fetchItemDetails = async (stockID: number, itemID: number): Promise
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data: Item = await response.json();
+    const data: ItemWithStockLabel = await response.json();
     console.log(data);
 
-    return data as Item;
+    return data as ItemWithStockLabel;
 
+};
+
+export const fetchStockName = async (stockID: number): Promise<string> => {
+    const { apiUrl, config } = await getApiConfig();
+    const response = await fetch(`${apiUrl}/stocks/${stockID}`, config);
+
+    if (!response.ok) {
+        console.error('Error in fetching stock details');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    const stockData = await response.json();
+    console.log('Données du stock récupérées:', stockData);
+    return stockData.LABEL; // Retourne le nom du stock
 };
 
 export const fetchLowStockItems = async():Promise<Item[]> =>{
