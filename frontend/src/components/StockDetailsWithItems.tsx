@@ -7,7 +7,7 @@ import {StockItemsProvider} from "../contexts/StockItemsContext.tsx";
 import {Fab, Paper, Tooltip} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import HomeIcon from '@mui/icons-material/Home';
 
 const StockDetailsWithItems: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
@@ -15,11 +15,10 @@ const StockDetailsWithItems: React.FC = () => {
     const navigate = useNavigate();
     const addStockItemRef = useRef<{ handleShowForm: () => void } | null>(null);
 
-
     return (
         <StockItemsProvider>
 
-            {/* Bandeau en haut avec le bouton accueil à gauche, texte au centre, et bouton ajout à droite */}
+            {/* Bandeau en haut avec le bouton accueil et retour aux stocks à gauche, titre au centre, et bouton ajout à droite */}
             <Paper
                 elevation={1}
                 sx={{
@@ -34,26 +33,49 @@ const StockDetailsWithItems: React.FC = () => {
                     marginBottom: 2,
                 }}
             >
-                {/* Bouton Accueil à gauche */}
-                <Tooltip title="Retour aux stocks" aria-label="home">
-                    <Fab
-                        color="secondary"
-                        onClick={() => navigate('/stocks')}
-                        size="small"
-                        sx={{
-                            backgroundColor: 'white',
-                            color: 'rgba(90, 33, 181, 0.8)',
-                            '&:hover': {
-                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
-                                backgroundColor: 'white', // Le fond reste blanc même au hover
-                                transform: 'scale(1.05)', // Effet de grossissement
-                            },
-                            transition: 'transform 0.3s, box-shadow 0.3s', // Transition pour adoucir l'effet
-                        }}
-                    >
-                        <ArrowBackIcon/>
-                    </Fab>
-                </Tooltip>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    {/* Bouton Accueil */}
+                    <Tooltip title="Retour à l'accueil" aria-label="home">
+                        <Fab
+                            color="secondary"
+                            onClick={() => navigate('/')}
+                            size="small"
+                            sx={{
+                                backgroundColor: 'white',
+                                color: 'rgba(90, 33, 181, 0.8)',
+                                '&:hover': {
+                                    boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                    backgroundColor: 'white',
+                                    transform: 'scale(1.05)',
+                                },
+                                transition: 'transform 0.3s, box-shadow 0.3s',
+                            }}
+                        >
+                            <HomeIcon/>
+                        </Fab>
+                    </Tooltip>
+
+                    {/* Bouton Retour aux stocks */}
+                    <Tooltip title="Retour aux stocks" aria-label="back-to-stocks">
+                        <Fab
+                            color="secondary"
+                            onClick={() => navigate('/stocks')}
+                            size="small"
+                            sx={{
+                                backgroundColor: 'white',
+                                color: 'rgba(90, 33, 181, 0.8)',
+                                '&:hover': {
+                                    boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                    backgroundColor: 'white',
+                                    transform: 'scale(1.05)',
+                                },
+                                transition: 'transform 0.3s, box-shadow 0.3s',
+                            }}
+                        >
+                            <ArrowBackIcon/>
+                        </Fab>
+                    </Tooltip>
+                </div>
 
                 {/* Titre centré */}
                 <StockDetails/>
@@ -68,11 +90,11 @@ const StockDetailsWithItems: React.FC = () => {
                             backgroundColor: 'white',
                             color: 'rgba(90, 33, 181, 0.8)',
                             '&:hover': {
-                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
-                                backgroundColor: 'white', // Le fond reste blanc même au hover
-                                transform: 'scale(1.05)', // Effet de grossissement
+                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                backgroundColor: 'white',
+                                transform: 'scale(1.05)',
                             },
-                            transition: 'transform 0.3s, box-shadow 0.3s', // Transition pour adoucir l'effet
+                            transition: 'transform 0.3s, box-shadow 0.3s',
                         }}
                     >
                         <AddIcon/>
