@@ -1,12 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {fetchStocksList} from "../utils/StockAPIClient.ts";
+import {deleteStock, fetchStocksList} from "../utils/StockAPIClient.ts";
 import {Stock} from "../dataModels.ts";
 import AddStock from "./AddStock.tsx";
 import {AuthenticatedTemplate} from "@azure/msal-react";
 import {Fab, Paper, Tooltip, Typography} from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home'; // Icône pour l'accueil
 import AddIcon from '@mui/icons-material/Add'; // Icône pour ajouter
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const StocksList: React.FC = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
@@ -33,6 +34,17 @@ const StocksList: React.FC = () => {
 
     const handleStockAdded = () => {
         fetchDataInner();
+    };
+
+    const handleStockDelete = async (ID: number) => {
+        if (stocks && window.confirm('Are you sure you want to delete this item?')) {
+            try {
+                await deleteStock(ID);
+                navigate(`/stocks/${ID}`);
+            } catch (error) {
+                console.error('Error deleting stock:', error);
+            }
+        }
     };
 
     return (
@@ -109,10 +121,35 @@ const StocksList: React.FC = () => {
                     <div key={stock.id} className="p-4 bg-gray-800 bg-opacity-50 border border-violet-300 rounded-md text-secondary
                     shadow-[0_-2px_10px_rgba(255,255,255,0.2),0_2px_10px_rgba(255,255,255,0.2)]
                     hover:shadow-[0_-4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(255,255,255,0.3)]
-                    transition-shadow duration-200">
+                    transition-shadow duration-200 relative">
                         <Link to={`/stocks/${stock.id}`} className="block text-secondary hover:text-white">
                             {stock.label}
                         </Link>
+
+                        {/* Bouton Supprimer */}
+                        <Tooltip title="Supprimer le stock" aria-label="delete">
+                            <Fab
+                                color="error"
+                                size="small"
+                                onClick={() => handleStockDelete(stock.id)} // Lier le bouton à la fonction de suppression
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: 10,
+                                    right: 10,
+                                    backgroundColor: 'white',
+                                    color: 'error.main',
+                                    padding: 0,
+                                    '&:hover': {
+                                        boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                        backgroundColor: 'white',
+                                        transform: 'scale(1.05)',
+                                    },
+                                    transition: 'transform 0.3s, box-shadow 0.3s',
+                                }}
+                            >
+                                <DeleteIcon sx={{ fontSize: '16px' }}/>
+                            </Fab>
+                        </Tooltip>
                     </div>
                 ))}
             </div>

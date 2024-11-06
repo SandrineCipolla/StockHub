@@ -121,6 +121,19 @@ export const addStock = async (LABEL: string, DESCRIPTION: string): Promise<Stoc
     return await response.json();
 };
 
+export const deleteStock = async (ID: number) => {
+    const body = {STOCK: ID}
+    const {apiUrl, config} = await getApiConfig('DELETE', body);
+    const response = await fetch(`${apiUrl}/stocks/${ID}`, config);
+
+    if (!response.ok) {
+        console.error('Error in deleteStock');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
 export const deleteStockItem = async (stockID: number, itemID: number) => {
     const body = {ITEM: itemID}
     const {apiUrl, config} = await getApiConfig('DELETE', body);
