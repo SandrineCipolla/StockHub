@@ -187,20 +187,6 @@ export const fetchItemDetails = async (stockID: number, itemID: number): Promise
 
 };
 
-export const fetchStockName = async (stockID: number): Promise<string> => {
-    const { apiUrl, config } = await getApiConfig();
-    const response = await fetch(`${apiUrl}/stocks/${stockID}`, config);
-
-    if (!response.ok) {
-        console.error('Error in fetching stock details');
-        throw new Error(`HTTP response with a status ${response.status}`);
-    }
-
-    const stockData = await response.json();
-    console.log('Données du stock récupérées:', stockData);
-    return stockData.LABEL; // Retourne le nom du stock
-};
-
 export const fetchLowStockItems = async():Promise<Item[]> =>{
     const {apiUrl, config} = await getApiConfig();
     const response = await fetch(`${apiUrl}/low-stock-items`, config);

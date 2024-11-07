@@ -12,9 +12,7 @@ const ItemDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
     const itemID = Number(ID);
     const stockID = Number(ID);
-    //const [itemDetail, setItemDetail] = useState<Item | null>(null);
     const [itemDetail, setItemDetail] = useState<ItemWithStockLabel | null>(null);
-    //const [stockDetail, setStockDetail] = useState<StockDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
@@ -29,12 +27,10 @@ const ItemDetails: React.FC = () => {
                 const itemData = await fetchItemDetails(stockID, itemID);
                 const itemWithLabel: ItemWithStockLabel = {
                     ...itemData,
-                    stockLabel: itemData.stockLabel || 'No label available', // Valeur par défaut si stockLabel est vide
+                    stockLabel: itemData.stockLabel || 'No label available',
                 };
                 setItemDetail(itemWithLabel);
                 setQuantity(itemData.QUANTITY);
-                //const stockData = await fetchStockDetails(stockID);
-                // setStockDetail(stockData);
                 setIsLoading(false);
 
             } catch (err) {
@@ -77,7 +73,7 @@ const ItemDetails: React.FC = () => {
 
     return (
         <div>
-            {/* Bandeau en haut avec le bouton accueil à gauche, texte au centre, et bouton retour à droite */}
+            {/* Bandeau  */}
             <Paper
                 elevation={1}
                 sx={{
@@ -177,8 +173,6 @@ const ItemDetails: React.FC = () => {
 
             {/* Détails de l'article */}
             <div className="bg-gray-800 bg-opacity-50 border-2 border-violet-300 rounded-lg shadow-md p-6 relative">
-                {/* Titre */}
-                {/*<h2 className="text-2xl font-bold mb-4">{itemDetail.LABEL}</h2>*/}
 
                 {/* Description */}
                 <div className="flex items-center mb-6">
@@ -201,9 +195,6 @@ const ItemDetails: React.FC = () => {
                         </button>
                     </div>
                 </div>
-
-                {/*/!* ID du stock (optionnel) *!/*/}
-                {/*<p className="text-gray-400 mb-4">Stock ID: {itemDetail.STOCK_ID}</p>*/}
 
                 {/* Nom du stock (discret, en bas à droite) */}
                 <div className="absolute bottom-4 right-4 text-gray-400 text-sm italic">

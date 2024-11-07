@@ -51,7 +51,6 @@ const AddStock = forwardRef<{ handleShowForm: () => void }, AddStockProps>(({onS
 
     return (
         <div>
-            {/*<button onClick={handleShowForm}>+</button>*/}
             <Modal
                 isOpen={showForm}
                 onRequestClose={handleShowForm}

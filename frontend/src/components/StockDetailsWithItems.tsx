@@ -18,7 +18,7 @@ const StockDetailsWithItems: React.FC = () => {
     return (
         <StockItemsProvider>
 
-            {/* Bandeau en haut avec le bouton accueil et retour aux stocks à gauche, titre au centre, et bouton ajout à droite */}
+            {/* Bandeau */}
             <Paper
                 elevation={1}
                 sx={{

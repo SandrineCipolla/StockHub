@@ -48,7 +48,7 @@ const StocksList: React.FC = () => {
     };
     return (
         <AuthenticatedTemplate>
-            {/* Bandeau en haut avec le bouton accueil à gauche, texte au centre, et bouton ajout à droite */}
+            {/* Bandeau  */}
             <Paper
                 elevation={1}
                 sx={{
