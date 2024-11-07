@@ -8,6 +8,7 @@ import {Fab, Paper, Tooltip, Typography} from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home'; // Icône pour l'accueil
 import AddIcon from '@mui/icons-material/Add'; // Icône pour ajouter
 import DeleteIcon from '@mui/icons-material/Delete';
+import {Theme} from "@mui/material/styles";
 
 const StocksList: React.FC = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
@@ -57,12 +58,12 @@ const StocksList: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    // backgroundColor: 'rgba(90, 33, 181, 0.8)',
-                    // color: 'white',
                     backgroundColor: 'primary.main', // Changer pour utiliser la couleur principale
                     color: 'primary.contrastText', // Texte clair pour contraster avec le fond
                     borderRadius: '0',
                     marginBottom: 2,
+                    height: '88px',
+                    borderBottom: (theme: Theme) => `3px solid ${theme.palette.secondary.main}`,
                 }}
             >
                 {/* Bouton Accueil à gauche */}
@@ -144,6 +145,7 @@ const StocksList: React.FC = () => {
                                         transform: 'scale(1.05)',
                                     },
                                     transition: 'transform 0.3s, box-shadow 0.3s',
+                                    zIndex: 1,
                                 }}
                             >
                                 <DeleteIcon sx={{ fontSize: '16px' }}/>

@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Fab, Paper, Tooltip, Typography} from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {Theme} from "@mui/material/styles";
 
 const ItemDetails: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
@@ -86,6 +87,8 @@ const ItemDetails: React.FC = () => {
                     color: 'primary.contrastText',
                     borderRadius: '0',
                     marginBottom: 2,
+                    height: '88px',
+                    borderBottom: (theme: Theme) => `3px solid ${theme.palette.secondary.main}`,
                 }}
             >
                 <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>

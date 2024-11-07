@@ -11,12 +11,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
     color: theme.palette.common.white,
-    backgroundColor: '#000000', // Fond semi-transparent
+    backgroundColor: '#000000',
     //backgroundColor: 'rgba(34, 34, 34, 0.8)', // Fond semi-transparent
-    position: 'sticky', // Sticky pour garder le header en haut
-    top: 0, // Reste en haut de la page
+    position: 'sticky',
+    top: 0,
     width: '100%',
-    zIndex: 10,
+    zIndex: 1000,
     display: 'flex',
     justifyContent: 'space-between', // Assure que les éléments sont bien alignés
     alignItems: 'center', // Centre verticalement les éléments

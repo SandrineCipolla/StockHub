@@ -8,6 +8,7 @@ import {Fab, Paper, Tooltip} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HomeIcon from '@mui/icons-material/Home';
+import {Theme} from '@mui/material/styles';
 
 const StockDetailsWithItems: React.FC = () => {
     const {ID} = useParams<{ ID: string }>();
@@ -27,10 +28,15 @@ const StockDetailsWithItems: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    backgroundColor: 'rgba(90, 33, 181, 0.8)',
-                    color: 'white',
+                    backgroundColor: 'primary.main', // Changer pour utiliser la couleur principale
+                    color: 'primary.contrastText', // Texte clair pour contraster avec le fond
                     borderRadius: '0',
                     marginBottom: 2,
+                    position: 'sticky',
+                    top: 88,
+                    zIndex: 500,
+                    height: '88px',
+                    borderBottom: (theme: Theme) => `3px solid ${theme.palette.secondary.main}`,
                 }}
             >
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
