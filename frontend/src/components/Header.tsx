@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, Drawer, IconButton } from "@mui/material";
-import { getUsername } from "../utils/msalUtils";
-import { useMsal } from "@azure/msal-react";
-import { styled } from "@mui/material/styles";
+import React, {useState} from "react";
+import {Box, Button, Divider, Drawer, IconButton, List, ListItemButton, ListItemText, Typography} from "@mui/material";
+import {getUsername} from "../utils/msalUtils";
+import {useMsal} from "@azure/msal-react";
+import {styled} from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {Link} from "react-router-dom";
 
 // Styles personnalisés utilisant styled
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Box)(({theme}) => ({
     padding: theme.spacing(2),
     color: theme.palette.common.white,
     backgroundColor: '#000000',
@@ -22,7 +23,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     alignItems: 'center', // Centre verticalement les éléments
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(({theme}) => ({
     color: theme.palette.common.white,
     backgroundColor: theme.palette.primary.main,
     marginLeft: theme.spacing(2),
@@ -41,14 +42,26 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const Header: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
-    const { instance } = useMsal();
+const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
+    const {instance} = useMsal();
     const activeAccount = instance.getActiveAccount();
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    // Fonction pour extraire la partie avant le "@"
+    const getUsernameWithoutDomain = (email: string) => {
+        const atIndex = email.indexOf('@');
+        return atIndex !== -1 ? email.substring(0, atIndex) : email; // Retourne la partie avant le "@"
+    };
 
     const handleLogout = () => {
         instance.logoutRedirect({
             postLogoutRedirectUri: "/",
+        });
+    };
+    const handleLogin = () => {
+        instance.loginRedirect({
+            scopes: ["user.read", "openid", "profile"], // Scopes de base pour l'authentification
+            redirectUri: "/stocks", // URI vers laquelle l'utilisateur sera redirigé après la connexion
         });
     };
 
@@ -62,23 +75,25 @@ const Header: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     return (
         <>
             <StyledBox>
-                <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
+                <Box sx={{flexGrow: 1, textAlign: 'left'}}>
                     <Typography variant="h3">StockHub</Typography>
                 </Box>
                 <Box display="flex" alignItems="center">
                     {activeAccount ? (
                         <>
-                            <Typography variant="body2" sx={{ marginRight: '10px' }}>
-                                Bienvenue {getUsername(instance.getAllAccounts())}
+                            <Typography variant="body2" sx={{marginRight: '10px'}}>
+                                {/*Bienvenue {getUsername(instance.getAllAccounts())}*/}
+                                Bienvenue {getUsernameWithoutDomain(getUsername(instance.getAllAccounts()))}
                             </Typography>
-                            <StyledButton onClick={handleLogout} sx={{marginRight: '16px' }}>
-                                <LogoutIcon sx={{ marginRight: '4px' }} />Logout</StyledButton>
+                            <StyledButton onClick={handleLogout} sx={{marginRight: '16px'}}>
+                                <LogoutIcon sx={{marginRight: '4px'}}/>Logout</StyledButton>
                         </>
                     ) : (
-                        <StyledButton onClick={onLogin} sx={{marginRight: '16px' }}> <LoginIcon sx={{ marginRight: '4px' }} />Login</StyledButton>
+                        <StyledButton onClick={onLogin} sx={{marginRight: '16px'}}> <LoginIcon
+                            sx={{marginRight: '4px'}}/>Login</StyledButton>
                     )}
                     <IconButton onClick={toggleDrawer(true)} edge="end" color="inherit">
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                 </Box>
             </StyledBox>
@@ -89,17 +104,95 @@ const Header: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         width: '200px',
-                        backgroundColor: '#EAD8F9',
+                        backgroundColor: 'primary.main',
                     },
                 }}
             >
                 {/* Menu items can be added here */}
-                <Box role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
-                    <Typography variant="h6" sx={{ padding: 2 }}>Menu</Typography>
+                <Box role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}
+                     sx={{color: 'white'}}>
+                    <Typography variant="h6" sx={{padding: 2}}>Menu</Typography>
                     {/* Ajoutez des éléments de menu ici */}
+                    <Divider sx={{borderColor: 'rgba(255, 255, 255, 0.2)'}}/>
+
+                    <List>
+                        {activeAccount ? (
+                            <>
+                                <ListItemButton
+                                    component={Link}
+                                    to="/stocks"
+                                    sx={{
+                                        color: 'white',
+                                        textDecoration: 'none', // Supprimer le soulignement du lien
+                                        transition: 'transform 0.2s, box-shadow 0.2s',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                            boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                            color: 'white',
+                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
+                                        },
+                                    }}
+                                >
+                                    <ListItemText primary="Mes stocks"/>
+                                </ListItemButton>
+
+                                <ListItemButton
+                                    component={Link}
+                                    to="/items"
+                                    sx={{
+                                        color: 'white',
+                                        textDecoration: 'none', // Supprimer le soulignement du lien
+                                        transition: 'transform 0.2s, box-shadow 0.2s',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                            boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                            color: 'white',
+                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
+                                        },
+                                    }}
+                                >
+                                    <ListItemText primary="Mes produits"/>
+                                </ListItemButton>
+
+                                <ListItemButton
+                                    component={Link}
+                                    to="/low-stock-items"
+                                    sx={{
+                                        color: 'white',
+                                        textDecoration: 'none', // Supprimer le soulignement du lien
+                                        transition: 'transform 0.2s, box-shadow 0.2s',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                            boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                            color: 'white',
+                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
+                                        },
+                                    }}
+                                >
+                                    <ListItemText primary="Stocks faibles"/>
+                                </ListItemButton>
+                            </>
+                        ) : (
+                            <ListItemButton
+
+                                onClick={handleLogin}
+                                sx={{
+                                    color: 'white',
+                                    transition: 'transform 0.2s, box-shadow 0.2s',
+                                    '&:hover': {
+                                        transform: 'scale(1.05)',
+                                        boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                        color: 'white',
+                                    },
+                                }}
+                            >
+                                <ListItemText primary="Se connecter"/>
+                            </ListItemButton>
+                        )}
+                    </List>
                 </Box>
             </Drawer>
-            <Box sx={{ height: '2px', backgroundColor: '#A855F7', marginTop: 3 }} />
+            <Box sx={{height: '2px', backgroundColor: '#A855F7', marginTop: 3}}/>
         </>
     );
 };

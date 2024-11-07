@@ -58,14 +58,6 @@ const ItemDetails: React.FC = () => {
     };
 
     const handleItemDelete = (stockID: number, itemID: number) => {
-        // if (itemDetail && window.confirm('Are you sure you want to delete this item?')) {
-        //     try {
-        //         await deleteStockItem(itemDetail.STOCK_ID, itemDetail.ID);
-        //         navigate(`/stocks/${itemDetail.STOCK_ID}`);
-        //     } catch (error) {
-        //         console.error('Error deleting item:', error);
-        //     }
-        // }
         navigate('/item-confirmation', {state: {stockID, itemID}});
     };
 
