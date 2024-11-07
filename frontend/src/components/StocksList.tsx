@@ -37,19 +37,9 @@ const StocksList: React.FC = () => {
         fetchDataInner();
     };
 
-    const handleStockDelete = async (stockID: number) => {
-        // if (stocks && window.confirm('Are you sure you want to delete this item?')) {
-        //     try {
-        //         await deleteStock(stockID);
-        //         setStocks(stocks.filter(stock => stock.id !== stockID)); // Met à jour l'état pour supprimer le stock de la liste
-        //     } catch (error) {
-        //         console.error('Error deleting stock:', error);
-        //     }
-        // }
-        // Afficher un message de confirmation
-        //
-        // Rediriger vers la page de confirmation avec l'ID du stock
-        navigate(`/confirmation`, {state: {stockID}});
+    const handleStockDelete = (stockID: number) => {
+        // Redirige l'utilisateur vers la page de confirmation
+        navigate('/confirmation', {state: {stockID}});
     };
     return (
         <AuthenticatedTemplate>
@@ -67,6 +57,9 @@ const StocksList: React.FC = () => {
                     borderRadius: '0',
                     marginBottom: 2,
                     height: '88px',
+                    position: 'sticky',
+                    top: 88,
+                    zIndex: 500,
                     borderBottom: (theme: Theme) => `3px solid ${theme.palette.secondary.main}`,
                 }}
             >
