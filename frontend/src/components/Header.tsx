@@ -11,7 +11,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
     color: theme.palette.common.white,
-    backgroundColor: 'rgba(34, 34, 34, 0.8)', // Fond semi-transparent
+    backgroundColor: '#000000', // Fond semi-transparent
+    //backgroundColor: 'rgba(34, 34, 34, 0.8)', // Fond semi-transparent
     position: 'sticky', // Sticky pour garder le header en haut
     top: 0, // Reste en haut de la page
     width: '100%',

@@ -15,6 +15,7 @@ import Home from "./pages/home/Home.tsx";
 import {ProtectedComponentProps} from "./utils/models.ts";
 import LowStockItemsList from "./components/LowStockItemsList.tsx";
 
+
 function ProtectedComponent({onLogin}: ProtectedComponentProps) {
     const {instance} = useMsal();
 
@@ -111,7 +112,7 @@ function ProtectedComponent({onLogin}: ProtectedComponentProps) {
                         <Route path="/items" element={<ItemsList/>}/>
                         <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
                         <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
-                        <Route path="/low-stock-items" element={<LowStockItemsList />} />
+                        <Route path="/low-stock-items" element={<LowStockItemsList/>}/>
                     </Routes>
                 </main>
                 <Footer/>
@@ -135,6 +136,9 @@ function App() {
     };
 
     return (
+        // <ThemeProvider theme={theme}>
+        //     <ProtectedComponent onLogin={handleLogin}/>
+        // </ThemeProvider>
         <div>
             <ProtectedComponent onLogin={handleLogin}/>
         </div>

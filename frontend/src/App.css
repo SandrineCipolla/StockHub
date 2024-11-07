@@ -16,7 +16,7 @@
 
 /* Body styles for Dark Mode by default */
 body {
-    @apply bg-background text-text; /* cfr dans tailwind.config.js */
+    @apply bg-background text-text; /* cfr dans tailwind.config.ts */
     margin: 0;
     min-width: 320px;
     min-height: 100vh;

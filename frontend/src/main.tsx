@@ -5,7 +5,7 @@ import {msalConfig} from "./authConfig.ts";
 import {MsalProvider} from "@azure/msal-react";
 import App from "./App.tsx";
 import {ThemeProvider, createTheme } from "@mui/material";
-import berryTheme from "./styles/theme.ts";
+import berryTheme from "./theme.ts";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
