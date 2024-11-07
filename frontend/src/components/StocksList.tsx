@@ -7,7 +7,7 @@ import {AuthenticatedTemplate} from "@azure/msal-react";
 import {Fab, Paper, Tooltip, Typography} from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home'; // Icône pour l'accueil
 import AddIcon from '@mui/icons-material/Add'; // Icône pour ajouter
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {Theme} from "@mui/material/styles";
 
 const StocksList: React.FC = () => {
@@ -38,12 +38,24 @@ const StocksList: React.FC = () => {
     };
 
     const handleStockDelete = async (stockID: number) => {
-        if (stocks && window.confirm('Are you sure you want to delete this item?')) {
+        // if (stocks && window.confirm('Are you sure you want to delete this item?')) {
+        //     try {
+        //         await deleteStock(stockID);
+        //         setStocks(stocks.filter(stock => stock.id !== stockID)); // Met à jour l'état pour supprimer le stock de la liste
+        //     } catch (error) {
+        //         console.error('Error deleting stock:', error);
+        //     }
+        // }
+        // Afficher un message de confirmation
+        const confirmDelete = window.confirm(
+            'Êtes-vous sûr de vouloir supprimer ce stock ? Cette action est irréversible et entraînera la suppression de son contenu.'
+        );
+        if (confirmDelete) {
             try {
                 await deleteStock(stockID);
-                setStocks(stocks.filter(stock => stock.id !== stockID)); // Met à jour l'état pour supprimer le stock de la liste
+                setStocks(stocks.filter(item => item.id !== stockID));
             } catch (error) {
-                console.error('Error deleting stock:', error);
+                console.error('Erreur lors de la suppression du stock:', error);
             }
         }
     };
@@ -129,26 +141,26 @@ const StocksList: React.FC = () => {
                         {/* Bouton Supprimer */}
                         <Tooltip title="Supprimer le stock" aria-label="delete">
                             <Fab
-                                color="error"
+                                //color="error"
                                 size="small"
                                 onClick={() => handleStockDelete(stock.id)} // Lier le bouton à la fonction de suppression
                                 sx={{
                                     position: 'absolute',
                                     bottom: 10,
-                                    right: 10,
-                                    backgroundColor: 'white',
-                                    color: 'error.main',
+                                    right: 5,
+                                    backgroundColor: 'transparent',
+                                    color: 'primary.main',
                                     padding: 0,
                                     '&:hover': {
                                         boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
-                                        backgroundColor: 'white',
+                                        backgroundColor: 'transparent',
                                         transform: 'scale(1.05)',
                                     },
                                     transition: 'transform 0.3s, box-shadow 0.3s',
                                     zIndex: 1,
                                 }}
                             >
-                                <DeleteIcon sx={{ fontSize: '16px' }}/>
+                                <DeleteForeverIcon sx={{ fontSize: '20px' }}/>
                             </Fab>
                         </Tooltip>
                     </div>
