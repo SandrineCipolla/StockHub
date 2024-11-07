@@ -15,6 +15,7 @@ import Home from "./pages/home/Home.tsx";
 import {ProtectedComponentProps} from "./utils/models.ts";
 import LowStockItemsList from "./components/LowStockItemsList.tsx";
 import ConfirmationPage from "./pages/ConfirmationPage.tsx";
+import ItemConfirmationPage from "./pages/ItemConfirmationPage.tsx";
 
 
 function ProtectedComponent({onLogin}: ProtectedComponentProps) {
@@ -112,9 +113,10 @@ function ProtectedComponent({onLogin}: ProtectedComponentProps) {
                         <Route path="/stocks" element={<StocksList/>}/>
                         <Route path="/items" element={<ItemsList/>}/>
                         <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
-                        <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
+                        <Route path="/stocks/:STOCKID/items/:ITEMID" element={<ItemDetails/>}/>
                         <Route path="/low-stock-items" element={<LowStockItemsList/>}/>
                         <Route path="/confirmation" element={<ConfirmationPage />} />
+                        <Route path="/item-confirmation" element={<ItemConfirmationPage />} />
                     </Routes>
                 </main>
                 <Footer/>

@@ -135,6 +135,8 @@ const StocksList: React.FC = () => {
                                     right: 5,
                                     backgroundColor: 'transparent',
                                     color: 'primary.main',
+                                    border: '1px outset',
+                                    borderColor: 'rgba(139, 92, 246, 0.8)',
                                     padding: 0,
                                     '&:hover': {
                                         boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',

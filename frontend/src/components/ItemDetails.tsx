@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {deleteStockItem, fetchItemDetails, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
+import {fetchItemDetails, updateStockItemQuantity} from "../utils/StockAPIClient.ts";
 import {ItemWithStockLabel} from "../dataModels.ts";
 import {faPlus, faSync, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -10,9 +10,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {Theme} from "@mui/material/styles";
 
 const ItemDetails: React.FC = () => {
-    const {ID} = useParams<{ ID: string }>();
-    const itemID = Number(ID);
-    const stockID = Number(ID);
+    const {STOCKID,ITEMID} = useParams<{ STOCKID: string ,ITEMID:string}>();
+    const itemID = Number(ITEMID);
+    const stockID = Number(STOCKID);
     const [itemDetail, setItemDetail] = useState<ItemWithStockLabel | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -57,15 +57,16 @@ const ItemDetails: React.FC = () => {
         }
     };
 
-    const handleItemDelete = async () => {
-        if (itemDetail && window.confirm('Are you sure you want to delete this item?')) {
-            try {
-                await deleteStockItem(itemDetail.STOCK_ID, itemDetail.ID);
-                navigate(`/stocks/${itemDetail.STOCK_ID}`);
-            } catch (error) {
-                console.error('Error deleting item:', error);
-            }
-        }
+    const handleItemDelete = (stockID: number, itemID: number) => {
+        // if (itemDetail && window.confirm('Are you sure you want to delete this item?')) {
+        //     try {
+        //         await deleteStockItem(itemDetail.STOCK_ID, itemDetail.ID);
+        //         navigate(`/stocks/${itemDetail.STOCK_ID}`);
+        //     } catch (error) {
+        //         console.error('Error deleting item:', error);
+        //     }
+        // }
+        navigate('/item-confirmation', {state: {stockID, itemID}});
     };
 
     if (isLoading) return <div>Loading...</div>;
@@ -179,13 +180,13 @@ const ItemDetails: React.FC = () => {
 
                 {/* Description */}
                 <div className="flex items-center mb-6">
-                    <p className="text-violet-400 font-semibold">Description:</p>
+                    <p className="text-violet-500 font-semibold">Description:</p>
                     <p className="text-gray-300 ml-2">{itemDetail.DESCRIPTION}</p>
                 </div>
 
                 {/* Quantité et mise à jour */}
                 <div className="flex items-center mb-4">
-                    <p className="text-violet-400 font-semibold mr-2">Quantité:</p>
+                    <p className="text-violet-500 font-semibold mr-2">Quantité:</p>
                     <div className="flex items-center">
                         <input
                             type="number"
@@ -193,7 +194,8 @@ const ItemDetails: React.FC = () => {
                             onChange={handleQuantityChange}
                             className="p-1 border rounded w-16 text-center bg-gray-900 text-white border-gray-600"
                         />
-                        <button onClick={handleQuantityUpdate} className="ml-2 p-1 bg-violet-400 text-white rounded">
+                        <button onClick={handleQuantityUpdate}
+                                className="ml-4 p-2 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105 hover:shadow-[0px_0px_15px_5px_rgba(255,255,255,0.5)]">
                             <FontAwesomeIcon icon={faSync}/>
                         </button>
                     </div>
@@ -204,20 +206,32 @@ const ItemDetails: React.FC = () => {
                     Vous êtes dans le stock : {itemDetail ? itemDetail.stockLabel : 'No label available'}
                 </div>
 
-                {/* Suppression (bouton poubelle en bas à gauche) */}
-                <div className="flex justify-between mt-6">
-                    {/* Le bouton poubelle sera sur la gauche */}
-                    <div className="flex justify-start">
-                        <button
-                            onClick={handleItemDelete}
-                            className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700"
-                            aria-label="Supprimer cet article"
-                        >
-                            <FontAwesomeIcon icon={faTrash}/>
-                        </button>
-                    </div>
-
-                </div>
+                {/*</div>*/}
+                {/* Bouton Poubelle en haut à droite */}
+                <Tooltip title="Supprimer cet article" aria-label="delete-item">
+                    <Fab
+                        color="secondary"
+                        onClick={() => handleItemDelete(stockID,itemID)}
+                        size="small"
+                        sx={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 5,
+                            backgroundColor: 'transparent',
+                            color: 'primary.main',
+                            border: '1px outset',
+                            borderColor: 'rgba(139, 92, 246, 0.8)',
+                            '&:hover': {
+                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                backgroundColor: 'transparent',
+                                transform: 'scale(1.05)',
+                            },
+                            transition: 'transform 0.3s, box-shadow 0.3s',
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </Fab>
+                </Tooltip>
             </div>
 
         </div>

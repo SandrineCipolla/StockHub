@@ -137,8 +137,11 @@ export const deleteStock = async (stockID: number) => {
 export const deleteStockItem = async (stockID: number, itemID: number) => {
     const body = {ITEM: itemID}
     const {apiUrl, config} = await getApiConfig('DELETE', body);
+    console.log('URL de la requête:', `${apiUrl}/stocks/${stockID}/items/${itemID}`);
+    console.log('Corps de la requête:', body);
+    console.log('Configuration de la requête:', config);
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
-
+    console.log('Réponse du serveur:', response);
     if (!response.ok) {
         console.error('Error in deleteStockItem');
         throw new Error(`HTTP response with a status ${response.status}`);
