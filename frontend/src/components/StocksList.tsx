@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {deleteStock, fetchStocksList} from "../utils/StockAPIClient.ts";
+import {fetchStocksList} from "../utils/StockAPIClient.ts";
 import {Stock} from "../dataModels.ts";
 import AddStock from "./AddStock.tsx";
 import {AuthenticatedTemplate} from "@azure/msal-react";
@@ -47,17 +47,9 @@ const StocksList: React.FC = () => {
         //     }
         // }
         // Afficher un message de confirmation
-        const confirmDelete = window.confirm(
-            'Êtes-vous sûr de vouloir supprimer ce stock ? Cette action est irréversible et entraînera la suppression de son contenu.'
-        );
-        if (confirmDelete) {
-            try {
-                await deleteStock(stockID);
-                setStocks(stocks.filter(item => item.id !== stockID));
-            } catch (error) {
-                console.error('Erreur lors de la suppression du stock:', error);
-            }
-        }
+        //
+        // Rediriger vers la page de confirmation avec l'ID du stock
+        navigate(`/confirmation`, {state: {stockID}});
     };
     return (
         <AuthenticatedTemplate>
@@ -160,7 +152,7 @@ const StocksList: React.FC = () => {
                                     zIndex: 1,
                                 }}
                             >
-                                <DeleteForeverIcon sx={{ fontSize: '20px' }}/>
+                                <DeleteForeverIcon sx={{fontSize: '20px'}}/>
                             </Fab>
                         </Tooltip>
                     </div>
