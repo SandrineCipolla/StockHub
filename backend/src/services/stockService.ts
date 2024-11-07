@@ -66,6 +66,24 @@ export class StockService {
         }
     }
 
+    async deleteStock(stockID: number, userID: number) {
+        // // Vérifie si le stock existe
+        // const exists = await this.writeStockRepository.existsById(stockID, userID);
+        // if (!exists) {
+        //     throw new NotFoundError("Stock not found or already deleted.", ErrorMessages.DeleteStock);
+        // }
+
+        // Supprime les éléments associés au stock
+        await this.writeStockRepository.deleteStockItemsByStockID(stockID);
+
+        // Si le stock existe, suppression
+        const result = await this.writeStockRepository.deleteStock(stockID, userID);
+        console.log('deleteStock result affectedRows:', result.affectedRows);
+        if (result.affectedRows === 0) {
+            throw new Error("Failed to delete the stock.");
+        }
+    }
+
     async getAllItems(userID:number) {
         return await this.readStockRepository.readAllItems(userID);
     }

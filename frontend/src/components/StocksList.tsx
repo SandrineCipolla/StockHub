@@ -36,17 +36,16 @@ const StocksList: React.FC = () => {
         fetchDataInner();
     };
 
-    const handleStockDelete = async (ID: number) => {
+    const handleStockDelete = async (stockID: number) => {
         if (stocks && window.confirm('Are you sure you want to delete this item?')) {
             try {
-                await deleteStock(ID);
-                navigate(`/stocks/${ID}`);
+                await deleteStock(stockID);
+                setStocks(stocks.filter(stock => stock.id !== stockID)); // Met à jour l'état pour supprimer le stock de la liste
             } catch (error) {
                 console.error('Error deleting stock:', error);
             }
         }
     };
-
     return (
         <AuthenticatedTemplate>
             {/* Bandeau en haut avec le bouton accueil à gauche, texte au centre, et bouton ajout à droite */}
