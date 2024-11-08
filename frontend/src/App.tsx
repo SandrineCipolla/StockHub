@@ -135,8 +135,15 @@ function App() {
             ...protectedResources.stockHubApi.scopes.write,
         ],
     };
-    const handleLogin = () => {
-        instance.loginRedirect(signUpSignInFlowRequest);
+    // const handleLogin = () => {
+    //     instance.loginRedirect(signUpSignInFlowRequest);
+    // };
+    const handleLogin = async () => {
+        try {
+            await instance.loginRedirect(signUpSignInFlowRequest);
+        } catch (error) {
+            console.error("Erreur lors de la connexion:", error);
+        }
     };
 
     return (

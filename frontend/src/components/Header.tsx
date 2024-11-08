@@ -58,12 +58,6 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
             postLogoutRedirectUri: "/",
         });
     };
-    const handleLogin = () => {
-        instance.loginRedirect({
-            scopes: ["user.read", "openid", "profile"], // Scopes de base pour l'authentification
-            redirectUri: "/stocks", // URI vers laquelle l'utilisateur sera redirigé après la connexion
-        });
-    };
 
     const toggleDrawer = (open: boolean) => (event: React.MouseEvent | React.KeyboardEvent) => {
         if (event.type === 'keydown' && (event as React.KeyboardEvent).key === 'Tab') {
@@ -175,7 +169,7 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                         ) : (
                             <ListItemButton
 
-                                onClick={handleLogin}
+                                onClick={onLogin}
                                 sx={{
                                     color: 'white',
                                     transition: 'transform 0.2s, box-shadow 0.2s',
