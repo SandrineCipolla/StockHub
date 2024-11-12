@@ -52,8 +52,13 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
         const atIndex = email.indexOf('@');
         return atIndex !== -1 ? email.substring(0, atIndex) : email; // Retourne la partie avant le "@"
     };
+    const clearLocalStorage = () => {
+        localStorage.removeItem("msal.idtoken");  // Suppression du token d'identité
+        localStorage.removeItem("msal.accesstoken"); // Suppression du token d'accès
 
+    };
     const handleLogout = () => {
+        clearLocalStorage();
         instance.logoutRedirect({
             postLogoutRedirectUri: "/",
         });
