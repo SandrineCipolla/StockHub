@@ -122,7 +122,7 @@ jobs:
       - script: |
           yarn install
         displayName: "Install dependencies"
-        workingDirectory: $(sourceFolderBack)
+        workingDirectory: $(sourceFolderBackend)
 
       - script: |
           yarn run build
@@ -131,7 +131,7 @@ jobs:
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: '$(sourceFolderBack)'
+          rootFolderOrFile: '$(sourceFolderBackend)'
           includeRootFolder: true
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
