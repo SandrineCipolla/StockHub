@@ -13,7 +13,7 @@ variables:
   - name: sourceFolderFront
     value: "frontend"
   - name: sourceFolderBackend
-    value: "frontend"
+    value: "backend"
 
 jobs:
   - job: buildfront
