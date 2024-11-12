@@ -27,7 +27,7 @@ export const msalConfig: Configuration = {
        // authority: "https://stockhubb2c.b2clogin.com/tfp/2b9bbbf5-4706-4eed-86a7-d55a5094b647/B2C_1_signupsignin",
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         knownAuthorities: [b2cPolicies.authorityDomain],
-        redirectUri: "http://localhost:5173/", // L'URI de redirection après la connexion
+        redirectUri: import.meta.env.VITE_REDIRECT_URI, // L'URI de redirection après la connexion
     },
     cache: {
         cacheLocation: "localStorage",
