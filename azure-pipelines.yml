@@ -127,7 +127,7 @@ jobs:
       - script: |
           yarn run build
         displayName: "Build application"
-        workingDirectory:
+        workingDirectory: $(sourceFolderBackend)
 
       - task: ArchiveFiles@2
         inputs:
