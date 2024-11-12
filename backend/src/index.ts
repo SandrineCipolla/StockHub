@@ -26,7 +26,7 @@ const app = express();
 // };
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net'] // Whitelist the domains you want to allow
+    origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net','https://zealous-bay-022807903.5.azurestaticapps.net'] // Whitelist the domains you want to allow
 };
 
 app.use(cors(corsOptions));
