@@ -1,0 +1,148 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - develop
+
+pool:
+  vmImage: ubuntu-latest
+variables:
+  - group: "stockhub-front-variable-group"
+  - name: sourceFolderFront
+    value: "frontend"
+  - name: sourceFolderBackend
+    value: "backend"
+
+jobs:
+  - job: buildfront
+    displayName: "Continuous integration Front"
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.x"
+        displayName: "Install Node.js"
+
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolderFront)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolderFront)
+
+      - script: |
+          yarn run test:ci
+        displayName: "Run tests"
+        workingDirectory: $(sourceFolderFront)
+
+      - task: PublishTestResults@2
+        displayName: "Publish test results"
+        condition: succeededOrFailed() # because otherwise we won't know what tests failed
+        inputs:
+          testResultsFiles: "$(sourceFolderFront)/src/reports/junit.xml"
+
+      - task: PublishCodeCoverageResults@2
+        displayName: "Publish code coverage"
+        inputs:
+          summaryFileLocation: "$(sourceFolderFront)/src/coverage/cobertura-coverage.xml"
+          reportDirectory: "$(sourceFolderFront)/src/coverage"
+
+  - job: buildback
+    displayName: "Continuous integration Backend"
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.x"
+        displayName: "Install Node.js"
+
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolderBackend)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolderBackend)
+
+      - script: |
+          yarn run test:ci
+        displayName: "Run tests"
+        workingDirectory: $(sourceFolderBackend)
+
+      - task: PublishTestResults@2
+        displayName: "Publish test results"
+        condition: succeededOrFailed() # because otherwise we won't know what tests failed
+        inputs:
+          testResultsFiles: "$(sourceFolderBackend)/src/reports/junit.xml"
+
+      - task: PublishCodeCoverageResults@2
+        displayName: "Publish code coverage"
+        inputs:
+          summaryFileLocation: "$(sourceFolderBackend)/src/coverage/cobertura-coverage.xml"
+          reportDirectory: "$(sourceFolderBackend)/src/coverage"
+
+  - job: continuousDeploymentFront
+    displayName: "Continuous deployment front"
+    dependsOn:
+      - buildfront
+      - buildback
+    condition: succeeded()
+    steps:
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolderFront)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolderFront)
+
+      - task: AzureStaticWebApp@0
+        displayName: "Deploy to Azure Static Web Apps"
+        inputs:
+          # workingDirectory: $(sourceFolder)
+          # app_build_command: "yarn run build"
+          skip_app_build: true
+          app_location: "$(sourceFolderFront)/dist"
+          azure_static_web_apps_api_token: $(Azure_UI_WebApp_DeploymentToken)
+
+  - job: continuousDeploymentBack
+    displayName: "Continuous deployment back"
+    dependsOn:
+      - buildfront
+      - buildback
+    condition: succeeded()
+    steps:
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolderBackend)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolderBackend)
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: '$(sourceFolderBackend)'
+          includeRootFolder: true
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          replaceExistingArchive: true
+
+      - task: AzureRmWebAppDeployment@4
+        inputs:
+          ConnectionType: 'AzureRM'
+          azureSubscription: 'Azure subscription 1(ad9f8614-6f0e-455a-a84a-93f6bc1555c2)'
+          appType: 'webAppLinux'
+          WebAppName: 'StockHubAppBack'
+          packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          RuntimeStack: 'NODE|18-lts'
+          StartupCommand: 'yarn run start:prod'
