@@ -52,6 +52,7 @@ export enum ErrorMessages {
     UpdateStockItemQuantity = "Error while updating the stock item quantity:",
     AddStockItem = "Error while adding a new stock item:",
     DeleteStockItem = "Error while deleting the stock item from the database:",
+    DeleteStock = "Error while deleting the stock from the database:",
     GetAllStocks = "Error while retrieving all stocks:",
     CreateStock = "Error while creating a new stock:",
     GetStockDetails = "Error while retrieving the stock details:",

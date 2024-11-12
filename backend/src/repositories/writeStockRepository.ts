@@ -1,4 +1,4 @@
-import {PoolConnection, ResultSetHeader} from "mysql2/promise";
+import {PoolConnection, ResultSetHeader, RowDataPacket} from "mysql2/promise";
 import {Stock, StockToCreate, UpdateStockRequest} from "../models";
 import {ErrorMessages, ValidationError} from "../errors";
 
@@ -52,4 +52,21 @@ export class WriteStockRepository {
         );
         return result;
     }
+
+    async deleteStock(stockID: number,userID:number): Promise<ResultSetHeader> {
+        console.log("Attempting to delete stock with ID - repo:", stockID);
+        const [result] = await this.connection.execute<ResultSetHeader>(
+            "DELETE FROM stocks WHERE ID = ? AND USER_ID = ?",
+            [stockID,userID]
+        );
+        return result;
+    }
+
+    async deleteStockItemsByStockID(stockID: number): Promise<void> {
+        await this.connection.execute(
+            "DELETE FROM items WHERE STOCK_ID = ?",
+            [stockID]
+        );
+    }
+
 }

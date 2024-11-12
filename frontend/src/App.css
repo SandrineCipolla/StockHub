@@ -2,18 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Global Styles */
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
-
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
-    --primary-color: #5b21b6;
-    --primary-color-dark: #4a148c;
-    --primary-color-light: #7e57c2;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -21,6 +14,15 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Body styles for Dark Mode by default */
+body {
+    @apply bg-background text-text; /* cfr dans tailwind.config.ts */
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+/* Container Styles */
 #root {
     max-width: 1280px;
     margin: auto;
@@ -28,72 +30,77 @@
     text-align: center;
 }
 
-
+/* Heading Styles */
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
 }
 
+/* Button Styles */
 button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
+    @apply border border-transparent rounded-lg py-2 px-4 text-white bg-primary cursor-pointer transition-colors duration-300;
 }
 
 button:hover {
-    border-color: #646cff;
+    @apply bg-secondary;
 }
 
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
-.menu:hover {
-  color: #5b21b6;
-}
-.menu:hover {
-  color: #5b21b6;
-}
 
-body {
-    margin: auto;
-    min-width: 320px;
-    min-height: 100vh;
-}
-
-.nav-item {
-    @apply mt-4 mb-4 text-violet-300;
-}
-
+/* Menu Styles */
 .menu {
-    @apply text-violet-300;
+    @apply text-primary;
 }
 
 .menu:hover {
-    color: #5b21b6;
+    @apply text-secondary;
 }
 
+/* Separator Styles */
 .separator {
     margin: 0 10px;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
+/* Styles pour le Light Mode */
+body.light-mode {
+    @apply bg-lightBackground text-lightText; /* cfr les couleurs définies pour le mode clair */
+}
 
+/* Light Mode Button Styles */
+body.light-mode button {
+    @apply bg-lightBackground text-lightText border border-gray-300;
+}
+
+body.light-mode .menu {
+    @apply text-black;
+}
+
+@media (prefers-color-scheme: light) {
+    /* Les styles ci-dessous seront remplacés par les classes Light Mode définies ci-dessus */
     a:hover {
         color: #747bff;
     }
+}
 
-    button {
-        background-color: #f9f9f9;
+@keyframes slide-in {
+    from {
+        transform: translateX(-100%); /* Commence à gauche de l'écran */
+        opacity: 0; /* Invisible au départ */
     }
+    to {
+        transform: translateX(0); /* Va à sa position d'origine */
+        opacity: 1; /* Devient visible */
+    }
+}
+
+.slide-in {
+    animation: slide-in 0.5s ease forwards; /* Applique l'animation */
+}
+
+
+.main-content {
+    padding-bottom: 60px; /* Ajuste la valeur selon la hauteur de la barre d'actions */
 }

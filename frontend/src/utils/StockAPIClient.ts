@@ -1,4 +1,4 @@
-import {Item, Stock, StockDetail, StockItem} from "../dataModels.ts";
+import {Item, ItemWithStockLabel, Stock, StockDetail, StockItem} from "../dataModels.ts";
 import {getApiConfig} from "./utils.ts";
 
 
@@ -41,6 +41,7 @@ export const fetchStocksList = async (): Promise<Stock[]> => {
 export const fetchStockDetails = async (numericID: number): Promise<StockDetail> => {
     const {apiUrl, config} = await getApiConfig();
     const response = await fetch(`${apiUrl}/stocks/${numericID}`, config);
+    console.log('Réponse API:', response);
 
     if (!response.ok) {
         console.error('Error in fetching stock details');
@@ -48,6 +49,7 @@ export const fetchStockDetails = async (numericID: number): Promise<StockDetail>
     }
 
     const data = await response.json();
+    console.log('Données du stock récupérées:', data);
 
     if (Array.isArray(data)) {
         return data[0] as StockDetail;
@@ -119,11 +121,27 @@ export const addStock = async (LABEL: string, DESCRIPTION: string): Promise<Stoc
     return await response.json();
 };
 
+export const deleteStock = async (stockID: number) => {
+   const body = {STOCK: stockID}
+    const {apiUrl, config} = await getApiConfig('DELETE', body);
+    const response = await fetch(`${apiUrl}/stocks/${stockID}`, config);
+    console.log('deleteStock HTTP response status:', response.status);
+    if (!response.ok) {
+        console.error('Error in deleteStock');
+        throw new Error(`HTTP response with a status ${response.status}`);
+    }
+
+    return await response.json();
+};
+
 export const deleteStockItem = async (stockID: number, itemID: number) => {
     const body = {ITEM: itemID}
     const {apiUrl, config} = await getApiConfig('DELETE', body);
+    console.log('URL de la requête:', `${apiUrl}/stocks/${stockID}/items/${itemID}`);
+    console.log('Corps de la requête:', body);
+    console.log('Configuration de la requête:', config);
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
-
+    console.log('Réponse du serveur:', response);
     if (!response.ok) {
         console.error('Error in deleteStockItem');
         throw new Error(`HTTP response with a status ${response.status}`);
@@ -156,7 +174,7 @@ export const fetchItemsList = async (): Promise<Item[]> => {
     }
 };
 
-export const fetchItemDetails = async (stockID: number, itemID: number): Promise<Item> => {
+export const fetchItemDetails = async (stockID: number, itemID: number): Promise<ItemWithStockLabel> => {
     const {apiUrl, config} = await getApiConfig();
     const response = await fetch(`${apiUrl}/stocks/${stockID}/items/${itemID}`, config);
 
@@ -165,10 +183,10 @@ export const fetchItemDetails = async (stockID: number, itemID: number): Promise
         throw new Error(`HTTP response with a status ${response.status}`);
     }
 
-    const data: Item = await response.json();
+    const data: ItemWithStockLabel = await response.json();
     console.log(data);
 
-    return data as Item;
+    return data as ItemWithStockLabel;
 
 };
 

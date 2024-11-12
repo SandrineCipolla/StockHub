@@ -119,6 +119,19 @@ export class StockController {
         }
     }
 
+    async deleteStock(req: Request, res: Response) {
+        try {
+            const OID = (req as any).userID as string;
+            const userID = await this.userService.convertOIDtoUserID(OID);
+            const stockID = Number(req.params.stockID);
+            await this.stockService.deleteStock(stockID,userID.value);
+            res.status(HTTP_CODE_OK).json({message: "Stock deleted successfully."});
+        } catch (err: any) {
+            console.error("Error in deleteStock:", err);
+            sendError(res, err as CustomError);
+        }
+    }
+
     async getAllItems(req: Request, res: Response) {
         try {
             const OID = (req as any).userID as string;

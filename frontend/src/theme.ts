@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material";
+import {createTheme} from "@mui/material";
 
 declare module '@mui/material/styles/createPalette' {
     interface PaletteOptions {
@@ -26,4 +26,14 @@ const berryTheme = createTheme({
     },
 });
 
+
 export default berryTheme;
+
+// import {DefaultTheme} from "styled-components";
+// import tailwindConfig from "../tailwind.config";
+//
+// const theme: DefaultTheme = {
+//     colors: tailwindConfig.theme.extend.colors,
+// };
+//
+// export default theme;

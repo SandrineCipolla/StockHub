@@ -29,7 +29,11 @@ export class ReadStockRepository {
     }
 
     async readItemDetails(itemID: number) {
-        const [items] = await this.connection.query("SELECT * FROM items WHERE ID = ?", [itemID]) as [RowDataPacket[], FieldPacket[]];
+        const [items] = await this.connection.query(
+            "SELECT items.*, stocks.label AS stockLabel \n" +
+            "         FROM items \n" +
+            "         JOIN stocks ON items.stock_id = stocks.id \n" +
+            "         WHERE items.ID = ?", [itemID]) as [RowDataPacket[], FieldPacket[]];
         return items;
     }
 

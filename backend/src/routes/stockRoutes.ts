@@ -99,6 +99,19 @@ const configureStockRoutes = async (): Promise<Router> => {
         }
     });
 
+    //Route pour supprimer un stock
+    router.delete("/stocks/:stockID", async (req, res) => {
+        const stockID = Number(req.params.stockID);
+        console.log(`Attempting to delete stock with ID: ${stockID}`);
+        try {
+            await stockController.deleteStock(req, res);
+            console.log(`Stock with ID ${stockID} deleted successfully`);
+        } catch (error) {
+            console.error(`Error in DELETE /stocks/${stockID}:`, error);
+            res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while deleting the stock from the database."});
+        }
+    });
+
     //Route pour récupérer la liste des items
     router.get("/items", async (req, res) => {
         try {

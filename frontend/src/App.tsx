@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/Header.tsx";
 import Footer from "./components/Footer";
 import StocksList from "./components/StocksList";
 import "./App.css";
@@ -14,6 +14,9 @@ import ItemDetails from "./components/ItemDetails.tsx";
 import Home from "./pages/home/Home.tsx";
 import {ProtectedComponentProps} from "./utils/models.ts";
 import LowStockItemsList from "./components/LowStockItemsList.tsx";
+import ConfirmationPage from "./pages/ConfirmationPage.tsx";
+import ItemConfirmationPage from "./pages/ItemConfirmationPage.tsx";
+
 
 function ProtectedComponent({onLogin}: ProtectedComponentProps) {
     const {instance} = useMsal();
@@ -110,8 +113,10 @@ function ProtectedComponent({onLogin}: ProtectedComponentProps) {
                         <Route path="/stocks" element={<StocksList/>}/>
                         <Route path="/items" element={<ItemsList/>}/>
                         <Route path="/stocks/:ID" element={<StockDetailsWithItems/>}/>
-                        <Route path="/stocks/:ID/items/:ID" element={<ItemDetails/>}/>
-                        <Route path="/low-stock-items" element={<LowStockItemsList />} />
+                        <Route path="/stocks/:STOCKID/items/:ITEMID" element={<ItemDetails/>}/>
+                        <Route path="/low-stock-items" element={<LowStockItemsList/>}/>
+                        <Route path="/confirmation" element={<ConfirmationPage />} />
+                        <Route path="/item-confirmation" element={<ItemConfirmationPage />} />
                     </Routes>
                 </main>
                 <Footer/>
@@ -130,11 +135,21 @@ function App() {
             ...protectedResources.stockHubApi.scopes.write,
         ],
     };
-    const handleLogin = () => {
-        instance.loginRedirect(signUpSignInFlowRequest);
+    // const handleLogin = () => {
+    //     instance.loginRedirect(signUpSignInFlowRequest);
+    // };
+    const handleLogin = async () => {
+        try {
+            await instance.loginRedirect(signUpSignInFlowRequest);
+        } catch (error) {
+            console.error("Erreur lors de la connexion:", error);
+        }
     };
 
     return (
+        // <ThemeProvider theme={theme}>
+        //     <ProtectedComponent onLogin={handleLogin}/>
+        // </ThemeProvider>
         <div>
             <ProtectedComponent onLogin={handleLogin}/>
         </div>
