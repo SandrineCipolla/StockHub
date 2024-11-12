@@ -32,13 +32,22 @@ const StockDetails: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col h-full justify-between">
-
-            <div>
-                <h2 className="text-lg font-bold mb-2 mt-2">{stockDetail.LABEL}</h2>
-                <p className="text-m font-semibold">{stockDetail.DESCRIPTION}</p>
-            </div>
-
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',  // Centre verticalement
+            alignItems: 'center',      // Centre horizontalement
+            height: '100%',             // Prend toute la hauteur disponible
+            textAlign: 'center', // Centre le texte
+            marginBottom:'10px',
+        }}>
+            {/* Titre centré avec flex: 1 */}
+            <h2 className="text-lg font-bold mb-2 mt-2">
+                {stockDetail.LABEL}
+            </h2>
+            <p className="text-m font-semibold">
+                {stockDetail.DESCRIPTION}
+            </p>
         </div>
     );
 };
