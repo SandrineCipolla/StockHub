@@ -92,12 +92,12 @@ jobs:
       - script: |
           yarn install
         displayName: "Install dependencies"
-        workingDirectory: $(sourceFolder)
+        workingDirectory: $(sourceFolderFront)
 
       - script: |
           yarn run build
         displayName: "Build application"
-        workingDirectory: $(sourceFolder)
+        workingDirectory: $(sourceFolderFront)
 
       - task: AzureStaticWebApp@0
         displayName: "Deploy to Azure Static Web Apps"
@@ -105,5 +105,5 @@ jobs:
           # workingDirectory: $(sourceFolder)
           # app_build_command: "yarn run build"
           skip_app_build: true
-          app_location: "$(sourceFolder)/dist"
+          app_location: "$(sourceFolderFront)/dist"
           azure_static_web_apps_api_token: $(Azure_UI_WebApp_DeploymentToken)
