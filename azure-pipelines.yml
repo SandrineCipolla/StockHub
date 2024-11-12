@@ -99,6 +99,10 @@ jobs:
         workingDirectory: $(sourceFolderFront)
 
       - script: |
+          echo "VITE_REDIRECT_URI=$(VITE_REDIRECT_URI)" >  $(sourceFolderFront)/.env
+        displayName: "Generate .env file"
+
+      - script: |
           yarn run build
         displayName: "Build application"
         workingDirectory: $(sourceFolderFront)
