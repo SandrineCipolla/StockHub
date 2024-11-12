@@ -100,6 +100,7 @@ jobs:
 
       - script: |
           echo "VITE_REDIRECT_URI=$(VITE_REDIRECT_URI)" >  $(sourceFolderFront)/.env
+          echo "VITE_API_SERVER_URL=$(VITE_API_SERVER_URL)" >> $(sourceFolderFront)/.env
         displayName: "Generate .env file"
 
       - script: |
