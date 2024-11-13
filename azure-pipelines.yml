@@ -150,6 +150,6 @@ jobs:
           azureSubscription: 'Azure subscription 1(ad9f8614-6f0e-455a-a84a-93f6bc1555c2)'
           appType: 'webAppLinux'
           appName: 'StockHubAppBack'
-          package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+          package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           runtimeStack: 'NODE|18-lts'
           startUpCommand: 'npm run start:prod'
