@@ -21,6 +21,9 @@ const StyledBox = styled(Box)(({theme}) => ({
     display: 'flex',
     justifyContent: 'space-between', // Assure que les éléments sont bien alignés
     alignItems: 'center', // Centre verticalement les éléments
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(1),
+    },
 }));
 
 const StyledButton = styled(Button)(({theme}) => ({
@@ -78,24 +81,31 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                     <Typography variant="h3">StockHub</Typography>
                 </Box>
                 <Box display="flex" alignItems="center">
-                    {activeAccount ? (
-                        <>
-                            <Typography variant="body2" sx={{marginRight: '10px'}}>
-                                {/*Bienvenue {getUsername(instance.getAllAccounts())}*/}
-                                Bienvenue {getUsernameWithoutDomain(getUsername(instance.getAllAccounts()))}
-                            </Typography>
-                            <StyledButton onClick={handleLogout} sx={{marginRight: '16px'}}>
-                                <LogoutIcon sx={{marginRight: '4px'}}/>Logout</StyledButton>
-                        </>
-                    ) : (
-                        <StyledButton onClick={onLogin} sx={{marginRight: '16px'}}> <LoginIcon
-                            sx={{marginRight: '4px'}}/>Login</StyledButton>
+                    {/*  bouton Login/Logout dans le header uniquement sur les écrans larges */}
+                    {activeAccount && (
+                        <Typography variant="body2" sx={{marginRight: '10px'}}>
+                            Bienvenue {getUsernameWithoutDomain(getUsername(instance.getAllAccounts()))}
+                        </Typography>
                     )}
+                    <Box sx={{display: {xs: 'none', sm: 'flex'}}}>
+                        {activeAccount ? (
+                            <StyledButton onClick={handleLogout} sx={{marginRight: '16px'}}>
+                                <LogoutIcon sx={{marginRight: '4px'}}/>Logout
+                            </StyledButton>
+                        ) : (
+                            <StyledButton onClick={onLogin} sx={{marginRight: '16px'}}>
+                                <LoginIcon sx={{marginRight: '4px'}}/>Login
+                            </StyledButton>
+                        )}
+                    </Box>
+
+                    {/* Menu hamburger */}
                     <IconButton onClick={toggleDrawer(true)} edge="end" color="inherit">
                         <MenuIcon/>
                     </IconButton>
                 </Box>
             </StyledBox>
+
             <Drawer
                 anchor="right"
                 open={drawerOpen}
@@ -109,12 +119,13 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
             >
                 {/* Menu items can be added here */}
                 <Box role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}
-                     sx={{color: 'white'}}>
+                     sx={{color: 'white', display: 'flex', flexDirection: 'column', height: '100vh',}}>
                     <Typography variant="h6" sx={{padding: 2}}>Menu</Typography>
-                    {/* Ajoutez des éléments de menu ici */}
+
+                    {/* éléments de menu */}
                     <Divider sx={{borderColor: 'rgba(255, 255, 255, 0.2)'}}/>
 
-                    <List>
+                    <List sx={{flexGrow: 1}}>
                         {activeAccount ? (
                             <>
                                 <ListItemButton
@@ -122,13 +133,31 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                                     to="/stocks"
                                     sx={{
                                         color: 'white',
-                                        textDecoration: 'none', // Supprimer le soulignement du lien
+                                        textDecoration: 'none',
+                                        // touchAction: 'manipulation',
+                                        // userSelect: 'none',
                                         transition: 'transform 0.2s, box-shadow 0.2s',
+                                        margin: '5px 0',
+
                                         '&:hover': {
                                             transform: 'scale(1.05)',
                                             boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
                                             color: 'white',
-                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
+                                            textDecoration: 'none',
+                                        },
+
+                                        '@media (max-width: 600px)': {
+                                            border: '1px solid white',
+                                            backgroundColor: 'transparent',
+                                            borderRadius: '50px',
+                                            '&:active': {
+                                                transform: 'scale(0.95)',
+                                                boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                                color: 'white',
+                                                textDecoration: 'none',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                borderRadius: '50px',
+                                            },
                                         },
                                     }}
                                 >
@@ -139,16 +168,34 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                                     component={Link}
                                     to="/items"
                                     sx={{
-                                        color: 'white',
-                                        textDecoration: 'none', // Supprimer le soulignement du lien
-                                        transition: 'transform 0.2s, box-shadow 0.2s',
-                                        '&:hover': {
-                                            transform: 'scale(1.05)',
-                                            boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
                                             color: 'white',
-                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
-                                        },
-                                    }}
+                                            textDecoration: 'none',
+                                            // touchAction: 'manipulation',
+                                            // userSelect: 'none',
+                                            transition: 'transform 0.2s, box-shadow 0.2s',
+                                            margin: '5px 0',
+
+                                            '&:hover': {
+                                                transform: 'scale(1.05)',
+                                                boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                                color: 'white',
+                                                textDecoration: 'none',
+                                            },
+
+                                            '@media (max-width: 600px)': {
+                                                border: '1px solid white',
+                                                backgroundColor: 'transparent',
+                                                borderRadius: '50px',
+                                                '&:active': {
+                                                    transform: 'scale(0.95)',
+                                                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                                    color: 'white',
+                                                    textDecoration: 'none',
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                    borderRadius: '50px',
+                                                },
+                                            },
+                                        }}
                                 >
                                     <ListItemText primary="Mes produits"/>
                                 </ListItemButton>
@@ -158,17 +205,72 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                                     to="/low-stock-items"
                                     sx={{
                                         color: 'white',
-                                        textDecoration: 'none', // Supprimer le soulignement du lien
+                                        textDecoration: 'none',
+                                        // touchAction: 'manipulation',
+                                        // userSelect: 'none',
                                         transition: 'transform 0.2s, box-shadow 0.2s',
+                                        margin: '5px 0',
+
                                         '&:hover': {
                                             transform: 'scale(1.05)',
                                             boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
                                             color: 'white',
-                                            textDecoration: 'none', // Assurez-vous que le soulignement disparaît au hover aussi
+                                            textDecoration: 'none',
+                                        },
+
+                                        '@media (max-width: 600px)': {
+                                            border: '1px solid white',
+                                            backgroundColor: 'transparent',
+                                            borderRadius: '50px',
+                                            '&:active': {
+                                                transform: 'scale(0.95)',
+                                                boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                                color: 'white',
+                                                textDecoration: 'none',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                borderRadius: '50px',
+                                            },
                                         },
                                     }}
                                 >
                                     <ListItemText primary="Stocks faibles"/>
+                                </ListItemButton>
+
+                                <ListItemButton onClick={handleLogout}
+                                                sx={{
+                                                    color: 'white',
+                                                    textDecoration: 'none', // Supprimer le soulignement du lien
+                                                    transition: 'transform 0.2s, box-shadow 0.2s',
+                                                    margin: '5px 0',
+
+                                                    '&:hover': {
+                                                        transform: 'scale(1.05)',
+                                                        boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                                                        color: 'white',
+                                                        textDecoration: 'none',
+                                                    },
+
+                                                    '@media (max-width: 600px)': {
+                                                        marginTop: '480px',
+                                                        border: '1px solid white', // Bordure blanche visible sur mobile
+                                                        backgroundColor: 'transparent', // Fond transparent par défaut
+                                                        borderRadius: '50px',
+                                                        '&:active': {
+                                                            transform: 'scale(0.95)',
+                                                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                                            color: 'white',
+                                                            textDecoration: 'none',
+                                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                            borderRadius: '50px',
+                                                        },
+                                                    },
+                                                    '@media (min-width: 601px)': {
+                                                        marginTop: '350px',
+                                                    },
+                                                }}
+
+                                >
+                                    <ListItemText primary="Se déconnecter"/>
                                 </ListItemButton>
                             </>
                         ) : (
@@ -177,11 +279,29 @@ const Header: React.FC<{ onLogin: () => void }> = ({onLogin}) => {
                                 onClick={onLogin}
                                 sx={{
                                     color: 'white',
+                                    textDecoration: 'none', // Supprimer le soulignement du lien
                                     transition: 'transform 0.2s, box-shadow 0.2s',
+                                    margin: '5px 0',
+
                                     '&:hover': {
                                         transform: 'scale(1.05)',
                                         boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
                                         color: 'white',
+                                        textDecoration: 'none',
+                                    },
+
+                                    '@media (max-width: 600px)': {
+                                        border: '1px solid white', // Bordure blanche visible sur mobile
+                                        backgroundColor: 'transparent', // Fond transparent par défaut
+                                        borderRadius: '50px',
+                                        '&:active': {
+                                            transform: 'scale(0.95)',
+                                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                            color: 'white',
+                                            textDecoration: 'none',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                            borderRadius: '50px',
+                                        },
                                     },
                                 }}
                             >
