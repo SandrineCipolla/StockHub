@@ -2,6 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+
+* {
+    box-sizing: border-box; /* Inclut padding et border dans la largeur des éléments */
+}
+
 /* Global Styles */
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -24,9 +29,10 @@ body {
 
 /* Container Styles */
 #root {
-    max-width: 1280px;
+   /*max-width: 1280px;*/
+    max-width: 100%;
     margin: auto;
-    padding: 2rem;
+    padding: 1rem;
     text-align: center;
 }
 
@@ -103,4 +109,18 @@ body.light-mode .menu {
 
 .main-content {
     padding-bottom: 60px; /* Ajuste la valeur selon la hauteur de la barre d'actions */
+}
+
+@media (max-width: 640px) {
+    #root {
+        padding: 1rem; /* Réduit le padding pour mobile */
+    }
+
+    h1 {
+        font-size: 2.5em; /* Ajuste la taille des titres sur mobile */
+    }
+
+    button {
+        @apply py-1 px-3 text-sm; /* Réduit la taille des boutons sur mobile */
+    }
 }
