@@ -14,6 +14,12 @@ const AddStockItem = forwardRef<{ handleShowForm: () => void }, AddStockItemProp
     const [showForm, setShowForm] = useState(false);
     const {setStockItems} = useContext(StockItemsContext);
 
+    const [touched, setTouched] = useState({
+        label: false,
+        description: false,
+        quantity: false
+    });
+
     useEffect(() => {
         Modal.setAppElement('#root');
     }, []);
@@ -32,8 +38,14 @@ const AddStockItem = forwardRef<{ handleShowForm: () => void }, AddStockItemProp
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (label.trim() === '' || description.trim() === '' || !Number.isInteger(quantity) || quantity <= 0) {
+            setTouched({ label: true, description: true, quantity: true });
+            return;
+        }
+
         try {
-            console.info('Submitting form with values:', {LABEL: label, DESCRIPTION: description, QUANTITY: quantity});
+            console.info('Submitting form with values:', { LABEL: label, DESCRIPTION: description, QUANTITY: quantity });
             await addStockItem(stockID, {
                 LABEL: label,
                 DESCRIPTION: description,
@@ -87,15 +99,68 @@ const AddStockItem = forwardRef<{ handleShowForm: () => void }, AddStockItemProp
 
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col mt-10 space-y-5">
-                            <input type="text" id="description" name="description" value={label} onChange={e => setLabel(e.target.value)} placeholder="Label"
-                                   required className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
-                            <input type="text" id="description" name="description" value={description} onChange={e => setDescription(e.target.value)}
-                                   placeholder="Description" required className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
-                            <input type="number" id="quantity" name="quantity" value={quantity} onChange={e => setQuantity(Number(e.target.value))}
-                                   placeholder="Quantity" required  className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
+                            {/* Champ Label */}
+                            <input
+                                type="text"
+                                id="label"
+                                name="label"
+                                value={label}
+                                onChange={e => setLabel(e.target.value)}
+                                onFocus={() => setTouched({...touched, label: true})}
+                                onBlur={() => setTouched({...touched, label: true})}
+                                placeholder="Label"
+                                className={`border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 ${
+                                    touched.label && label.trim() === '' ? 'border-red-500' : 'focus:ring-violet-500'
+                                }`}
+                                required
+                            />
+                            {touched.label && label.trim() === '' && (
+                                <span className="text-red-500">Le label est requis</span>
+                            )}
+
+                            {/* Champ Description */}
+                            <input
+                                type="text"
+                                id="description"
+                                name="description"
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                                onFocus={() => setTouched({...touched, description: true})}
+                                onBlur={() => setTouched({...touched, description: true})}
+                                placeholder="Description"
+                                className={`border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 ${
+                                    touched.description && description.trim() === '' ? 'border-red-500' : 'focus:ring-violet-500'
+                                }`}
+                                required
+                            />
+                            {touched.description && description.trim() === '' && (
+                                <span className="text-red-500">La description est requise</span>
+                            )}
+
+                            {/* Champ Quantity */}
+                            <input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                value={quantity}
+                                onChange={e => setQuantity(Number(e.target.value))}
+                                onFocus={() => setTouched({...touched, quantity: true})}
+                                onBlur={() => setTouched({...touched, quantity: true})}
+                                placeholder="Quantity"
+                                className={`border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 ${
+                                    touched.quantity && (!Number.isInteger(quantity) || quantity <= 0) ? 'border-red-500' : 'focus:ring-violet-500'
+                                }`}
+                                required
+                            />
+                            {touched.quantity && (!Number.isInteger(quantity) || quantity <= 0) && (
+                                <span className="text-red-500">La quantité doit être un entier positif</span>
+                            )}
                         </div>
                         <div className="flex justify-center mt-5">
-                            <button type="submit" className="p-3 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105 hover:shadow-[0px_0px_15px_5px_rgba(255,255,255,0.5)]">Add Item</button>
+                            <button type="submit"
+                                    className="p-3 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105 hover:shadow-[0px_0px_15px_5px_rgba(255,255,255,0.5)]">Add
+                                Item
+                            </button>
                         </div>
                     </form>
                 </div>
