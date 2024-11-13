@@ -135,13 +135,13 @@ jobs:
         workingDirectory: $(sourceFolderBackend)
 
       - script: |
-          yarn run package
+          yarn run build
         displayName: "Build application"
         workingDirectory: $(sourceFolderBackend)
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: '$(sourceFolderBackend)/dist'
+          rootFolderOrFile: '$(sourceFolderBackend)'
           includeRootFolder: true
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -155,4 +155,4 @@ jobs:
           WebAppName: 'StockHubAppBack'
           packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           RuntimeStack: 'NODE|18-lts'
-          StartupCommand: 'node server.js'
+          StartupCommand: 'npm run start:prod'
