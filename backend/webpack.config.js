@@ -8,7 +8,7 @@ module.exports = {
     target: 'node', // Spécifie que le bundle est pour Node.js, pas pour le navigateur
 
     output: {
-        path: path.resolve(__dirname, 'package'),
+        path: path.resolve(__dirname, 'dist'),
         filename: 'server.js',
     },
     resolve: {
