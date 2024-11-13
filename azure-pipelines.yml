@@ -90,7 +90,6 @@ jobs:
     displayName: "Continuous deployment front"
     dependsOn:
       - buildfront
-      - buildback
     condition: succeeded()
     steps:
       - script: |
@@ -120,7 +119,6 @@ jobs:
   - job: continuousDeploymentBack
     displayName: "Continuous deployment back"
     dependsOn:
-      - buildfront
       - buildback
     condition: succeeded()
     steps:
