@@ -13,6 +13,10 @@ const AddStock = forwardRef<{ handleShowForm: () => void }, AddStockProps>(({onS
     const [description, setDescription] = useState('');
     const [showForm, setShowForm] = useState(false);
 
+    const [touched, setTouched] = useState({
+        label: false,
+        description: false
+    });
 
     useEffect(() => {
         Modal.setAppElement('#root');
@@ -32,6 +36,11 @@ const AddStock = forwardRef<{ handleShowForm: () => void }, AddStockProps>(({onS
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (label.trim() === '' || description.trim() === '') {
+            setTouched({ label: true, description: true });
+            return;
+        }
         try {
             console.info('Submitting form with values:', {LABEL: label, DESCRIPTION: description});
             await addStock(
@@ -82,15 +91,45 @@ const AddStock = forwardRef<{ handleShowForm: () => void }, AddStockProps>(({onS
 
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col mt-10 space-y-5">
-                            <input type="text" id="label" name="label" value={label}
-                                   onChange={e => setLabel(e.target.value)}
-                                   placeholder="Label"
-                                   required
-                                   className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
-                            <input type="text" id="description" name="description" value={description}
-                                   onChange={e => setDescription(e.target.value)}
-                                   placeholder="Description" className="border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 focus:ring-violet-500"/>
+                            {/* Champ Label avec validation */}
+                            <input
+                                type="text"
+                                id="label"
+                                name="label"
+                                value={label}
+                                onChange={e => setLabel(e.target.value)}
+                                onFocus={() => setTouched({...touched, label: true})}
+                                onBlur={() => setTouched({...touched, label: true})}
+                                placeholder="Label"
+                                className={`border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 ${
+                                    touched.label && label.trim() === '' ? 'border-red-500' : 'focus:ring-violet-500'
+                                }`}
+                                required
+                            />
+                            {touched.label && label.trim() === '' && (
+                                <span className="text-red-500">Le label est requis</span>
+                            )}
+
+                            {/* Champ Description avec validation */}
+                            <input
+                                type="text"
+                                id="description"
+                                name="description"
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                                onFocus={() => setTouched({...touched, description: true})}
+                                onBlur={() => setTouched({...touched, description: true})}
+                                placeholder="Description"
+                                className={`border p-2 rounded-lg bg-gray-800 text-white shadow focus:outline-none focus:ring-2 ${
+                                    touched.description && description.trim() === '' ? 'border-red-500' : 'focus:ring-violet-500'
+                                }`}
+                                required
+                            />
+                            {touched.description && description.trim() === '' && (
+                                <span className="text-red-500">La description est requise</span>
+                            )}
                         </div>
+
                         <div className="flex justify-center mt-5">
                             <button type="submit"
                                     className="p-3 bg-violet-700 text-white rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-violet-600 hover:scale-105 hover:shadow-[0px_0px_15px_5px_rgba(255,255,255,0.5)]">Add
