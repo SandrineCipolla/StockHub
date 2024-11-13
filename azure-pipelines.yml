@@ -141,8 +141,8 @@ jobs:
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: '$(sourceFolderBackend)/package'
-          includeRootFolder: false
+          rootFolderOrFile: '$(sourceFolderBackend)/dist'
+          includeRootFolder: true
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           replaceExistingArchive: true

@@ -10,7 +10,7 @@
     "test:ci": "jest --config=jest.ci.config.js --detectOpenHandles --forceExit",
     "test:coverage": "COVERAGE=true jest --config=jest.ci.config.js --passWithNoTests --detectOpenHandles --forceExit",
     "build": "tsc --project tsconfig.json",
-    "package": "rimraf package && webpack"
+    "package": "rimraf dist && webpack"
   },
   "keywords": [],
   "author": "",
