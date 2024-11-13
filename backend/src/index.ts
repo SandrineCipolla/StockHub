@@ -11,19 +11,12 @@ import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
 import {WriteUserRepository} from "./services/writeUserRepository";
 import configureUserRoutes from "./routes/userRoutes";
-//import appInsights from 'applicationinsights';
+import appInsights from 'applicationinsights';
 
 dotenv.config();
 
 const app = express();
 
-// Define the CORS options
-// const corsOptions = {
-//     credentials: true,
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//     origin: ['http://localhost:5173','https://stockhubappback.azurewebsites.net'] // Whitelist the domains you want to allow
-// };
 const corsOptions = {
     credentials: true,
     origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net','https://zealous-bay-022807903.5.azurestaticapps.net'] // Whitelist the domains you want to allow
@@ -33,7 +26,7 @@ app.use(cors(corsOptions));
 
 const port = process.env.PORT || 8080;
 
-/*
+
 appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4b14-bb84-b838715ad701')
     .setAutoDependencyCorrelation(true)
     .setAutoCollectRequests(true)
@@ -42,15 +35,7 @@ appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4
     .setAutoCollectDependencies(true)
     .setAutoCollectConsole(true)
     .setSendLiveMetrics(true)
-    .start();*/
-
-app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(200); // Réponse 200 OK pour les requêtes préliminaires
-});
+    .start();
 
 
 export async function initializeApp() {
