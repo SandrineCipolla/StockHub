@@ -134,7 +134,7 @@ jobs:
         inputs:
           cleanTargetFolder: true
           sshEndpoint: $(currentSshEndpoint)
-          contents: "$(sourceFolderBack)/**"
+          contents: "$(sourceFolderBackend)/**"
           targetFolder: $(deployDirectoryBack)
           readyTimeout: "20000"
           delayBetweenUploads: "5"
@@ -145,4 +145,4 @@ jobs:
           sshEndpoint: $(currentSshEndpoint)
           runOptions: "inline"
           inline: |
-            sudo docker build --no-cache $(deployDirectoryBack)/$(sourceFolderBack) -t "backend_stockhub" 2>&1
+            sudo docker build --no-cache $(deployDirectoryBack)/$(sourceFolderBackend) -t "backend_stockhub" 2>&1
