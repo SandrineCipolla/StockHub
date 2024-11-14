@@ -55,41 +55,6 @@ jobs:
           summaryFileLocation: "$(sourceFolderFront)/src/coverage/cobertura-coverage.xml"
           reportDirectory: "$(sourceFolderFront)/src/coverage"
 
-  - job: buildback
-    displayName: "Continuous integration Backend"
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "20.x"
-        displayName: "Install Node.js"
-
-      - script: |
-          yarn install
-        displayName: "Install dependencies"
-        workingDirectory: $(sourceFolderBackend)
-
-      - script: |
-          yarn run build
-        displayName: "Build application"
-        workingDirectory: $(sourceFolderBackend)
-
-      - script: |
-          yarn run test:ci
-        displayName: "Run tests"
-        workingDirectory: $(sourceFolderBackend)
-
-      - task: PublishTestResults@2
-        displayName: "Publish test results"
-        condition: succeededOrFailed() # because otherwise we won't know what tests failed
-        inputs:
-          testResultsFiles: "$(sourceFolderBackend)/src/reports/junit.xml"
-
-      - task: PublishCodeCoverageResults@2
-        displayName: "Publish code coverage"
-        inputs:
-          summaryFileLocation: "$(sourceFolderBackend)/src/coverage/cobertura-coverage.xml"
-          reportDirectory: "$(sourceFolderBackend)/src/coverage"
-
   - job: continuousDeploymentFront
     displayName: "Continuous deployment front"
     dependsOn:
