@@ -14,6 +14,10 @@ variables:
     value: "frontend"
   - name: sourceFolderBackend
     value: "backend"
+  - name: deployDirectory
+    value: "/home/stockhub-deploy/deploy_front"
+  - name: currentSshEndpoint
+    value: "ssh-stockhub-deploy"
 
 jobs:
   - job: buildfront
@@ -92,64 +96,26 @@ jobs:
       - buildfront
     condition: succeeded()
     steps:
-      - script: |
-          yarn install
-        displayName: "Install dependencies"
-        workingDirectory: $(sourceFolderFront)
-
+      
       - script: |
           echo "VITE_REDIRECT_URI=$(VITE_REDIRECT_URI)" >  $(sourceFolderFront)/.env
           echo "VITE_API_SERVER_URL=$(VITE_API_SERVER_URL)" >> $(sourceFolderFront)/.env
         displayName: "Generate .env file"
 
-      - script: |
-          yarn run build
-        displayName: "Build application"
-        workingDirectory: $(sourceFolderFront)
-
-      - task: AzureStaticWebApp@0
-        displayName: "Deploy to Azure Static Web Apps"
+      - task: CopyFilesOverSSH@0
+        displayName: "Copy dist to remote server"
         inputs:
-          # workingDirectory: $(sourceFolder)
-          # app_build_command: "yarn run build"
-          skip_app_build: true
-          app_location: "$(sourceFolderFront)/dist"
-          azure_static_web_apps_api_token: $(Azure_UI_WebApp_DeploymentToken)
+          cleanTargetFolder: true
+          sshEndpoint: $(currentSshEndpoint)
+          contents: "$(sourceFolderFront)"
+          targetFolder: $(deployDirectory)
+          readyTimeout: "20000"
+          delayBetweenUploads: "5"
 
-  - job: continuousDeploymentBack
-    displayName: "Continuous deployment back"
-    dependsOn:
-      - buildback
-    condition: succeeded()
-    steps:
-      - task: NodeTool@0
+      - task: SSH@0
+        displayName: "create docker image"
         inputs:
-          versionSpec: "20.x"
-        displayName: "Install Node.js"
-
-      - script: |
-          yarn install
-        displayName: "Install dependencies"
-        workingDirectory: $(sourceFolderBackend)
-
-      - script: |
-          yarn run build
-        displayName: "Build application"
-        workingDirectory: $(sourceFolderBackend)
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: '$(sourceFolderBackend)'
-          includeRootFolder: true
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          replaceExistingArchive: true
-
-      - task: AzureWebApp@1
-        inputs:
-          azureSubscription: 'Azure subscription 1(ad9f8614-6f0e-455a-a84a-93f6bc1555c2)'
-          appType: 'webAppLinux'
-          appName: 'StockHubAppBack'
-          package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          runtimeStack: 'NODE|18-lts'
-          startUpCommand: 'npm run start:prod'
+          sshEndpoint: $(currentSshEndpoint)
+          runOptions: "inline"
+          inline: |
+            sudo docker build --no-cache $(deployDirectory)/$(sourceFolderFront) -t "frontend_stockhub" 2>&1
