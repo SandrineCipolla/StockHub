@@ -72,7 +72,7 @@ jobs:
         inputs:
           cleanTargetFolder: true
           sshEndpoint: $(currentSshEndpoint)
-          contents: "$(sourceFolderFront)"
+          contents: "$(sourceFolderFront)/**"
           targetFolder: $(deployDirectory)
           readyTimeout: "20000"
           delayBetweenUploads: "5"
