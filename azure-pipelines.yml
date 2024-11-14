@@ -16,6 +16,8 @@ variables:
     value: "backend"
   - name: deployDirectory
     value: "/home/stockhub-deploy/deploy_front"
+  - name: deployDirectoryBack
+    value: "/home/stockhub-deploy/deploy_back"
   - name: currentSshEndpoint
     value: "ssh-stockhub-deploy"
 
@@ -55,6 +57,41 @@ jobs:
           summaryFileLocation: "$(sourceFolderFront)/src/coverage/cobertura-coverage.xml"
           reportDirectory: "$(sourceFolderFront)/src/coverage"
 
+  - job: buildback
+    displayName: "Continuous integration Backend"
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "20.x"
+        displayName: "Install Node.js"
+
+      - script: |
+          yarn install
+        displayName: "Install dependencies"
+        workingDirectory: $(sourceFolderBackend)
+
+      - script: |
+          yarn run build
+        displayName: "Build application"
+        workingDirectory: $(sourceFolderBackend)
+
+      - script: |
+          yarn run test:ci
+        displayName: "Run tests"
+        workingDirectory: $(sourceFolderBackend)
+
+      - task: PublishTestResults@2
+        displayName: "Publish test results"
+        condition: succeededOrFailed() # because otherwise we won't know what tests failed
+        inputs:
+          testResultsFiles: "$(sourceFolderBackend)/src/reports/junit.xml"
+
+      - task: PublishCodeCoverageResults@2
+        displayName: "Publish code coverage"
+        inputs:
+          summaryFileLocation: "$(sourceFolderBackend)/src/coverage/cobertura-coverage.xml"
+          reportDirectory: "$(sourceFolderBackend)/src/coverage"
+
   - job: continuousDeploymentFront
     displayName: "Continuous deployment front"
     dependsOn:
@@ -84,3 +121,28 @@ jobs:
           runOptions: "inline"
           inline: |
             sudo docker build --no-cache $(deployDirectory)/$(sourceFolderFront) -t "frontend_stockhub" 2>&1
+  
+  - job: continuousDeploymentBack
+    displayName: "Continuous deployment back"
+    dependsOn:
+      - buildback
+    condition: succeeded()
+    steps:
+  
+      - task: CopyFilesOverSSH@0
+        displayName: "Copy dist to remote server"
+        inputs:
+          cleanTargetFolder: true
+          sshEndpoint: $(currentSshEndpoint)
+          contents: "$(sourceFolderBack)/**"
+          targetFolder: $(deployDirectoryBack)
+          readyTimeout: "20000"
+          delayBetweenUploads: "5"
+
+      - task: SSH@0
+        displayName: "create docker image"
+        inputs:
+          sshEndpoint: $(currentSshEndpoint)
+          runOptions: "inline"
+          inline: |
+            sudo docker build --no-cache $(deployDirectoryBack)/$(sourceFolderBack) -t "backend_stockhub" 2>&1
