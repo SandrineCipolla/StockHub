@@ -12,6 +12,8 @@ services:
       DB_PASSWORD: stockhub_password
       DB_PORT: 3306
       DB_DATABASE: stockhub
+      CLIENT_ID: dc30ef57-cdc1-4a3e-aac5-9647506a72ef
+      CLIENT_SECRET: AzJ8Q~4d_sM4ru2h.aE7-5GHCRjsTjvjiGmTSbNK
     ports:
       - 3002:3000
   db:

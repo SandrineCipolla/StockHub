@@ -11,7 +11,8 @@ import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
 import {WriteUserRepository} from "./services/writeUserRepository";
 import configureUserRoutes from "./routes/userRoutes";
-import appInsights from 'applicationinsights';
+
+let appInsights = require('applicationinsights');
 
 dotenv.config();
 
@@ -27,15 +28,15 @@ app.use(cors(corsOptions));
 const port = process.env.PORT || 8080;
 
 
-appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY || 'c351e2d8-eb24-4b14-bb84-b838715ad701')
-    .setAutoDependencyCorrelation(true)
-    .setAutoCollectRequests(true)
-    .setAutoCollectPerformance(true,1000)
-    .setAutoCollectExceptions(true)
-    .setAutoCollectDependencies(true)
-    .setAutoCollectConsole(true)
-    .setSendLiveMetrics(true)
-    .start();
+// appInsights.setup(process.env.APPINSIGHTS_CONNECTION_STRING)
+//     .setAutoDependencyCorrelation(true)
+//     .setAutoCollectRequests(true)
+//     .setAutoCollectPerformance(true,1000)
+//     .setAutoCollectExceptions(true)
+//     .setAutoCollectDependencies(true)
+//     .setAutoCollectConsole(true)
+//     .setSendLiveMetrics(true)
+//     .start();
 
 
 export async function initializeApp() {

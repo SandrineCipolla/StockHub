@@ -1,1 +1,1 @@
-docker build . -t frontend_stockhub
+docker build . -t frontend_stockhub --no-cache --pull
