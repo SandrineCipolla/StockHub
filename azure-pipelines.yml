@@ -115,12 +115,12 @@ jobs:
           delayBetweenUploads: "5"
 
       - task: SSH@0
-        displayName: "create docker image"
+        displayName: "create docker image front"
         inputs:
           sshEndpoint: $(currentSshEndpoint)
           runOptions: "inline"
           inline: |
-            sudo docker build --no-cache --build-arg DEPLOY_TARGET=production -t frontend_stockhub $(deployDirectoryBack)/$(sourceFolderFront) 2>&1
+            sudo docker build --no-cache --build-arg DEPLOY_TARGET=production -t frontend_stockhub $(deployDirectory)/$(sourceFolderFront) 2>&1
   
   - job: continuousDeploymentBack
     displayName: "Continuous deployment back"
