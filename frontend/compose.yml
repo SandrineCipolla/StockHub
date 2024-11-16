@@ -4,6 +4,7 @@ services:
     ports:
       - 5174:80
       - 5175:443
+
   backend:
     image: backend_stockhub:latest
     environment:
@@ -16,7 +17,8 @@ services:
       DB_PASSWORD: stockhub_password
       DB_DATABASE: stockhub
     ports:
-      - 3002:3000
+      - 3002:8080
+
   db:
     image: mysql:latest
     restart: always
@@ -25,5 +27,14 @@ services:
       MYSQL_PASSWORD: stockhub_password
       MYSQL_DATABASE: stockhub
       MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - stockhub-db-volume:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
     ports:
-      - 3320:3306
+      - 5176:8080
+
+volumes:
+  stockhub-db-volume:
