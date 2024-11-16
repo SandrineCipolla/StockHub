@@ -3,7 +3,7 @@
 import mysql, {PoolConnection} from "mysql2/promise";
 import dotenv from "dotenv";
 import {connectionOptions} from "./configurationDb";
-
+import {rootUtils} from "./Utils/logger";
 
 const pool = mysql.createPool(connectionOptions);
 
@@ -12,11 +12,11 @@ export default pool;
 export async function connectToDatabase(): Promise<PoolConnection> {
     try {
         const connection = await pool.getConnection();
-        console.info("Connection to database successful");
+        rootUtils.info("Connection to database successful");
         return connection;
     } catch (error) {
         //TODO :affiner les message d'erreur.
-        console.error("Error connecting to the database:", error);
+        rootUtils.error("Error connecting to the database:", error);
         throw error;
     }
 }

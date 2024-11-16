@@ -25,7 +25,9 @@
     "passport": "^0.7.0",
     "passport-azure-ad": "^4.3.5",
     "passport-jwt": "^4.0.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "typescript-logging": "^2.2.0",
+    "typescript-logging-category-style": "^2.2.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

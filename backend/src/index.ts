@@ -11,16 +11,22 @@ import {ReadUserRepository} from "./services/readUserRepository";
 import {connectToDatabase} from "./dbUtils";
 import {WriteUserRepository} from "./services/writeUserRepository";
 import configureUserRoutes from "./routes/userRoutes";
+import {rootController, rootMain} from "./Utils/logger";
 
-let appInsights = require('applicationinsights');
+rootMain.info("Starting application ...");
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173','http://stockhubappback.azurewebsites.net','https://zealous-bay-022807903.5.azurestaticapps.net'] // Whitelist the domains you want to allow
+    origin: [
+        'http://localhost:5173',
+        'http://stockhubappback.azurewebsites.net',
+        'https://zealous-bay-022807903.5.azurestaticapps.net',
+        'https://localhost:5175',
+        'http://localhost:5174']
 };
 
 app.use(cors(corsOptions));
@@ -28,22 +34,12 @@ app.use(cors(corsOptions));
 const port = process.env.PORT || 8080;
 
 
-// appInsights.setup(process.env.APPINSIGHTS_CONNECTION_STRING)
-//     .setAutoDependencyCorrelation(true)
-//     .setAutoCollectRequests(true)
-//     .setAutoCollectPerformance(true,1000)
-//     .setAutoCollectExceptions(true)
-//     .setAutoCollectDependencies(true)
-//     .setAutoCollectConsole(true)
-//     .setSendLiveMetrics(true)
-//     .start();
-
-
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
     const audience = authConfig.credentials.clientID;
 
     if (!clientID || !audience) {
+        rootMain.error("clientID or audience is not defined in authConfig");
         throw new Error('clientID or audience is not defined in authConfig');
     }
     const options = {
@@ -63,57 +59,56 @@ export async function initializeApp() {
     const userService = new UserService(readUserRepository, writeUserRepository);
 
     const bearerStrategy = new passportAzureAd.BearerStrategy(options, async (req: express.Request, token: any, done: (err: CustomError | null, user?: any, info?: any) => void) => {
-        console.log("Token received:", token);
+        rootMain.debug("Token received:", token);
         if (!token.hasOwnProperty('scp')) {
-            console.error("Token does not have 'scp' property");
+            rootMain.error("Token does not have 'scp' property");
             return done(new Error('Unauthorized'), null, 'No delegated permissions found');
         }
-        console.log("Token is valid, proceeding with authentication");
+        rootMain.info("Token is valid, proceeding with authentication");
         try {
             const email = token.emails[0];
             let userID = await userService.convertOIDtoUserID(email);
             if (userID.empty) {
-                console.log("User ID not found, adding new user");
+                rootMain.info("User ID not found, adding new user");
                 userID = await userService.addUser(email);
             }
             done(null, {userID}, token);
         } catch (error) {
-            console.error("Error during authentication:", error);
+            rootMain.error("Error during authentication:", error);
             done(error as CustomError, null);
         }
     });
 
-    try {
-        console.log("Connection to database successful");
-    } catch (error) {
-        console.error("Error connecting to the database :", error);
-        process.exit(1);
-    }
-
+    rootMain.info("initialization of authentication ...");
 
     app.use(express.json());
     app.use(passport.initialize());
     passport.use(bearerStrategy);
 
+    rootMain.info("initialization of authentication DONE!");
+
     app.use(
         '/api',
         (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+            console.info("Authenticating user ...");
+
             passport.authenticate(
                 'oauth-bearer',
                 {session: false},
                 (err: CustomError, user: any, info: any) => {
                     if (err) {
-                        console.error("Authentication error:", err.message);
+                        rootController.error("Authentication error:", err.message);
                         return res.status(401).json({error: err.message});
                     }
                     if (!user) {
-                        console.error("User not authenticated");
+                        rootController.error("User not authenticated, returning 401");
                         return res.status(401).json({error: 'Unauthorized'});
                     }
                     if (info) {
                         (req as any).authInfo = info;
                         (req as any).userID = info.emails[0] as string;
-                        console.log("Authentication successful, proceeding to next middleware");
+                        rootController.info("Authentication successful, proceeding to next middleware - {oid}", {oid: info.emails[0]});
                         return next();
                     }
                 }
@@ -150,7 +145,7 @@ export async function initializeApp() {
     });
 
     app.listen(port, () => {
-        console.info(`Backend server running on port ${port}`);
+        rootMain.info(`Backend server running on port ${port}`);
     });
 }
 

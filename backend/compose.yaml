@@ -24,6 +24,10 @@ services:
       MYSQL_PASSWORD: stockhub_password
     ports:
       - 3306:3306
+    volumes:
+      - stockhub-db-volume:/var/lib/mysql
+volumes:
+    stockhub-db-volume:
 #    volumes:
 #      - ./db:/docker-entrypoint-initdb.d
 #    healthcheck:

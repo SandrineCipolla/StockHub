@@ -7,6 +7,8 @@ import {HTTP_CODE_CREATED, HTTP_CODE_OK} from "../Utils/httpCodes";
 import {UserService} from "../services/userService";
 import {ReadUserRepository} from "../services/readUserRepository";
 import {WriteUserRepository} from "../services/writeUserRepository";
+import {rootStockController} from "../Utils/logger";
+
 //
 //
 //
@@ -31,8 +33,12 @@ export class StockController {
         try {
 
             const OID = (req as any).userID as string;
+
             const userID = await this.userService.convertOIDtoUserID(OID);
             const stocks = await this.stockService.getAllStocks(userID.value);
+
+            console.info("getAllStocks {OID} - {stocks.length}", OID, stocks.length);
+
             res.status(HTTP_CODE_OK).json(stocks);
         } catch (err: any) {
             sendError(res, err as CustomError);
@@ -44,10 +50,16 @@ export class StockController {
             const OID = (req as any).userID as string;
             const userID = await this.userService.convertOIDtoUserID(OID);
             const {LABEL, DESCRIPTION} = req.body;
+
+            console.info('createStock {OID} - {LABEL} - {DESCRIPTION} ...', OID, LABEL, DESCRIPTION);
+
             if (!LABEL || !DESCRIPTION) {
                 return sendError(res, new BadRequestError("LABEL and DESCRIPTION are required to create a stock.", ErrorMessages.CreateStock));
             }
             await this.stockService.createStock({LABEL, DESCRIPTION}, userID.value);
+
+            console.info('createStock {OID} - {LABEL} - {DESCRIPTION} DONE!', OID, LABEL, DESCRIPTION);
+
             res.status(HTTP_CODE_CREATED).json({message: "Stock created successfully."});
         } catch (err: any) {
             sendError(res, err as CustomError);

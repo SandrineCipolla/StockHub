@@ -6,9 +6,13 @@ import {WriteStockRepository} from "../repositories/writeStockRepository";
 import {HTTP_CODE_INTERNAL_SERVER_ERROR} from "../Utils/httpCodes";
 import {ReadUserRepository} from "../services/readUserRepository";
 import { WriteUserRepository } from "../services/writeUserRepository";
-
+import {rootController} from "../Utils/logger";
 
 const configureStockRoutes = async (): Promise<Router> => {
+    const rootConfigureStockRoutes = rootController.getChildCategory("configureStockRoutes");
+
+    rootConfigureStockRoutes.info("Configuring stock routes...");
+
     const router = Router({ mergeParams: true });
 
     // création instance de stockController
@@ -18,7 +22,6 @@ const configureStockRoutes = async (): Promise<Router> => {
     const readUser = new ReadUserRepository(connection);
     const writeUser = new WriteUserRepository(connection);
     const stockController = new StockController(readStockRepository, writeStockRepository, readUser, writeUser);
-
 
     //Route pour récupération de la liste des stocks
     router.get("/stocks", async (req, res) => {
@@ -56,8 +59,9 @@ const configureStockRoutes = async (): Promise<Router> => {
     router.post("/stocks", async (req, res) => {
         try {
             await stockController.createStock(req, res);
+
         } catch (error) {
-            console.error("Error in POST /stocks:", error);
+            rootController.error("Error in POST /stocks:", error);
             res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error: "Error while querying the database."});
         }
     });
@@ -142,6 +146,8 @@ const configureStockRoutes = async (): Promise<Router> => {
             res.status(HTTP_CODE_INTERNAL_SERVER_ERROR).json({error:"Error while quering the database for low stock items"})
         }
     });
+
+    rootConfigureStockRoutes.info("Configuring stock routes DONE!");
 
     return router;
 }
