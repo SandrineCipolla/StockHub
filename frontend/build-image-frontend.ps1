@@ -1,1 +1,1 @@
-docker build --no-cache --build-arg DEPLOY_TARGET=production --progress=plain -t frontend_stockhub .
+docker build --no-cache --build-arg DEPLOY_TARGET=production -t frontend_stockhub .
