@@ -1,7 +1,6 @@
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import {vi} from 'vitest';
 import StockItems from "../src/components/StockItems";
-import {StockItemsContext, StockItemsContextProps} from '../src/contexts/StockItemsContext';
 import {fetchStockItems} from "../src/utils/StockAPIClient";
 
 // Mocking de l'API fetchStockItems
@@ -37,7 +36,7 @@ describe('StockItems', () => {
     // });
 
     it('affiche "Your stock is empty. Please add items." lorsque le stock est vide', async () => {
-        const mockSetStockItems = vi.fn();
+
         renderComponent();
 
         // Vérifier que le message pour stock vide est affiché
