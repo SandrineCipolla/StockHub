@@ -1,7 +1,6 @@
 //Etablir la connexion à la base de données MySQL
 
 import mysql, {PoolConnection} from "mysql2/promise";
-import dotenv from "dotenv";
 import {connectionOptions} from "./configurationDb";
 import {rootUtils} from "./Utils/logger";
 
