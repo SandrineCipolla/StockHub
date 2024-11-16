@@ -3,6 +3,7 @@ services:
     image: frontend_stockhub:latest
     ports:
       - 5174:80
+      - 5175:443
   backend:
     image: backend_stockhub:latest
     environment:

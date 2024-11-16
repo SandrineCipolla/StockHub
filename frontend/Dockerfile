@@ -36,7 +36,7 @@ COPY --from=builder /usr/src/app/dist .
 
 
 # Copy your custom Nginx configuration (adjust path as needed)
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
 
 # Generate a self-signed SSL certificate
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
