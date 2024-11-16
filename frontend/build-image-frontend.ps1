@@ -1,1 +1,1 @@
-docker build . -t frontend_stockhub --no-cache --pull
+docker build --no-cache --build-arg DEPLOY_TARGET=production --progress=plain -t frontend_stockhub .
