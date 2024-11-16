@@ -60,7 +60,7 @@ export const msalConfig: Configuration = {
 
 export const protectedResources = {
     stockHubApi: {
-        endpoint: 'http://localhost:3000/api/v1',
+        endpoint: import.meta.env.VITE_API_SERVER_URL,
         scopes: {
             read: ['https://stockhubb2c.onmicrosoft.com/dc30ef57-cdc1-4a3e-aac5-9647506a72ef/FilesRead'],
             write: ['https://stockhubb2c.onmicrosoft.com/dc30ef57-cdc1-4a3e-aac5-9647506a72ef/FilesWrite'],

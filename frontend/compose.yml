@@ -8,21 +8,21 @@ services:
     environment:
       NODE_ENV: production
       DB_HOST: db
+      DB_PORT: 3306
+      CLIENT_ID: dc30ef57-cdc1-4a3e-aac5-9647506a72ef
+      CLIENT_SECRET: AzJ8Q~4d_sM4ru2h.aE7-5GHCRjsTjvjiGmTSbNK
       DB_USER: stockhub_user
       DB_PASSWORD: stockhub_password
-      DB_PORT: 3306
       DB_DATABASE: stockhub
-      CLIENT_ID: ${AZURE_CLIENT_ID}
-      CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
     ports:
       - 3002:3000
   db:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: stockhub
       MYSQL_USER: stockhub_user
       MYSQL_PASSWORD: stockhub_password
+      MYSQL_DATABASE: stockhub
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - 3320:3306

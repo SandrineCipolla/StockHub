@@ -5,8 +5,8 @@ import {Stock} from "../dataModels.ts";
 import AddStock from "./AddStock.tsx";
 import {AuthenticatedTemplate} from "@azure/msal-react";
 import {Fab, Paper, Tooltip, Typography} from "@mui/material";
-import HomeIcon from '@mui/icons-material/Home'; // Icône pour l'accueil
-import AddIcon from '@mui/icons-material/Add'; // Icône pour ajouter
+import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {Theme} from "@mui/material/styles";
 
@@ -52,8 +52,8 @@ const StocksList: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    backgroundColor: 'primary.main', // Changer pour utiliser la couleur principale
-                    color: 'primary.contrastText', // Texte clair pour contraster avec le fond
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
                     borderRadius: '0',
                     marginBottom: 2,
                     height: '88px',
@@ -74,11 +74,11 @@ const StocksList: React.FC = () => {
                             // color: 'rgba(90, 33, 181, 0.8)',
                             color: 'primary.main',
                             '&:hover': {
-                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
-                                backgroundColor: 'white', // Le fond reste blanc même au hover
-                                transform: 'scale(1.05)', // Effet de grossissement
+                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                backgroundColor: 'white',
+                                transform: 'scale(1.05)',
                             },
-                            transition: 'transform 0.3s, box-shadow 0.3s', // Transition pour adoucir l'effet
+                            transition: 'transform 0.3s, box-shadow 0.3s',
                         }}
                     >
                         <HomeIcon/>
@@ -100,11 +100,11 @@ const StocksList: React.FC = () => {
                             backgroundColor: 'white',
                             color: 'primary.main',
                             '&:hover': {
-                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)', // Ombre douce autour du bouton
-                                backgroundColor: 'white', // Le fond reste blanc même au hover
-                                transform: 'scale(1.05)', // Effet de grossissement
+                                boxShadow: '0px 4px 15px rgba(255, 255, 255, 0.5)',
+                                backgroundColor: 'white',
+                                transform: 'scale(1.05)',
                             },
-                            transition: 'transform 0.3s, box-shadow 0.3s', // Transition pour adoucir l'effet
+                            transition: 'transform 0.3s, box-shadow 0.3s',
                         }}
                     >
                         <AddIcon/>
@@ -126,9 +126,9 @@ const StocksList: React.FC = () => {
                         {/* Bouton Supprimer */}
                         <Tooltip title="Supprimer le stock" aria-label="delete">
                             <Fab
-                                //color="error"
+
                                 size="small"
-                                onClick={() => handleStockDelete(stock.id)} // Lier le bouton à la fonction de suppression
+                                onClick={() => handleStockDelete(stock.id)}
                                 sx={{
                                     position: 'absolute',
                                     bottom: 10,
