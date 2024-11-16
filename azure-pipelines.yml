@@ -120,7 +120,7 @@ jobs:
           sshEndpoint: $(currentSshEndpoint)
           runOptions: "inline"
           inline: |
-            sudo docker build --no-cache --build-arg DEPLOY_TARGET=production -t frontend_stockhub $(deployDirectoryBack)/$(sourceFolderBackend) 2>&1
+            sudo docker build --no-cache --build-arg DEPLOY_TARGET=production -t frontend_stockhub $(deployDirectoryBack)/$(sourceFolderFront) 2>&1
   
   - job: continuousDeploymentBack
     displayName: "Continuous deployment back"
