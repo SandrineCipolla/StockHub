@@ -16,3 +16,6 @@ export const rootStockController = rootController.getChildCategory("stockControl
 
 export const rootDatabase = provider.getCategory("database");
 export const rootReadUserRepository = rootDatabase.getChildCategory("readUserRepository");
+
+export const rootSecurity = provider.getCategory("security");
+export const rootSecurityAuthenticationMiddleware = rootSecurity.getChildCategory("authenticationMiddleware");

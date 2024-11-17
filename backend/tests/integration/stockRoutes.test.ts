@@ -1,6 +1,7 @@
 import request from "supertest";
-import {app, initializeApp} from "../../src";
+import {app} from "../../src";
 import {HTTP_CODE_OK} from "../../src/Utils/httpCodes";
+import {initializeApp} from "../../src/initializeApp";
 
 // describe("Stock Routes", () => {
 //
