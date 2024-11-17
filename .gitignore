@@ -2,3 +2,4 @@
 .vscode
 mysql_data
 node_modules
+.env*
