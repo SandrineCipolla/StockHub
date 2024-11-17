@@ -9,7 +9,6 @@ import {app} from "./index";
 import {authConfigbearerStrategy} from "./Utils/authBearerStrategy";
 import {authenticationMiddleware} from "./Utils/authenticateMiddleware";
 
-
 export async function initializeApp() {
     const clientID = authConfig.credentials.clientID;
     const audience = authConfig.credentials.clientID;
