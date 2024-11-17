@@ -7,15 +7,20 @@ const provider = CategoryProvider.createProvider("ExampleProvider", {
 });
 
 /* Create some root categories for this example, you can also expose getLogger() from the provider instead e.g. */
-export const rootModel = provider.getCategory("model");
-export const rootService = provider.getCategory("service");
 export const rootMain = provider.getCategory("main");
 export const rootController = provider.getCategory("controller");
 export const rootUtils = provider.getCategory("utils");
-export const rootStockController = rootController.getChildCategory("stockController");
 
-export const rootDatabase = provider.getCategory("database");
-export const rootReadUserRepository = rootDatabase.getChildCategory("readUserRepository");
+// Server setup
+export const rootServerSetup = rootMain.getChildCategory("serverSetup");
 
+// Security
 export const rootSecurity = provider.getCategory("security");
 export const rootSecurityAuthenticationMiddleware = rootSecurity.getChildCategory("authenticationMiddleware");
+
+// Controller
+export const rootStockController = rootController.getChildCategory("stockController");
+
+// Database
+export const rootDatabase = provider.getCategory("database");
+export const rootReadUserRepository = rootDatabase.getChildCategory("readUserRepository");

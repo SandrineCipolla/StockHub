@@ -34,7 +34,6 @@ WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /usr/src/app/dist .
 
-
 # Copy your custom Nginx configuration (adjust path as needed)
 COPY default.conf /etc/nginx/conf.d/default.conf
 

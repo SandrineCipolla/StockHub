@@ -3,3 +3,4 @@
 mysql_data
 node_modules
 .env*
+killport.js

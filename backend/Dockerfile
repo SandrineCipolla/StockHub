@@ -20,15 +20,18 @@ RUN npm run build
 # Étape 2 : Image de production
 FROM node:${NODE_VERSION}-alpine AS production
 
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/package*.json ./
 COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
 
-RUN npm install --production
-
-# Expose the port that the application listens on.
-EXPOSE 3000
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/ssl/private/selfsigned.key \
+  -out /etc/ssl/certs/selfsigned.crt \
+  -subj "/C=FR/ST=State/L=Paris/O=Sancci/OU=Main/CN=localhost"
 
 # Run the application.
 CMD  [ "node", "dist/src/index.js" ]

@@ -1,15 +1,17 @@
 import authConfig from "./authConfig";
-import { rootMain} from "./Utils/logger";
+import {rootMain, rootSecurity, rootServerSetup} from "./Utils/logger";
 import express from "express";
 import {CustomError} from "./errors";
 import passport from "passport";
 import configureStockRoutes from "./routes/stockRoutes";
 import configureUserRoutes from "./routes/userRoutes";
-import {app} from "./index";
-import {authConfigbearerStrategy} from "./Utils/authBearerStrategy";
-import {authenticationMiddleware} from "./Utils/authenticateMiddleware";
+import {authConfigbearerStrategy} from "./authentication/authBearerStrategy";
+import {authenticationMiddleware} from "./authentication/authenticateMiddleware";
+import {startHttpsServer} from "./serverSetup/setupHttpsServer";
+import {setupHttpServer} from "./serverSetup/setupHttpServer";
+import {isProductionMode, selectedRuntimeMode} from "./config/runtimeMode";
 
-export async function initializeApp() {
+export async function initializeApp(app: express.Application) {
     const clientID = authConfig.credentials.clientID;
     const audience = authConfig.credentials.clientID;
 
@@ -20,7 +22,7 @@ export async function initializeApp() {
 
     const bearerStrategy = authConfigbearerStrategy;
 
-    rootMain.info("initialization of authentication ...");
+    rootSecurity.info("initialization of authentication ...");
 
     app.use(express.json());
 
@@ -28,7 +30,7 @@ export async function initializeApp() {
 
     passport.use(bearerStrategy);
 
-    rootMain.info("initialization of authentication DONE!");
+    rootSecurity.info("initialization of authentication DONE!");
 
     app.use(
         '/api',
@@ -67,9 +69,14 @@ export async function initializeApp() {
 
     // might be here tha I'll have to change stuff
 
-    const port = process.env.PORT || 8080;
+    const port = process.env.HTTP_PORT || 8080;
 
-    app.listen(port, () => {
-        rootMain.info(`Backend server running on port ${port}`);
-    });
+    if(isProductionMode()) {
+        startHttpsServer(app);
+    }
+    else {
+        rootServerSetup.info('>>>> HTTPS server not started because running on {selectedRuntimeMode} <<<<', selectedRuntimeMode);
+    }
+
+    setupHttpServer(app);
 }

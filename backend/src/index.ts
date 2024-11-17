@@ -3,18 +3,17 @@ import cors from "cors";
 import {rootMain} from "./Utils/logger";
 import {initializeApp} from "./initializeApp";
 import {corsConfig} from "./config/corsConfig";
+import {selectedRuntimeMode} from "./config/runtimeMode";
 
 rootMain.info("Starting application ...");
+rootMain.info("selected runtime mode is {selectedRuntimeMode}", selectedRuntimeMode);
 
 const app = express();
 
 app.use(cors(corsConfig));
 
-const port = process.env.PORT || 8080;
-
-
 if (process.env.NODE_ENV !== "test") {
-    initializeApp();
+   initializeApp(app);
 }
 
 export {app};

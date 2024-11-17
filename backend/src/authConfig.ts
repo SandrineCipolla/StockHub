@@ -1,7 +1,7 @@
 const passportConfig = {
     credentials: {
         tenantName: 'stockhubb2c.onmicrosoft.com',
-        clientID: process.env.CLIENT_ID,
+        clientID: process.env.CLIENT_ID
     },
     policies: {
         policyName: 'B2C_1_signupsignin',
