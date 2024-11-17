@@ -7,26 +7,18 @@ services:
 
   backend:
     image: backend_stockhub:latest
-    environment:
-      NODE_ENV: production
-      DB_HOST: db
-      DB_PORT: 3306
-      CLIENT_ID: dc30ef57-cdc1-4a3e-aac5-9647506a72ef
-      CLIENT_SECRET: AzJ8Q~4d_sM4ru2h.aE7-5GHCRjsTjvjiGmTSbNK
-      DB_USER: stockhub_user
-      DB_PASSWORD: stockhub_password
-      DB_DATABASE: stockhub
+    depends_on:
+      - db
+    env_file:
+      - .env.localcompose
     ports:
       - 3002:8080
 
   db:
     image: mysql:latest
     restart: always
-    environment:
-      MYSQL_USER: stockhub_user
-      MYSQL_PASSWORD: stockhub_password
-      MYSQL_DATABASE: stockhub
-      MYSQL_ROOT_PASSWORD: root
+    env_file:
+      - .env.localcompose
     volumes:
       - stockhub-db-volume:/var/lib/mysql
 
